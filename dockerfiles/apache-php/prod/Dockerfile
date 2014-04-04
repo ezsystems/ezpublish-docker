@@ -1,4 +1,4 @@
-FROM sample/apache
+FROM ezpublish/apache
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV TIMEZONE Europe/Warsaw
@@ -6,21 +6,17 @@ ENV TIMEZONE Europe/Warsaw
 RUN locale-gen en_US en_US.UTF-8
 ENV LANG en_US.UTF-8
 
-# Add PHP 5.5 repository
-RUN apt-get update -y
-RUN apt-get install software-properties-common -y
-RUN apt-add-repository ppa:ondrej/php5 -y
-RUN apt-get update -y
-
-# install PHP
-RUN apt-get install -y --force-yes php5 libapache2-mod-php5 php5-mysql php5-json php5-xsl php5-intl php5-mcrypt
-
-# install utils
-RUN apt-get install -y curl
-
-# apt clean
-RUN apt-get clean
-RUN rm -rf /var/lib/apt/lists/*
+# update and install
+RUN apt-get install -y --force-yes \
+    software-properties-common \
+    php5 \
+    libapache2-mod-php5 \
+    php5-mysql \
+    php5-json \
+    php5-xsl \
+    php5-intl \
+    php5-mcrypt \
+    curl
 
 # install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin && mv /usr/local/bin/composer.phar /usr/local/bin/composer

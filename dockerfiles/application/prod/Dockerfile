@@ -1,11 +1,15 @@
-FROM sample/apache-php:prod
+FROM ezpublish/apache-php:prod
 
-ADD ../../../application /srv/application
+## broken, this won't work, should use volumes instead like :dev
+ADD ../../../ezpublish /srv/ezpublish
 
-RUN rm -rf /srv/application/app/cache/* /srv/application/app/logs/*
-RUN cd /srv/application && composer install -n --no-dev
+RUN rm -rf /srv/ezpublish/ezpublish/cache/* /srv/ezpublish/ezpublish/logs/*
+RUN cd /srv/ezpublish && composer install -n --no-dev
 RUN rm -rf /var/www
-RUN ln -s /srv/application/web /var/www
-RUN chown -R www-data:www-data /srv/application
+RUN ln -s /srv/ezpublish/web /var/www
+RUN chown -R www-data:www-data /srv/ezpublish
 
-RUN rm /srv/application/web/app_dev.php
+
+CMD ["/usr/sbin/apache2", "-D", "FOREGROUND"]
+
+EXPOSE 80
