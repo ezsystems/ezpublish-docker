@@ -1,6 +1,6 @@
 FROM sample/apache-php:prod
 
-ADD . /srv/application
+ADD ../../../application /srv/application
 
 RUN rm -rf /srv/application/app/cache/* /srv/application/app/logs/*
 RUN cd /srv/application && composer install -n --no-dev
