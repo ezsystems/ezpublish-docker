@@ -1,4 +1,4 @@
-FROM ubuntu:12.10
+FROM ubuntu:saucy
 
 ENV DEBIAN_FRONTEND noninteractive
 
