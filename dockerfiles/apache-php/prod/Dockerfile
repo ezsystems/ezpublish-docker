@@ -16,6 +16,8 @@ RUN apt-get install -y --force-yes \
     php5-xsl \
     php5-intl \
     php5-mcrypt \
+    php5-gd \
+    php5-curl \
     curl
 
 # install composer

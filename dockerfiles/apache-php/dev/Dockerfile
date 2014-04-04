@@ -4,9 +4,12 @@ RUN apt-get install -y \
     vim \
     git \
     tree \
-    php5-xdebug
+    php5-xdebug \
+    php5-sqlite
 
-ADD php.ini /etc/php.ini
+ADD php.ini /etc/php5/mods-available/debug_php.ini
+
+RUN php5enmod debug_php
 
 ADD xdebug.ini /xdebug.ini
 RUN sed -i "s@EXTENSION_DIR@`php -i | grep extension_dir | awk '{print $(NF)}'`@" /xdebug.ini
