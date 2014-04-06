@@ -8,7 +8,6 @@ ENV LANG en_US.UTF-8
 
 # update and install
 RUN apt-get install -y --force-yes \
-    software-properties-common \
     php5 \
     libapache2-mod-php5 \
     php5-mysql \
