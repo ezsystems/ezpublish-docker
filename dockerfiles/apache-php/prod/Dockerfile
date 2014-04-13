@@ -1,4 +1,4 @@
-FROM ezpublish/apache
+FROM ezsystems/apache
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV TIMEZONE Europe/Warsaw
@@ -17,7 +17,8 @@ RUN apt-get install -y --force-yes \
     php5-mcrypt \
     php5-gd \
     php5-curl \
-    curl
+    curl \
+    mysql-client
 
 # install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin && mv /usr/local/bin/composer.phar /usr/local/bin/composer

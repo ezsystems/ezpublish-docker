@@ -1,4 +1,4 @@
-FROM ezpublish/apache-php:prod
+FROM ezsystems/apache-php:prod
 
 RUN apt-get install -y \
     vim \
@@ -12,7 +12,7 @@ RUN mv /debug_php.ini /etc/php5/mods-available/debug_php.ini
 RUN php5enmod debug_php
 
 ADD xdebug.ini /xdebug.ini
-RUN /xdebug.ini >> /etc/php5/mods-available/xdebug.ini
+RUN echo /xdebug.ini >> /etc/php5/mods-available/xdebug.ini
 
 
 # Install & Configure  webgrind

@@ -1,4 +1,4 @@
-FROM ezpublish/apache-php:prod
+FROM ezsystems/apache-php:prod
 
 ## broken, this won't work, should use volumes instead like :dev
 ADD ../../../ezpublish /srv/ezpublish

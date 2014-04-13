@@ -1,8 +1,11 @@
-FROM ezpublish/apache-php:dev
+FROM ezsystems/apache-php:dev
 
-RUN rm -rf /var/www
-RUN ln -s /srv/ezpublish/web /var/www
 
-CMD ["/usr/sbin/apache2", "-D", "FOREGROUND"]
+# As application is put in as volume we do all needed operation on run
+ADD run.sh /run.sh
+ADD generate_kickstart_file.sh /generate_kickstart_file.sh
+RUN chmod 755 /*.sh
+
+CMD /run.sh
 
 EXPOSE 80
