@@ -33,10 +33,11 @@ Vagrant.configure("2") do |config|
       args: "-e MYSQL_PASS=\""+ params['db_password'] + "\""
     d.run "web-1",
       image: "ezsystems/ezpublish:dev",
-      args: "--link db-1:db -n -p 80:80 -v '/vagrant/ezpublish/:/var/www:rw' -e EZ_KICKSTART=\""+ params['ez_kickstart'] + "\""
+      args: "--link db-1:db -n -p 80:80 -p 22 -v '/vagrant/ezpublish/:/var/www:rw' -e EZ_KICKSTART=\""+ params['ez_kickstart'] + "\""
   end
 
-  config.vm.synced_folder ".", "/vagrant", :nfs => true
+  nfs = (RUBY_PLATFORM =~ /darwin/ || RUBY_PLATFORM =~ /linux/)
+  config.vm.synced_folder ".", "/vagrant", :nfs => nfs
 
   config.vm.network :forwarded_port, guest: 80, host: 8080
   config.vm.network :private_network, ip: params['ip']
@@ -46,5 +47,11 @@ Vagrant.configure("2") do |config|
      vb.gui = false
      vb.customize ["modifyvm", :id, "--memory", params['memory']]
      vb.customize ["modifyvm", :id, "--cpus", params['cpus']]
+     vb.customize ["modifyvm", :id, "--ostype", "Ubuntu_64"]
+  end
+
+  # caches apt,composer,.. downloads, install with `vagrant plugin install vagrant-cachier`
+  if Vagrant.has_plugin?("vagrant-cachier")
+    config.cache.scope = :box
   end
 end
