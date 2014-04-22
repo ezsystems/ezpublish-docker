@@ -1,4 +1,5 @@
-FROM ubuntu:saucy
+FROM tianon/ubuntu-core:14.04
+#FROM ubuntu:trusty
 
 ENV DEBIAN_FRONTEND noninteractive
 

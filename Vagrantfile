@@ -12,12 +12,13 @@ params = {
 }
 
 Vagrant.configure("2") do |config|
-  config.vm.box = "saucy64"
-  config.vm.box_url = "http://cloud-images.ubuntu.com/vagrant/saucy/current/saucy-server-cloudimg-amd64-vagrant-disk1.box"
+  config.vm.box = "trusty64"
+  config.vm.box_url = "https://cloud-images.ubuntu.com/vagrant/trusty/current/trusty-server-cloudimg-amd64-vagrant-disk1.box"
 
   # Pull in the external docker images we need
   config.vm.provision "docker",
-    images: ["ubuntu:saucy", "tutum/mysql"]
+    images: ["tianon/ubuntu-core:14.04", "tutum/mysql"]
+#    images: ["ubuntu:trusty", "tutum/mysql"]
 
   # Set the Timezone to something useful
   config.vm.provision :shell, :inline => "echo \"" + params['timezone'] + "\" | sudo tee /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata"
@@ -36,8 +37,9 @@ Vagrant.configure("2") do |config|
       args: "--link db-1:db -n -p 80:80 -p 22 -v '/vagrant/ezpublish/:/var/www:rw' -e EZ_KICKSTART=\""+ params['ez_kickstart'] + "\""
   end
 
-  nfs = (RUBY_PLATFORM =~ /darwin/ || RUBY_PLATFORM =~ /linux/)
-  config.vm.synced_folder ".", "/vagrant", :nfs => nfs
+  config.vm.synced_folder ".", "/vagrant", type: "rsync",
+    rsync__exclude: [ ".git/", ".vagrant/", "ezpublish/.git/"],
+    rsync__auto: true
 
   config.vm.network :forwarded_port, guest: 80, host: 8080
   config.vm.network :private_network, ip: params['ip']
