@@ -17,8 +17,7 @@ Vagrant.configure("2") do |config|
 
   # Pull in the external docker images we need
   config.vm.provision "docker",
-    images: ["tianon/ubuntu-core:14.04", "tutum/mysql"]
-#    images: ["ubuntu:trusty", "tutum/mysql"]
+    images: ["ubuntu:trusty", "tutum/mysql"]
 
   # Set the Timezone to something useful
   config.vm.provision :shell, :inline => "echo \"" + params['timezone'] + "\" | sudo tee /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata"
