@@ -4,7 +4,7 @@
 params = {
     "ip"          => "33.33.33.53",
     "project"     => "ezpublish-docker",
-    "memory"      => 1024,
+    "memory"      => 756,
     "cpus"        => 1,
     "timezone"    => "CET",
     "db_password" => "youmaychangethis",
