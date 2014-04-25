@@ -8,7 +8,10 @@ params = {
     "cpus"        => 1,
     "timezone"    => "CET",
     "db_password" => "youmaychangethis",
-    "ez_kickstart" => "true"
+    # Generates kickstart.ini file with database settings if true
+    "kickstart" => "true",
+    # Pre downloads packages from provided url if set
+    "packageurl" => "http://packages.ez.no/ezpublish/5.3/5.3.0alpha1/"
 }
 
 Vagrant.configure("2") do |config|
@@ -33,7 +36,8 @@ Vagrant.configure("2") do |config|
       args: "-e MYSQL_PASS=\""+ params['db_password'] + "\""
     d.run "web-1",
       image: "ezsystems/ezpublish:dev",
-      args: "--link db-1:db -n -p 80:80 -p 22 -v '/vagrant/ezpublish/:/var/www:rw' -e EZ_KICKSTART=\""+ params['ez_kickstart'] + "\""
+      args: "--link db-1:db -n -p 80:80 -p 22 -v '/vagrant/ezpublish/:/var/www:rw' -e EZ_KICKSTART=\"" + params['kickstart']
+          + "\" -e EZ_PACKAGEURL=\"" + params['packageurl'] + "\""
   end
 
   config.vm.synced_folder ".", "/vagrant", type: "rsync",

@@ -1,7 +1,7 @@
 #!/bin/bash
 
-if [ ! -f /var/www/ezpublish_legacy/kickstart.ini-dist ]; then
-    echo "ERROR: Could not find /var/www/ezpublish_legacy/kickstart.ini-dist, did you forget to place eZ Publish in vagrant folder?"
+if [ ! -f ezpublish_legacy/kickstart.ini-dist ]; then
+    echo "ERROR: Could not find ezpublish_legacy/kickstart.ini-dist, did you forget to place eZ Publish in vagrant/ezpublish folder?"
     exit 1;
 fi
 
@@ -21,4 +21,4 @@ Socket=
 
 [site_details]
 Database=test
-" > /var/www/ezpublish_legacy/kickstart.ini
+" > ezpublish_legacy/kickstart.ini
