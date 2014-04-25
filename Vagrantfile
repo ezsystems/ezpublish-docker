@@ -36,8 +36,7 @@ Vagrant.configure("2") do |config|
       args: "-e MYSQL_PASS=\""+ params['db_password'] + "\""
     d.run "web-1",
       image: "ezsystems/ezpublish:dev",
-      args: "--link db-1:db -n -p 80:80 -p 22 -v '/vagrant/ezpublish/:/var/www:rw' -e EZ_KICKSTART=\"" + params['kickstart']
-          + "\" -e EZ_PACKAGEURL=\"" + params['packageurl'] + "\""
+      args: "--link db-1:db -n -p 80:80 -p 22 -v '/vagrant/ezpublish/:/var/www:rw' -e EZ_KICKSTART=\""+ params['kickstart'] +"\" -e EZ_PACKAGEURL=\""+ params['packageurl'] +"\""
   end
 
   config.vm.synced_folder ".", "/vagrant", type: "rsync",
