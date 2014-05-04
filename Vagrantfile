@@ -25,8 +25,13 @@ Vagrant.configure("2") do |config|
   # Set the Timezone to something useful
   config.vm.provision :shell, :inline => "echo \"" + params['timezone'] + "\" | sudo tee /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata"
 
-  # Build images of our custom docker files
-  config.vm.provision :shell, :inline => "cd /vagrant && ./build.sh"
+  config.vm.provision "docker" do |d|
+    d.build_image "/vagrant/dockerfiles/apache",          args: "-t 'ezsystems/apache'"
+    d.build_image "/vagrant/dockerfiles/apache-php/prod", args: "-t 'ezsystems/apache-php:prod'"
+    d.build_image "/vagrant/dockerfiles/apache-php/dev",  args: "-t 'ezsystems/apache-php:dev'"
+    #d.build_image "/vagrant/dockerfiles/ezpublish/prod", args: "-t 'ezsystems/ezpublish:prod'"
+    d.build_image "/vagrant/dockerfiles/ezpublish/dev",   args: "-t 'ezsystems/ezpublish:dev'"
+  end
 
   # Startup the docker images we need
   config.vm.provision "docker" do |d|
@@ -36,7 +41,7 @@ Vagrant.configure("2") do |config|
       args: "-e MYSQL_PASS=\""+ params['db_password'] + "\""
     d.run "web-1",
       image: "ezsystems/ezpublish:dev",
-      args: "--link db-1:db -n -p 80:80 -p 22 -v '/vagrant/ezpublish/:/var/www:rw' -e EZ_KICKSTART=\""+ params['kickstart'] +"\" -e EZ_PACKAGEURL=\""+ params['packageurl'] +"\""
+      args: "--link db-1:db -n --dns 8.8.8.8 --dns 8.8.4.4 -p 80:80 -p 22 -v '/vagrant/ezpublish/:/var/www:rw' -e EZ_KICKSTART=\""+ params['kickstart'] +"\" -e EZ_PACKAGEURL=\""+ params['packageurl'] +"\""
   end
 
   config.vm.synced_folder ".", "/vagrant", type: "rsync",

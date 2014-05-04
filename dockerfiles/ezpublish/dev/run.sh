@@ -9,15 +9,15 @@ if [ "$EZ_KICKSTART" = "true" ]; then
 fi
 
 # Dowload packages if requested
-if [ "$PACKAGEURL" ]; then
+if [ "$PACKAGEURL" != "" ]; then
 	/install_packages.sh
 fi
 
 # Fix permissions as they are wrong in case rsync is used
-# @todo: +a or acl would be safer to use
-sudo chown -R "${APACHE_RUN_USER}":"${APACHE_RUN_GROUP}" ezpublish/{cache,logs,config} ezpublish_legacy/{design,extension,settings,var} web
-sudo find {ezpublish/{cache,logs,config},ezpublish_legacy/{design,extension,settings,var},web} -type d | sudo xargs chmod -R 775
-sudo find {ezpublish/{cache,logs,config},ezpublish_legacy/{design,extension,settings,var},web} -type f | sudo xargs chmod -R 664
+sudo setfacl -R -m u:$APACHE_RUN_USER:rwx -m u:`whoami`:rwx \
+     ezpublish/{cache,logs,config,sessions} ezpublish_legacy/{design,extension,settings,var} web
+sudo setfacl -dR -m u:$APACHE_RUN_USER:rwx -m u:`whoami`:rwx \
+     ezpublish/{cache,logs,config,sessions} ezpublish_legacy/{design,extension,settings,var} web
 
 # start services
 exec supervisord -n
