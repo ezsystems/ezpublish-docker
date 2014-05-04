@@ -13,11 +13,13 @@ if [ "$PACKAGEURL" != "" ]; then
 	/install_packages.sh
 fi
 
-# Fix permissions as they are wrong in case rsync is used
+
+echo "Setting permissions on eZ Publish folder as they might be broken if rsync is used"
 sudo setfacl -R -m u:$APACHE_RUN_USER:rwx -m u:`whoami`:rwx \
      ezpublish/{cache,logs,config,sessions} ezpublish_legacy/{design,extension,settings,var} web
 sudo setfacl -dR -m u:$APACHE_RUN_USER:rwx -m u:`whoami`:rwx \
      ezpublish/{cache,logs,config,sessions} ezpublish_legacy/{design,extension,settings,var} web
+
 
 # start services
 exec supervisord -n

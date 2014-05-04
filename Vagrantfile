@@ -45,7 +45,7 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.synced_folder ".", "/vagrant", type: "rsync",
-    rsync__exclude: [ ".git/", ".vagrant/", "ezpublish/.git/"],
+    rsync__exclude: [ ".git/", "ezpublish/.git/"],
     rsync__auto: true
 
   config.vm.network :forwarded_port, guest: 80, host: 8080

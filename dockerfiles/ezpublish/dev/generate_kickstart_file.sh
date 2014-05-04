@@ -7,7 +7,8 @@ fi
 
 
 
-# GENERATE kickstart.ini
+echo "Generating kickstart.ini"
+
 echo "[database_choice]
 Continue=true
 Type=mysqli
@@ -27,5 +28,5 @@ Database=ezp
 
 
 
-# CREATE database if it does not exists
- mysql -uadmin --password=$DB_ENV_MYSQL_PASS --protocol=tcp --host=$DB_PORT_3306_TCP_ADDR -e "CREATE DATABASE IF NOT EXISTS ezp CHARACTER SET=utf8"
+echo "Creating database if it does not exists"
+mysql -uadmin --password=$DB_ENV_MYSQL_PASS --protocol=tcp --host=$DB_PORT_3306_TCP_ADDR -e "CREATE DATABASE IF NOT EXISTS ezp CHARACTER SET=utf8"
