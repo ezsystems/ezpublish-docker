@@ -2,9 +2,9 @@
 
 echo "Installing (pre downloading) ezpublish packages"
 
-PACKAGES="ezwt_extension.ezpkg ezstarrating_extension.ezpkg ezgmaplocation_extension.ezpkg ezdemo_extension.ezpkg ezflow_extension.ezpkg ezcomments_extension.ezpkg ezdemo_classes.ezpkg ezdemo_democontent_clean.ezpkg"
+PACKAGES="ezdemo_site.ezpkg ezwt_extension.ezpkg ezstarrating_extension.ezpkg ezgmaplocation_extension.ezpkg ezdemo_extension.ezpkg ezflow_extension.ezpkg ezdemo_classes.ezpkg ezdemo_democontent.ezpkg"
 # Needs to be set by caller
-#EZ_PACKAGEURL="http://packages.ez.no/ezpublish/5.3/5.3.0alpha1/"
+#EZ_PACKAGEURL="http://packages.ez.no/ezpublish/5.3/5.3.0rc1/"
 
 DOCROOT=""
 PACKAGEREPOSITORY=""

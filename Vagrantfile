@@ -11,7 +11,7 @@ params = {
     # Generates kickstart.ini file with database settings if true
     "kickstart" => "true",
     # Pre downloads packages from provided url if set
-    "packageurl" => "http://packages.ez.no/ezpublish/5.3/5.3.0alpha1/"
+    "packageurl" => "http://packages.ez.no/ezpublish/5.3/5.3.0rc1/"
 }
 
 Vagrant.configure("2") do |config|
