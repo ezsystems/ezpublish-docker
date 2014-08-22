@@ -6,7 +6,6 @@ if [ ! -f ezpublish_legacy/kickstart.ini-dist ]; then
 fi
 
 
-
 echo "Generating kickstart.ini"
 
 echo "[database_choice]
@@ -25,8 +24,3 @@ Socket=
 [site_details]
 Database=ezp
 " > ezpublish_legacy/kickstart.ini
-
-
-
-echo "Creating database if it does not exists"
-mysql -uadmin --password=$DB_ENV_MYSQL_PASS --protocol=tcp --host=$DB_PORT_3306_TCP_ADDR -e "CREATE DATABASE IF NOT EXISTS ezp CHARACTER SET=utf8"
