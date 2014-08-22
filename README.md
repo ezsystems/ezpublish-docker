@@ -7,11 +7,12 @@
 
 This project if done right replaces our current puppet and ansible scripts (parts might make sense to use here!).
 In addition it will cover additional use cases with time, all of them being:
-1. Create a set of official containers/scripts for use for
-- 1. Testing (QA, Support, Dev)
-- 2. Sprint / Release Demo (PS, Sales, PM)
-- 3. Production (internal Ops, but potentially also partners)
-2. Add additional containers for the different platforms we support to be able to automate Behat (BDD) testing across a wide range of platforms and combinations.
+
+1.  Create a set of official containers/scripts for use for
+ 1.  Testing (QA, Support, Dev)
+ 2.  Sprint / Release Demo (PS, Sales, PM)
+ 3.  Production (internal Ops, but potentially also partners)
+2.  Add additional containers for the different platforms we support to be able to automate Behat (BDD) testing across a wide range of platforms and combinations.
 
 Technical goal is to eventually set up the containers in cluster mode, but for testing needs it should support being
 setup in single mode as well. For cluster mode it first needs to be able to do that inside one vm, second step is being
