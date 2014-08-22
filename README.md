@@ -1,23 +1,54 @@
-# Symfony2 with Docker Sample
+# eZ Publish5 in Docker
 
-Sample Symfony2 application on Docker (production and development environment).
+[WIP]eZ Publish installed in docker containers.
 
-**NOTE:** This project requires Vagrant 1.4+.
+
+## Project goal
+
+This project if done right replaces our current puppet and ansible scripts (parts might make sense to use here!).
+In addition it will cover additional use cases with time, all of them being:
+1. Create a set of official containers/scripts for use for
+- 1. Testing (QA, Support, Dev)
+- 2. Sprint / Release Demo (PS, Sales, PM)
+- 3. Production (internal Ops, but potentially also partners)
+2. Add additional containers for the different platforms we support to be able to automate Behat (BDD) testing across a wide range of platforms and combinations.
+
+Technical goal is to eventually set up the containers in cluster mode, but for testing needs it should support being
+setup in single mode as well. For cluster mode it first needs to be able to do that inside one vm, second step is being
+able to spread the load across several hosts (technology choice needed here, this field is currently WIP).
 
 ## Installation
 
 - Ensure you have the following tools installed on our computer:
  - Vagrant (http://vagrantup.com)
- - VirtualBox (http://www.virtualbox.org)
+ - VirtualBox (http://www.virtualbox.org) **NOTE:** Requires Vagrant 1.6.
 - Run `vagrant up`
 
 ## Building images
 
-Use `./build.sh` in project root to build all docker images or run each command yourself.
+Docker images are buildt and started (run) by Vagrant (see VagrantFile), however for manual build either use
+the out of date `./build.sh` in project root to build all docker images or run each command yourself.
 
-### What's inside ?
+## What's inside ?
 
-All images are based on `ubuntu:13.10`
+Host machine is running CoreOS allowing us to not have to maintain the host (autoupdate) and allowing us to
+take advantage of its clustering cababilities in the future.
+
+All container images are currently based on `ubuntu:14.04`
+
+### Docker images
+
+These should be refactored in the future to be the something like the following images:
+- http server with fastcgi
+- php fpm for serving php
+- crontab container with php cli
+
+**Note** We should take more advantage of offical images from Docker, however they now use Debian as it takes less
+space then Ubuntu, and for lowest space use (and memory?) base images should be the same across all our offical images.
+
+And development mode or not should probably rather be a global parameter then special images.
+
+However right now following images exists:
 
 #### ezpublish/apache
 
@@ -37,6 +68,7 @@ Added `xdebug` and `webgrind`.
 
 #### ezpublish/application:prod
 
+!! currently not in use, ezpublish/application:dev is used instead.
 Image based on `ezpublish/apache-php:prod`
 
 Symfony2 application. Code is under `/srv/ezpublish/`.
@@ -46,41 +78,3 @@ Symfony2 application. Code is under `/srv/ezpublish/`.
 Image based on `ezpublish/apache-php:dev`
 
 Image prepared to by run with mounted shared volume with application code to `/srv/ezpublish/`.
-
-
-## Production
-
-TBD
-
-## Development environment
-
-Running docker image.
-
-#### 1. Default command
-
-Default CMD starts apache (it doesn't install composer dependencies or install assets)
-
-Inside the VM command-line run:
-
-`docker run -p 80:80 -v /vagrant/ezpublish/:/srv/ezpublish:rw ezpublish/application:dev`
-
-Now you have running instance of your application under `http://symfony2-docker.playground`
-
-#### 2. /bin/bash 
-
-If you want develop your application inside docker instance, run command in the VM command-line:
-
-`docker run -i -t -p 80:80 -v /vagrant/ezpublish/:/srv/ezpublish:rw ezpublish/application:dev /bin/bash`
-
-Now you should be inside docker instance. 
-
-Next step is run apache: `service apache2 start`.
-
-Application code is in `/srv/ezpublish/`.
-
-## TODO
-
-- Create docker images for databases (MySQL, NoSQL)
-- Symfony2 Simple CRUDs
-- Make possible to pass `TIMEZONE` to `docker build` or `docker run`
-- Make possible to pas `github` to `docker build` (Required sometimes for composer ([see](https://github.com/composer/composer/issues/2366)))

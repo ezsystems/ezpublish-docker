@@ -2,28 +2,30 @@
 # vi: set ft=ruby :
 
 params = {
-    "ip"          => "33.33.33.53",
-    "project"     => "ezpublish-docker",
-    "memory"      => 756,
-    "cpus"        => 1,
-    "timezone"    => "CET",
+    "coreos_channel" => "stable",
+    "ip" => "33.33.33.53",
+    "project" => "ezpublish-docker",
+    "memory" => 512,
+    "cpus" => 1,
+    "timezone" => "CET",
     "db_password" => "youmaychangethis",
     # Generates kickstart.ini file with database settings if true
     "kickstart" => "true",
-    # Pre downloads packages from provided url if set
-    "packageurl" => "http://packages.ez.no/ezpublish/5.3/5.3.0rc1/"
+    # Pre downloads packages from provided url if set for setup wizard speed up
+    "packageurl" => "" # "http://packages.ez.no/ezpublish/5.4/5.4.0alpha1/"
 }
 
 Vagrant.configure("2") do |config|
-  config.vm.box = "trusty64"
-  config.vm.box_url = "https://cloud-images.ubuntu.com/vagrant/trusty/current/trusty-server-cloudimg-amd64-vagrant-disk1.box"
+  config.vm.box = "coreos-%s" % params['coreos_channel']
+  config.vm.box_version = ">= 308.0.1"
+  config.vm.box_url = "http://%s.release.core-os.net/amd64-usr/current/coreos_production_vagrant.json" % params['coreos_channel']
+
+  # Set the Timezone to something useful
+  config.vm.provision :shell, :inline => "echo \"" + params['timezone'] + "\" | sudo tee /etc/timezone"
 
   # Pull in the external docker images we need
   config.vm.provision "docker",
     images: ["ubuntu:trusty", "tutum/mysql"]
-
-  # Set the Timezone to something useful
-  config.vm.provision :shell, :inline => "echo \"" + params['timezone'] + "\" | sudo tee /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata"
 
   config.vm.provision "docker" do |d|
     d.build_image "/vagrant/dockerfiles/apache",          args: "-t 'ezsystems/apache'"
@@ -41,7 +43,7 @@ Vagrant.configure("2") do |config|
       args: "-e MYSQL_PASS=\""+ params['db_password'] + "\""
     d.run "web-1",
       image: "ezsystems/ezpublish:dev",
-      args: "--link db-1:db -n --dns 8.8.8.8 --dns 8.8.4.4 -p 80:80 -p 22 -v '/vagrant/ezpublish/:/var/www:rw' -e EZ_KICKSTART=\""+ params['kickstart'] +"\" -e EZ_PACKAGEURL=\""+ params['packageurl'] +"\""
+      args: "--link db-1:db --dns 8.8.8.8 --dns 8.8.4.4 -p 80:80 -p 22 -v '/vagrant/ezpublish/:/var/www:rw' -e EZ_KICKSTART=\""+ params['kickstart'] +"\" -e EZ_PACKAGEURL=\""+ params['packageurl'] +"\""
   end
 
   config.vm.synced_folder ".", "/vagrant", type: "rsync",
@@ -51,12 +53,20 @@ Vagrant.configure("2") do |config|
   config.vm.network :forwarded_port, guest: 80, host: 8080
   config.vm.network :private_network, ip: params['ip']
 
+  config.vm.hostname = params['project']
+
   config.vm.provider :virtualbox do |vb|
-     vb.name = params['project']
+     vb.check_guest_additions = false
+     vb.functional_vboxsf = false
      vb.gui = false
-     vb.customize ["modifyvm", :id, "--memory", params['memory']]
-     vb.customize ["modifyvm", :id, "--cpus", params['cpus']]
-     vb.customize ["modifyvm", :id, "--ostype", "Ubuntu_64"]
+     vb.memory = params['memory']
+     vb.cpus = params['cpus']
+     vb.customize ["modifyvm", :id, "--ostype", "Linux26_64"]
+  end
+
+  # Vagrant plugin conflict with coreos
+  if Vagrant.has_plugin?("vagrant-vbguest") then
+    config.vbguest.auto_update = false
   end
 
   # caches apt,composer,.. downloads, install with `vagrant plugin install vagrant-cachier`
