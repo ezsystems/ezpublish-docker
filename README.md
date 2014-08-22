@@ -25,6 +25,21 @@ able to spread the load across several hosts (technology choice needed here, thi
  - VirtualBox (http://www.virtualbox.org) **NOTE:** Requires Vagrant 1.6.
 - Run `vagrant up`
 
+#### Known issue
+Assets needs to be generated after setup wizard is done, this might be eZ Publish issue with dev envirment.
+
+To fix:
+- vagrant ssh
+- # Inception: You are inside the vm
+- docker run -i --link db-1:db -v '/vagrant/ezpublish/:/var/www:rw' -t ezsystems/ezpublish:dev /bin/bash
+- # Inception^2: You are inside a identical container to the one running apache & php, with same eZ Publish volume attached
+- cd /var/www
+- php ezpublish/console ezpublish:legacy:assets_install --relative --env dev
+
+That shoudl be it, exit 2 times to get back to your command line.
+
+
+
 ## Building images
 
 Docker images are buildt and started (run) by Vagrant (see VagrantFile), however for manual build either use
