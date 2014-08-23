@@ -51,13 +51,19 @@ All container images are currently based on `ubuntu:14.04`
 
 ### Docker images
 
-These should be refactored in the future to be the something like the following images:
+These should be refactored in the future to be something like the following list of containers:
 - http server with fastcgi
 - php fpm for serving php
 - crontab container with php cli
+- Database: Mysql|Postgres|..
+- Clustering: 
+ - Cache: Memcached|Redis|..
+ - HTTP cache: Varnish|Nginx|..
+ - FS: NFS|GridFS|..  (services like S3 might not need a continer, but could have a contianer acting as proxy)
 
-**Note** We should take more advantage of offical images from Docker, however they now use Debian as it takes less
-space then Ubuntu, and for lowest space use (and memory?) base images should be the same across all our offical images.
+**Note** We should take advantage of offical images from Docker as much as possible, however they now use Debian
+as it takes less space then Ubuntu, and for lowest space use (and memory?) base images should be the same across
+all our offical images.
 
 And development mode or not should probably rather be a global parameter then special images.
 
