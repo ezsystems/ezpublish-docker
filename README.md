@@ -28,7 +28,7 @@ able to spread the load across several hosts (technology choice needed here, thi
 #### Known issue
 Assets needs to be generated after setup wizard is done, this might be eZ Publish issue with dev envirment.
 
-To fix we need to do a 2 level inception getting inside vm and then ezpublish contaner, as that is difficult we just enter bash of a identical one with same eZ Publish volumen attached and same database conatiner linked:
+To fix we need to do a 2 level inception getting inside vm and then ezpublish container, as that is difficult we just enter bash of a identical one with same eZ Publish volumen attached and same database container linked:
 - ```$ vagrant ssh```
 - ```$ docker run -i --link db-1:db -v '/vagrant/ezpublish/:/var/www:rw' -t ezsystems/ezpublish:dev /bin/bash```
 - ```$ cd /var/www```
