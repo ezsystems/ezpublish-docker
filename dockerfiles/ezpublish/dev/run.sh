@@ -20,8 +20,11 @@ sudo setfacl -R -m u:$APACHE_RUN_USER:rwx -m u:`whoami`:rwx \
 sudo setfacl -dR -m u:$APACHE_RUN_USER:rwx -m u:`whoami`:rwx \
      ezpublish/{cache,logs,config,sessions} ezpublish_legacy/{design,extension,settings,var} web
 
-echo "Generate assets for dev env, otherwise they will be missing"
-php ezpublish/console assetic:dump --env dev
+
+echo "Re-generate symlink assets in case rsync was used so asstets added during setup wizards are reachable"
+# php ezpublish/console assetic:dump --env dev
+php ezpublish/console assets:install --symlink --relative --env dev
+php ezpublish/console ezpublish:legacy:assets_install --symlink --relative --env dev
 
 
 # Create ezp database if we intend to run setup wizard (need to be run last to make sure db is up)

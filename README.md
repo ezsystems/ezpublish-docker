@@ -28,17 +28,39 @@ For containers needed see [below](#docker-images).
 - TODO: It is currently not possible to provide database dump, only clean install is currently supported!
 - Run `vagrant up`
 
-#### Known issue
-Assets needs to be generated after setup wizard is done, this might be eZ Publish issue with dev envirment.
+When this is done you should be able to browse to eZ Publish setup wizard by going to http://localhost/:8080
 
-To fix we need to do a 2 level inception getting inside vm and then ezpublish container, as that is difficult we just enter bash of a identical one with same eZ Publish volumen attached and same database container linked:
+#### SSH
+
+##### VM
+
+To enter virual machine:
+- ```vagrant ssh```
+
+From there you can check running continers:
+- ```docker ps```
+
+And inspect the eZ Publish folder which was rsynced into the vm and is used as volume for eZ Publish cotainer:
+- ```ls -al /vagrant/ezpublish/```
+
+
+##### Container
+
+To run php/mysql commands you'll need to reach level 2 inception to get inside vm & the ezpublish container. As that is
+difficult we just enter bash of a identical container with same eZ Publish volumen attached & database container linked:
 - ```vagrant ssh```
 - ```docker run -i --link db-1:db -v '/vagrant/ezpublish/:/var/www:rw' -t ezsystems/ezpublish:dev /bin/bash```
+
+From there you can run symfony commands like normal:
 - ```cd /var/www```
-- ```php ezpublish/console ezpublish:legacy:assets_install --symlink --relative --env dev```
+- ```php ezpublish/console ezpublish:legacy:assets_install --symlink --relative --env dev``
 
-That should be it, ```exit``` 2 times to get back to your command line!
+You can also access mysql from this contianer as it has client installed:
+- ```mysql -uadmin --password=$DB_ENV_MYSQL_PASS --protocol=tcp --host=$DB_PORT_3306_TCP_ADDR```
 
+( For other environment variables see ```env```, basically these typically comes from parent images and links )
+
+To get out, type ```exit``` two times ;)
 
 ## Building images
 
@@ -59,7 +81,7 @@ These should be refactored in the future to be something like the following list
 - php fpm for serving php
 - crontab container with php cli
 - Database: Mysql|Postgres|..
-- Clustering: 
+- Clustering:
  - Cache: Memcached|Redis|..
  - HTTP cache: Varnish|Nginx|..
  - FS: NFS|GridFS|..  (services like S3 might not need a continer, but could have a contianer acting as proxy)
