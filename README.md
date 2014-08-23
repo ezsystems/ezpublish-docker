@@ -1,12 +1,12 @@
 # eZ Publish5 in Docker
 
-[WIP]eZ Publish installed in docker containers.
-
+eZ Publish Inception, installed in docker containers, inside a virtual machine (configurable in VagrantFile).
+Project is work in progress!
 
 ## Project goal
 
-This project if done right replaces our current puppet and ansible scripts (parts might make sense to use here!).
-In addition it will cover additional use cases with time, all of them being:
+This project, if done right, replaces our current puppet and ansible scripts (parts might make sense to reuse here).
+In addition it will cover additional use cases with time, including:
 
 1.  Create a set of official containers/scripts for use for
  1.  Testing (QA, Support, Dev)
@@ -16,14 +16,16 @@ In addition it will cover additional use cases with time, all of them being:
 
 Technical goal is to eventually set up the containers in cluster mode, but for testing needs it should support being
 setup in single mode as well. For cluster mode it first needs to be able to do that inside one vm, second step is being
-able to spread the load across several hosts (technology choice needed here, this field is currently WIP). For containers
-needed see [below](#docker-images).
+able to spread the load across several hosts (this field is extremely volatile at time of writing; mesos & 99 others).
+For containers needed see [below](#docker-images).
 
 ## Installation
 
 - Ensure you have the following tools installed on our computer:
- - Vagrant (http://vagrantup.com)
- - VirtualBox (http://www.virtualbox.org) **NOTE:** Requires Vagrant 1.6.
+ - Vagrant 1.6+ (http://vagrantup.com)
+ - VirtualBox 4.3.12+ (http://www.virtualbox.org)
+- Put your eZ Publish direclty inside "ezpublish/" directory, or symlink it there (iwerwriting the folder)
+- TODO: It is currently not possible to provide database dump, only clean install is currently supported!
 - Run `vagrant up`
 
 #### Known issue
