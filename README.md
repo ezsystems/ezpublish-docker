@@ -33,7 +33,7 @@ To fix we need to do a 2 level inception getting inside vm and then ezpublish co
 - ```vagrant ssh```
 - ```docker run -i --link db-1:db -v '/vagrant/ezpublish/:/var/www:rw' -t ezsystems/ezpublish:dev /bin/bash```
 - ```cd /var/www```
-- ```php ezpublish/console ezpublish:legacy:assets_install --relative --env dev```
+- ```php ezpublish/console ezpublish:legacy:assets_install --symlink --relative --env dev```
 
 That should be it, ```exit``` 2 times to get back to your command line!
 
