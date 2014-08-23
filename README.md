@@ -16,7 +16,8 @@ In addition it will cover additional use cases with time, all of them being:
 
 Technical goal is to eventually set up the containers in cluster mode, but for testing needs it should support being
 setup in single mode as well. For cluster mode it first needs to be able to do that inside one vm, second step is being
-able to spread the load across several hosts (technology choice needed here, this field is currently WIP).
+able to spread the load across several hosts (technology choice needed here, this field is currently WIP). For containers
+needed see [below](#docker-images).
 
 ## Installation
 
