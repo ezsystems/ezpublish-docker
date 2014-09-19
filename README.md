@@ -5,74 +5,107 @@ Project is work in progress!
 
 ## Project goal
 
-This project, if done right, replaces our current puppet and ansible scripts (parts might make sense to reuse here).
-In addition it will cover additional use cases with time, including:
+Cover the following use cases (with time), including (in prioritized order):
 
-1.  Create a set of official containers/scripts for use for
- 1.  Testing (QA, Support, Dev)
- 2.  Sprint / Release Demo (PS, Sales, PM)
+1.  Single server images, for use by:
+ 1.  Sprint / Release Demo (PS, Sales, PM)
+ 2.  Testing (QA, Support, Dev)
  3.  Production (internal Ops, but potentially also partners)
-2.  Add additional containers for the different platforms we support to be able to automate Behat (BDD) testing across a wide range of platforms and combinations.
-
-Technical goal is to eventually set up the containers in cluster mode, but for testing needs it should support being
-setup in single mode as well. For cluster mode it first needs to be able to do that inside one vm, second step is being
-able to spread the load across several hosts (this field is extremely volatile at time of writing; mesos & 99 others).
-For containers needed see [below](#docker-images).
-
-## Installation
-
-- Ensure you have the following tools installed on our computer:
- - Vagrant 1.6+ (http://vagrantup.com)
- - VirtualBox 4.3.12+ (http://www.virtualbox.org)
-- Put your eZ Publish direclty inside "ezpublish/" directory, or symlink it there (iwerwriting the folder)
-- TODO: It is currently not possible to provide database dump, only clean install is currently supported!
-- Run `vagrant up`
-
-When this is done you should be able to browse to eZ Publish setup wizard by going to http://localhost/:8080
-
-#### SSH
-
-##### VM
-
-To enter virual machine:
-- ```vagrant ssh```
-
-From there you can check running continers:
-- ```docker ps```
-
-And inspect the eZ Publish folder which was rsynced into the vm and is used as volume for eZ Publish cotainer:
-- ```ls -al /vagrant/ezpublish/```
+2.  Cluster support (Memcached, Varnish4, DFS)
+3.  Add additional containers for the different platforms we support to be able to automate Behat (BDD) testing across
+    a wide range of platforms and combinations.
+4. (outside scope of this Repository) Investigate use of Meos++ for use with massive clustering
 
 
-##### Container
+### Spec
 
-To run php/mysql commands you'll need to reach level 2 inception to get inside vm & the ezpublish container. As that is
-difficult we just enter bash of a identical container with same eZ Publish volumen attached & database container linked:
-- ```vagrant ssh```
-- ```docker run -i --link db-1:db -v '/vagrant/ezpublish/:/var/www:rw' -t ezsystems/ezpublish:dev /bin/bash```
+#### "Host" (VM Guest when using Vagrant)
 
-From there you can run symfony commands like normal:
-- ```cd /var/www```
-- ```php ezpublish/console ezpublish:legacy:assets_install --symlink --relative --env dev``
+Host machine is running CoreOS allowing us to not have to maintain the host (autoupdate), have a light host OS,
+and allowing us to take advantage of its clustering capabilities in the future.
 
-You can also access mysql from this contianer as it has client installed:
-- ```mysql -uadmin --password=$DB_ENV_MYSQL_PASS --protocol=tcp --host=$DB_PORT_3306_TCP_ADDR```
+eZ Publish is placed in .vagrant/ezpublish as mounted by Vagrant on boot, this is used as volume for all
+containers that need access to it.
 
-( For other environment variables see ```env```, basically these typically comes from parent images and links )
+    Port (Listen): 80
+    Software: CoreOs
 
-To get out, type ```exit``` two times ;)
+#### Configuration
 
-## Building images
+In the beginning VagrantFile will be used, and config is up to user to adjust eZ Publish install and VagrantFile.
 
-Docker images are buildt and started (run) by Vagrant (see VagrantFile), however for manual build either use
-the out of date `./build.sh` in project root to build all docker images or run each command yourself.
+However eventually the following needs to be configured in a "Docker way"(TM):
+- Container linking (typically fig or Meos for cluster setup or manually using Weave)
+- Configuring of eZ Publish (typically using Ansible)
+    - database (example: mysql/postgres/oracle/..)
+    - cache (example: memcached/file/redis/..)
+    - http cache (example: varnish4/nginx/file/..)
+    - search (example: solr/es/db/..)
+    - io (example: file/nfs/s3/..)
 
-## What's inside ?
 
-Host machine is running CoreOS allowing us to not have to maintain the host (autoupdate) and allowing us to
-take advantage of its clustering cababilities in the future.
+#### Docker Images
 
-All container images are currently based on `ubuntu:14.04`
+As much as possible we would like to reuse existing images out there by contributing features to them.
+A lot of existing images exists for ubuntu and debian.
+
+##### Images varying by Base
+
+Base images are provided by Docker, and the once we would like to use are currently (prioritized):
+- `centos:centos7`
+- `ubuntu:trusty`
+- `debian:wheezy` (for later, might make sense ot wait for `debian:jessie`)
+- `opensuse:latest` (for later, if/when we re add suse to supported platforms)
+
+For test coverage of our different supported platforms we would thus like to eventually have the following images
+either from docker hub or home grown implemented using all the listed base images above:
+
+###### DB
+
+    Port (Listen): 80
+    CMD: start httpd service
+    Software: Nginx, Apache
+    Configuration:
+        FastCGI on port 9000
+        VirtualHost config with <volume>/web as configured as web root (at container start before starting server?)
+
+
+###### HTTPD
+
+    Port (Listen): 80
+    CMD: start httpd service
+    Software: Nginx, Apache
+    Volume: .vagrant/ezpublish mounted to for instance /var/www
+    Configuration:
+        FastCGI on port 9000
+        VirtualHost config with <volume-mount-dir>/web as configured as web root (at docker run before starting server?)
+
+
+###### PHP
+
+Image to use both as php-fpm (fast cgi) container, as cronjob container running php scripts and can be used
+for starting own instance on demand for running own php commands against the eZ install.
+
+    Port (Listen): 9000
+    Software: php-fpm, php-cli
+    Volume: .vagrant/ezpublish mounted to for instance /var/www
+    Configuration:
+        Configure php-fpm to execute on <volume-mount-dir>/web.
+
+Should probably be a dev version extending this adding all kind of debug things like xdebug and modifying settings.
+
+
+##### Other images
+
+List of images that does not need to be strictly tested on the misc distros.
+TBD but if we continue with a Reference platform these should use CentOS, if not we are free to choose.
+
+###### Memcached
+###### Varnish v4
+###### Solr
+###### Elastic Search
+###### NFS
+
 
 ### Docker images
 
@@ -94,31 +127,50 @@ And development mode or not should probably rather be a global parameter then sp
 
 However right now following images exists:
 
-#### ezpublish/apache
+## Installation
 
-Clean apache2 docker image.
+NB: This section reflects current status with images not reflecting spec above!
 
-#### ezpublish/apache-php:prod
+- Ensure you have the following tools installed on our computer:
+ - Vagrant 1.6+ (http://vagrantup.com)
+ - VirtualBox 4.3.12+ (http://www.virtualbox.org)
+- Put your eZ Publish directly inside "ezpublish/" directory, or symlink it there (overwriting the folder)
+- TODO: It is currently not supported to provide database dump, only clean install is currently supported!
+- Run `vagrant up`
 
-Image based on `ezpublish/apache`.
+When this is done you should be able to browse to eZ Publish setup wizard by going to http://localhost/:8080
 
-Apache2 with php 5.5. Also installed `curl` and `composer`.
+#### SSH
 
-#### ezpublish/apache-php:dev
+##### VM
 
-Image based on `ezpublish/apache-php:prod`.
+To enter virual machine:
+- ```vagrant ssh```
 
-Added `xdebug` and `webgrind`.
+From there you can check running containers:
+- ```docker ps```
 
-#### ezpublish/application:prod
+And inspect the eZ Publish folder which was rsynced into the vm and is used as volume for eZ Publish cotainer:
+- ```ls -al /vagrant/ezpublish/```
 
-!! currently not in use, ezpublish/application:dev is used instead.
-Image based on `ezpublish/apache-php:prod`
 
-Symfony2 application. Code is under `/srv/ezpublish/`.
+##### Container
 
-#### ezpublish/application:dev
+To run php/mysql commands you'll need to get inside vm & the ezpublish container. As that is
+difficult we just enter bash of a identical container with same eZ Publish volumen attached & database container linked:
+- ```vagrant ssh```
+- ```docker run -i --link db-1:db -v '/vagrant/ezpublish/:/var/www:rw' -t ezsystems/ezpublish:dev /bin/bash```
 
-Image based on `ezpublish/apache-php:dev`
+From there you can run symfony commands like normal:
+- ```cd /var/www```
+- ```php ezpublish/console ezpublish:legacy:assets_install --symlink --relative --env dev``
 
-Image prepared to by run with mounted shared volume with application code to `/srv/ezpublish/`.
+You can also access mysql from this contianer as it has client installed:
+- ```mysql -uadmin --password=$DB_ENV_MYSQL_PASS --protocol=tcp --host=$DB_PORT_3306_TCP_ADDR```
+
+( For other environment variables see ```env```, basically these typically comes from parent images and links )
+
+To get out, type ```exit``` two times ;)
+
+
+
