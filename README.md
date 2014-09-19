@@ -62,12 +62,11 @@ either from docker hub or home grown implemented using all the listed base image
 
 ###### DB
 
-    Port (Listen): 80
-    CMD: start httpd service
-    Software: Nginx, Apache
-    Configuration:
-        FastCGI on port 9000
-        VirtualHost config with <volume>/web as configured as web root (at container start before starting server?)
+    Port (Listen): <depends on server>
+    CMD: start db service
+    Software: mysql/mariadb, postgres, ..
+    On run:
+        Should 1. create database and give rights to a user, 2. accept existing database dump
 
 
 ###### HTTPD
