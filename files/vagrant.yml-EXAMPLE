@@ -20,5 +20,6 @@ ezpublish:
 
 debug:
     disable_rsync: false
+    disable_docker_pull: false
 
 

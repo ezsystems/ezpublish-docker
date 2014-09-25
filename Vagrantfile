@@ -14,8 +14,10 @@ Vagrant.configure("2") do |config|
   config.vm.provision :shell, :inline => "echo \"" + vagrantConfig['virtualmachine']['timezone'] + "\" | sudo tee /etc/timezone"
 
   # Pull in the external docker images we need
-  config.vm.provision "docker",
-    images: ["ubuntu:trusty", "tutum/mysql"]
+  if vagrantConfig['debug']['disable_docker_pull'] == false
+    config.vm.provision "docker",
+      images: ["ubuntu:trusty", "tutum/mysql"]
+  end
 
   config.vm.provision "docker" do |d|
     d.build_image "/vagrant/dockerfiles/apache",          args: "-t 'ezsystems/apache'"
@@ -46,9 +48,11 @@ Vagrant.configure("2") do |config|
     echo '#{ssh_authorized_keys_file }' > /home/core/.ssh/authorized_keys2 && chmod 600 /home/core/.ssh/authorized_keys2 && chown core:core /home/core/.ssh/authorized_keys2
   "
 
-  config.vm.synced_folder ".", "/vagrant", type: "rsync",
-    rsync__exclude: [ ".git/", "ezpublish/.git/"],
-    rsync__auto: true
+  if vagrantConfig['debug']['disable_rsync'] == false
+    config.vm.synced_folder ".", "/vagrant", type: "rsync",
+      rsync__exclude: [ ".git/", "ezpublish/.git/"],
+      rsync__auto: true
+  end
 
   config.vm.network :forwarded_port, guest: 80, host: 8080
   config.vm.network :private_network, ip: vagrantConfig['virtualmachine']['network']['private_network_ip']
