@@ -1,0 +1,24 @@
+---
+
+virtualmachine:
+    ram: 512
+    cpus: 1
+    timezone: CET
+    gui: false
+    coreos_channel: stable
+    hostname: ezpublish-docker #was named "project"
+
+    network:
+        private_network_ip: 33.33.33.53
+
+dbserver:
+    password: youmaychangethis
+
+ezpublish:
+    kickstart: "true"
+    packageurl: http://packages.ez.no/ezpublish/5.4/5.4.0alpha1/
+
+debug:
+    disable_rsync: false
+
+

@@ -1,27 +1,17 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-params = {
-    "coreos_channel" => "stable",
-    "ip" => "33.33.33.53",
-    "project" => "ezpublish-docker",
-    "memory" => 512,
-    "cpus" => 1,
-    "timezone" => "CET",
-    "db_password" => "youmaychangethis",
-    # Generates kickstart.ini file with database settings if true
-    "kickstart" => "true",
-    # Pre downloads packages from provided url if set for setup wizard speed up
-    "packageurl" => "" # "http://packages.ez.no/ezpublish/5.4/5.4.0alpha1/"
-}
+require 'yaml'
+
+vagrantConfig = YAML::load_file( "files/vagrant.yml" )
 
 Vagrant.configure("2") do |config|
-  config.vm.box = "coreos-%s" % params['coreos_channel']
+  config.vm.box = "coreos-%s" % vagrantConfig['virtualmachine']['coreos_channel']
   config.vm.box_version = ">= 308.0.1"
-  config.vm.box_url = "http://%s.release.core-os.net/amd64-usr/current/coreos_production_vagrant.json" % params['coreos_channel']
+  config.vm.box_url = "http://%s.release.core-os.net/amd64-usr/current/coreos_production_vagrant.json" % vagrantConfig['virtualmachine']['coreos_channel']
 
   # Set the Timezone to something useful
-  config.vm.provision :shell, :inline => "echo \"" + params['timezone'] + "\" | sudo tee /etc/timezone"
+  config.vm.provision :shell, :inline => "echo \"" + vagrantConfig['virtualmachine']['timezone'] + "\" | sudo tee /etc/timezone"
 
   # Pull in the external docker images we need
   config.vm.provision "docker",
@@ -40,10 +30,10 @@ Vagrant.configure("2") do |config|
     # todo: we should persist the data to db dir in this folder (see https://github.com/tutumcloud/tutum-docker-mysql)
     d.run "db-1",
       image: "tutum/mysql",
-      args: "-e MYSQL_PASS=\""+ params['db_password'] + "\""
+      args: "-e MYSQL_PASS=\""+ vagrantConfig['dbserver']['password'] + "\""
     d.run "web-1",
       image: "ezsystems/ezpublish:dev",
-      args: "--link db-1:db --dns 8.8.8.8 --dns 8.8.4.4 -p 80:80 -p 22 -v '/vagrant/ezpublish/:/var/www:rw' -e EZ_KICKSTART=\""+ params['kickstart'] +"\" -e EZ_PACKAGEURL=\""+ params['packageurl'] +"\""
+      args: "--link db-1:db --dns 8.8.8.8 --dns 8.8.4.4 -p 80:80 -p 22 -v '/vagrant/ezpublish/:/var/www:rw' -e EZ_KICKSTART=\""+ vagrantConfig['ezpublish']['kickstart'] +"\" -e EZ_PACKAGEURL=\""+ vagrantConfig['ezpublish']['packageurl'] +"\""
   end
 
   config.vm.synced_folder ".", "/vagrant", type: "rsync",
@@ -51,16 +41,16 @@ Vagrant.configure("2") do |config|
     rsync__auto: true
 
   config.vm.network :forwarded_port, guest: 80, host: 8080
-  config.vm.network :private_network, ip: params['ip']
+  config.vm.network :private_network, ip: vagrantConfig['virtualmachine']['network']['private_network_ip']
 
-  config.vm.hostname = params['project']
+  config.vm.hostname = vagrantConfig['virtualmachine']['hostname']
 
   config.vm.provider :virtualbox do |vb|
      vb.check_guest_additions = false
      vb.functional_vboxsf = false
      vb.gui = false
-     vb.memory = params['memory']
-     vb.cpus = params['cpus']
+     vb.memory = vagrantConfig['virtualmachine']['ram']
+     vb.cpus = vagrantConfig['virtualmachine']['cpus']
      vb.customize ["modifyvm", :id, "--ostype", "Linux26_64"]
   end
 
