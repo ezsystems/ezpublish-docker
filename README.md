@@ -135,6 +135,7 @@ NB: This section reflects current status with images not reflecting spec above!
  - VirtualBox 4.3.12+ (http://www.virtualbox.org)
 - Put your eZ Publish directly inside "ezpublish/" directory, or symlink it there (overwriting the folder)
 - TODO: It is currently not supported to provide database dump, only clean install is currently supported!
+- Copy files/vagrant.yml-EXAMPLE to files/vagrant.yml. Then adjust settings in .yml file as needed
 - Run `vagrant up`
 
 When this is done you should be able to browse to eZ Publish setup wizard by going to http://localhost/:8080
