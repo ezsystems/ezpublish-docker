@@ -135,6 +135,7 @@ NB: This section reflects current status with images not reflecting spec above!
  - VirtualBox 4.3.12+ (http://www.virtualbox.org)
 - Put your eZ Publish directly inside "ezpublish/" directory, or symlink it there (overwriting the folder)
 - TODO: It is currently not supported to provide database dump, only clean install is currently supported!
+- Copy files/vagrant.yml-EXAMPLE to files/vagrant.yml. Then adjust settings in .yml file as needed
 - Run `vagrant up`
 
 When this is done you should be able to browse to eZ Publish setup wizard by going to http://localhost/:8080
@@ -173,3 +174,9 @@ To get out, type ```exit``` two times ;)
 
 
 
+##### Running vagrant from windows
+
+It is possible to run this from Windows. However, it is not possible to use synced_folder with type virtualbox ( seems to be some incompatibility between virtualbox and docker's provision plugin in Vagrant or between CoreOS and Vagrant ? )
+So, you need to use rsync on Windows too. In order to do this, you need rsync and ssh.
+Easiest way to accomplish this is to install MinGW ( minimalist GNU for Windows ), http://sourceforge.net/projects/mingw/files/MSYS/Extension/rsync/rsync-3.0.8-1/
+Download wingw-get-setup.exe and install openssh and rsync. You should then add "C:\MinGW\msys\1.0\bin" to your path and you should be all set to run "vagrant up"
