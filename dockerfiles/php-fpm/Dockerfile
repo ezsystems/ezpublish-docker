@@ -15,7 +15,16 @@ ENV LANG en_US.UTF-8
 #ENV APACHE_LOG_DIR      /var/log/apache2
 
 RUN apt-get update -y && apt-get install -y \
-    php5-fpm
+    php5-fpm \
+    php5-mysql \
+    php5-json \
+    php5-xsl \
+    php5-intl \
+    php5-mcrypt \
+    php5-gd \
+    php5-curl \
+    curl \
+    mysql-client
 
 # Set timezone
 RUN echo $TIMEZONE > /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata
