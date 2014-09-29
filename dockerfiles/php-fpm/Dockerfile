@@ -1,0 +1,35 @@
+FROM ubuntu:trusty
+
+ENV DEBIAN_FRONTEND noninteractive
+ENV MEMORY_LIMIT 256M
+ENV PORT 9000
+
+RUN locale-gen en_US en_US.UTF-8
+ENV LANG en_US.UTF-8
+
+#ENV APACHE_RUN_USER     www-data
+#ENV APACHE_RUN_GROUP    www-data
+#ENV APACHE_PID_FILE     /var/run/apache2.pid
+#ENV APACHE_RUN_DIR      /var/run/apache2
+#ENV APACHE_LOCK_DIR     /var/lock/apache2
+#ENV APACHE_LOG_DIR      /var/log/apache2
+
+RUN apt-get update -y && apt-get install -y \
+    php5-fpm
+
+# Set timezone
+RUN echo $TIMEZONE > /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata
+RUN sed -i "s@^;date.timezone =.*@date.timezone = $TIMEZONE@" /etc/php5/*/php.ini
+
+# Set memory limit
+RUN sed -i "s@^memory_limit =.*@memory_limit = $MEMORY_LIMIT@" /etc/php5/fpm/php.ini
+
+# Disable daemonizeing php-fpm
+RUN sed -i "s@^;daemonize = yes*@daemonize = no@" /etc/php5/fpm/php-fpm.conf
+
+# Set listen socket for php-fpm
+RUN sed -i "s@^listen = /var/run/php5-fpm.sock@listen = $PORT@" /etc/php5/fpm/pool.d/www.conf
+
+CMD ["/usr/sbin/php5-fpm"]
+
+EXPOSE 9000
