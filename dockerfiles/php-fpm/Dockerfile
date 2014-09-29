@@ -1,6 +1,7 @@
 FROM ubuntu:trusty
 
 ENV DEBIAN_FRONTEND noninteractive
+ENV TIMEZONE Europe/Warsaw
 ENV MEMORY_LIMIT 256M
 ENV PORT 9000
 
