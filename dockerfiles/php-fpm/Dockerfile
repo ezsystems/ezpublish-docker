@@ -3,6 +3,7 @@ FROM ubuntu:trusty
 ENV DEBIAN_FRONTEND noninteractive
 ENV TIMEZONE Europe/Warsaw
 ENV MEMORY_LIMIT 256M
+ENV MAX_EXECUTION_TIME 180
 ENV PORT 9000
 
 RUN locale-gen en_US en_US.UTF-8
@@ -33,6 +34,9 @@ RUN sed -i "s@^;date.timezone =.*@date.timezone = $TIMEZONE@" /etc/php5/*/php.in
 
 # Set memory limit
 RUN sed -i "s@^memory_limit =.*@memory_limit = $MEMORY_LIMIT@" /etc/php5/fpm/php.ini
+
+# Set Max execution time
+RUN sed -i "s@^max_execution_time = .*@max_execution_time = $MAX_EXECUTION_TIME@" /etc/php5/fpm/php.ini
 
 # Disable daemonizeing php-fpm
 RUN sed -i "s@^;daemonize = yes*@daemonize = no@" /etc/php5/fpm/php-fpm.conf
