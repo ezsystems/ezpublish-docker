@@ -1,0 +1,12 @@
+Remove all containers for a particular image:
+docker ps -a | grep 'nginx:latest' | awk '{print $1}' | xargs docker rm
+
+
+Remove all stoped containers
+docker ps -a | grep 'Exited' | awk '{print $1}' | xargs docker rm
+
+
+Attach to a running container
+docker inspect --format "{{ .State.Pid }}" [container_id]
+nsenter --target [pid] --mount --uts --ipc --net --pid
+
