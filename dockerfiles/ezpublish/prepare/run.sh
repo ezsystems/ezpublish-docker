@@ -3,6 +3,9 @@
 # Make sure we are within root www dir
 cd /var/www/
 
+
+echo `date` kickstart=$EZ_KICKSTART > /vlog.txt
+
 # Prepare for setup wizard if requested
 if [ "$EZ_KICKSTART" = "true" ]; then
   /generate_kickstart_file.sh
@@ -33,6 +36,3 @@ if [ "$EZ_KICKSTART" = "true" ]; then
   mysql -uadmin --password=$DB_ENV_MYSQL_PASS --protocol=tcp --host=$DB_PORT_3306_TCP_ADDR -e "CREATE DATABASE IF NOT EXISTS ezp CHARACTER SET=utf8"
 fi
 
-
-# start services
-exec supervisord -n
