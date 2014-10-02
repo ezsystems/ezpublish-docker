@@ -10,3 +10,5 @@ Attach to a running container
 docker inspect --format "{{ .State.Pid }}" [container_id]
 nsenter --target [pid] --mount --uts --ipc --net --pid
 
+Attach to a given container ( one liner )
+name="web-1"; container=`docker ps -a | grep "$name " | awk '{print $1}'`; pid=`docker inspect --format "{{ .State.Pid }}" $container`; nsenter --target $pid --mount --uts --ipc --net --pid
