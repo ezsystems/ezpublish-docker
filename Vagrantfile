@@ -25,7 +25,6 @@ Vagrant.configure("2") do |config|
     d.build_image "/vagrant/dockerfiles/php-fpm",          args: "-t 'ezsystems/php-fpm'"
     d.build_image "/vagrant/dockerfiles/php-cli/base",         args: "-t 'ezsystems/php-cli:base'"
     d.build_image "/vagrant/dockerfiles/php-cli",         args: "-t 'ezsystems/php-cli'"
-    #d.build_image "/vagrant/dockerfiles/ezpublish/prod", args: "-t 'ezsystems/ezpublish:prod'"
     d.build_image "/vagrant/dockerfiles/ezpublish/prepare",   args: "-t 'ezsystems/ezpublish:prepare'"
   end
 
