@@ -20,13 +20,16 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.provision "docker" do |d|
+    d.build_image "/vagrant/dockerfiles/ubuntu",          args: "-t 'ezsystems/ubuntu:apt-get'"
     d.build_image "/vagrant/dockerfiles/nginx",          args: "-t 'ezsystems/nginx'"
     d.build_image "/vagrant/dockerfiles/php-fpm",          args: "-t 'ezsystems/php-fpm'"
     d.build_image "/vagrant/dockerfiles/apache",          args: "-t 'ezsystems/apache'"
     d.build_image "/vagrant/dockerfiles/apache-php/prod", args: "-t 'ezsystems/apache-php:prod'"
     d.build_image "/vagrant/dockerfiles/apache-php/dev",  args: "-t 'ezsystems/apache-php:dev'"
+    d.build_image "/vagrant/dockerfiles/php-cli/base",         args: "-t 'ezsystems/php-cli:base'"
+    d.build_image "/vagrant/dockerfiles/php-cli",         args: "-t 'ezsystems/php-cli'"
     #d.build_image "/vagrant/dockerfiles/ezpublish/prod", args: "-t 'ezsystems/ezpublish:prod'"
-    d.build_image "/vagrant/dockerfiles/ezpublish/dev",   args: "-t 'ezsystems/ezpublish:dev'"
+    d.build_image "/vagrant/dockerfiles/ezpublish/prepare",   args: "-t 'ezsystems/ezpublish:prepare'"
   end
 
   # Startup the docker images we need
@@ -35,9 +38,10 @@ Vagrant.configure("2") do |config|
     d.run "db-1",
       image: "tutum/mysql",
       args: "-e MYSQL_PASS=\""+ vagrantConfig['dbserver']['password'] + "\""
-    d.run "web-1",
-      image: "ezsystems/ezpublish:dev",
-      args: "--link db-1:db --dns 8.8.8.8 --dns 8.8.4.4 -p 80:80 -p 22 -v '/vagrant/ezpublish/:/var/www:rw' -e EZ_KICKSTART=\""+ vagrantConfig['ezpublish']['kickstart'] +"\" -e EZ_PACKAGEURL=\""+ vagrantConfig['ezpublish']['packageurl'] +"\""
+    d.run "prepare",
+      image: "ezsystems/ezpublish:prepare",
+      args: "--rm --link db-1:db --dns 8.8.8.8 --dns 8.8.4.4 -p 80:80 -p 22 -v '/vagrant/ezpublish/:/var/www:rw' -e EZ_KICKSTART=\""+ vagrantConfig['ezpublish']['kickstart'] +"\" -e EZ_PACKAGEURL=\""+ vagrantConfig['ezpublish']['packageurl'] +"\"",
+      daemonize: false
     d.run "php-fpm",
       image: "ezsystems/php-fpm",
       args: "--link db-1:db --dns 8.8.8.8 --dns 8.8.4.4 -p 22 -v '/vagrant/ezpublish/:/var/www:rw' -e EZ_KICKSTART=\""+ vagrantConfig['ezpublish']['kickstart'] +"\" -e EZ_PACKAGEURL=\""+ vagrantConfig['ezpublish']['packageurl'] +"\""
