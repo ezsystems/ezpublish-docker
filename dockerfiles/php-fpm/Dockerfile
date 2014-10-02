@@ -1,4 +1,4 @@
-FROM ubuntu:trusty
+FROM ezsystems/ubuntu:apt-get
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV TIMEZONE Europe/Warsaw
@@ -16,7 +16,7 @@ ENV LANG en_US.UTF-8
 #ENV APACHE_LOCK_DIR     /var/lock/apache2
 #ENV APACHE_LOG_DIR      /var/log/apache2
 
-RUN apt-get update -y && apt-get install -y \
+RUN apt-get install -y \
     php5-fpm \
     php5-mysql \
     php5-json \

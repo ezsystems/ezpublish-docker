@@ -1,4 +1,4 @@
-FROM ubuntu:trusty
+FROM ezsystems/ubuntu:apt-get
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -12,7 +12,7 @@ ENV DEBIAN_FRONTEND noninteractive
 ENV PORT 80
 ENV BASEDIR /var/www
 
-RUN apt-get update -y && apt-get install -y \
+RUN apt-get install -y \
     nginx
 
 
