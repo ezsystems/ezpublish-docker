@@ -17,6 +17,4 @@ sed -i "s@%BASEDIR%@${BASEDIR}@" /etc/nginx/sites-available/ezpublish
 
 echo "fastcgi_read_timeout $FASTCGI_READ_TIMEOUT;" > /etc/nginx/conf.d/fastcgi_read_timeout.conf
 
-#echo "while true; do echo hello world; sleep 1; done" > /a.sh; chmod a+x /a.sh
-#/a.sh
 /usr/sbin/nginx
