@@ -32,6 +32,9 @@ RUN sed -i "s@^memory_limit =.*@memory_limit = $MEMORY_LIMIT@" /etc/php5/fpm/php
 # Set Max execution time
 RUN sed -i "s@^max_execution_time = .*@max_execution_time = $MAX_EXECUTION_TIME@" /etc/php5/fpm/php.ini
 
+# Set Debug level
+#RUN sed -i "s@^;log_level = notice@log_level = debug@" /etc/php5/fpm/php-fpm.conf
+
 # Disable daemonizeing php-fpm
 RUN sed -i "s@^;daemonize = yes*@daemonize = no@" /etc/php5/fpm/php-fpm.conf
 
