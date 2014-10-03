@@ -33,6 +33,6 @@ php ezpublish/console ezpublish:legacy:assets_install --symlink --relative --env
 # Create ezp database if we intend to run setup wizard (need to be run last to make sure db is up)
 if [ "$EZ_KICKSTART" = "true" ]; then
   echo "Creating database if it does not exists"
-  mysql -uadmin --password=$DB_ENV_MYSQL_PASS --protocol=tcp --host=$DB_PORT_3306_TCP_ADDR -e "CREATE DATABASE IF NOT EXISTS ezp CHARACTER SET=utf8"
+  mysql -uadmin --password=$DB_ENV_MYSQL_PASS --protocol=tcp --host=db -e "CREATE DATABASE IF NOT EXISTS ezp CHARACTER SET=utf8"
 fi
 
