@@ -5,4 +5,4 @@ FROM ubuntu:trusty
 
 RUN apt-get update -y
 
-CMD ["/usr/bin/true"]
+CMD ["/bin/true"]
