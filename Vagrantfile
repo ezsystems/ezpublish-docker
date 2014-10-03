@@ -31,9 +31,13 @@ Vagrant.configure("2") do |config|
   # Startup the docker images we need
   config.vm.provision "docker" do |d|
     # todo: we should persist the data to db dir in this folder (see https://github.com/tutumcloud/tutum-docker-mysql)
+    d.run "db-vol",
+      image: "ezsystems/ubuntu:apt-get",
+      args: "-v /var/lib/mysql",
+      daemonize: false
     d.run "db-1",
       image: "tutum/mysql",
-      args: "-e MYSQL_PASS=\""+ vagrantConfig['dbserver']['password'] + "\""
+      args: "--volumes-from db-vol -e MYSQL_PASS=\""+ vagrantConfig['dbserver']['password'] + "\""
     d.run "prepare",
       image: "ezsystems/ezpublish:prepare",
       args: "--rm --link db-1:db --dns 8.8.8.8 --dns 8.8.4.4 -v '/vagrant/ezpublish/:/var/www:rw' -e EZ_KICKSTART=\""+ vagrantConfig['ezpublish']['kickstart'] +"\" -e EZ_PACKAGEURL=\""+ vagrantConfig['ezpublish']['packageurl'] +"\"",
