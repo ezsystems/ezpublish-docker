@@ -2,7 +2,7 @@
 
 MAXTRY=10
 
-# db container might not be ready, so let's wait for it such case
+# db container might not be ready, so let's wait for it in such case
 function createMysqlDatabase
 {
     local DBUP
