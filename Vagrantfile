@@ -30,10 +30,9 @@ Vagrant.configure("2") do |config|
 
   # Startup the docker images we need
   config.vm.provision "docker" do |d|
-    # todo: we should persist the data to db dir in this folder (see https://github.com/tutumcloud/tutum-docker-mysql)
     d.run "db-vol",
       image: "ezsystems/ubuntu:apt-get",
-      args: "-v /var/lib/mysql",
+      args: "-v /vagrant/volumes/mysql:/var/lib/mysql:rw",
       daemonize: false
     d.run "db-1",
       image: "tutum/mysql",
