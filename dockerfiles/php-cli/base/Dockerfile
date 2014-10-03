@@ -12,7 +12,7 @@ RUN apt-get install -y --force-yes \
     php5-mcrypt \
     php5-gd \
     php5-curl \
-    mysql-client
+    mysql-client \
     curl \
     wget \
     vim \
