@@ -3,6 +3,7 @@ FROM ezsystems/ubuntu:apt-get
 ENV DEBIAN_FRONTEND noninteractive
 ENV TIMEZONE Europe/Warsaw
 ENV MEMORY_LIMIT 256M
+# If you change MAX_EXECUTION TIME, also change fastcgi_read_timeout accordingly in nginx!
 ENV MAX_EXECUTION_TIME 180
 ENV PORT 9000
 

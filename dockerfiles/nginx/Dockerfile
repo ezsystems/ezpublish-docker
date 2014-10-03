@@ -4,6 +4,9 @@ ENV DEBIAN_FRONTEND noninteractive
 
 ENV PORT 80
 ENV BASEDIR /var/www
+# If you change FASTCGI_READ_TIMEOUT, also change max_execution_time accordingly in php-fpm!
+ENV FASTCGI_READ_TIMEOUT 190
+
 
 RUN apt-get install -y \
     nginx
