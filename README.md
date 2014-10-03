@@ -140,6 +140,8 @@ NB: This section reflects current status with images not reflecting spec above!
 
 When this is done you should be able to browse to eZ Publish setup wizard by going to http://localhost/:8080
 
+If you later want to do changes to your docker/vagrant files, you need to stop and remove the corresponding container ```docker stop [containerid]```, remove the image ```docker rmi [imageid]``` and then run ```vagrant provision``` instead of ```vagrant provision```
+
 #### SSH
 
 ##### VM
@@ -154,24 +156,36 @@ And inspect the eZ Publish folder which was rsynced into the vm and is used as v
 - ```ls -al /vagrant/ezpublish/```
 
 
-##### Container
+##### Running php-cli and mysql commands
 
-To run php/mysql commands you'll need to get inside vm & the ezpublish container. As that is
-difficult we just enter bash of a identical container with same eZ Publish volume attached & database container linked:
+To run php/mysql commands you'll need to start a new container which contains php-cli:
 - ```vagrant ssh```
-- ```docker run -i --link db-1:db -v '/vagrant/ezpublish/:/var/www:rw' -t ezsystems/ezpublish:dev /bin/bash```
+- ```docker run --rm -i -t --link db-1:db --dns 8.8.8.8 --dns 8.8.4.4 -v '/vagrant/ezpublish/:/var/www:rw' ezsystems/php-cli /bin/bash```
 
 From there you can run symfony commands like normal:
-- ```cd /var/www```
 - ```php ezpublish/console ezpublish:legacy:assets_install --symlink --relative --env dev``
 
-You can also access mysql from this contianer as it has client installed:
-- ```mysql -uadmin --password=$DB_ENV_MYSQL_PASS --protocol=tcp --host=$DB_PORT_3306_TCP_ADDR```
+You can also access mysql from this container as it has the mysql client installed:
+- ```mysql -uadmin --password=[mysqlpasswd] --protocol=tcp --host=db```
+
+Mysql password is defined in files/vagrant.yml
 
 ( For other environment variables see ```env```, basically these typically comes from parent images and links )
 
 To get out, type ```exit``` two times ;)
 
+
+##### The containers
+
+Once you have the system up, doing a ```docker ps -a``` will reveal that the following containers:
+ - web-nginx
+ - php-fpm
+ - db-1
+ - db-vol
+
+The db-vol container is stopped ( meaning no processes are running in it ). This is correct. This container is only a data volume container for the mysql raw db files.
+The content of this data volume container is mapped to /vagrant/volumes/mysql/ on VM. 
+If you want to reset the mysql databases, you'll need to stop and remove the db-1 container, remove all files in volumes/mysql and make sure that is synced to VM ( /vagrant/volumes/mysql ), then recreate db-1 container
 
 
 ##### Running vagrant from windows
