@@ -116,11 +116,11 @@ These should be refactored in the future to be something like the following list
 - Clustering:
  - Cache: Memcached|Redis|..
  - HTTP cache: Varnish|Nginx|..
- - FS: NFS|GridFS|..  (services like S3 might not need a continer, but could have a contianer acting as proxy)
+ - FS: NFS|GridFS|..  (services like S3 might not need a container, but could have a container acting as proxy)
 
-**Note** We should take advantage of offical images from Docker as much as possible, however they now use Debian
+**Note** We should take advantage of official images from Docker as much as possible, however they now use Debian
 as it takes less space then Ubuntu, and for lowest space use (and memory?) base images should be the same across
-all our offical images.
+all our official images.
 
 And development mode or not should probably rather be a global parameter then special images.
 
@@ -144,20 +144,20 @@ When this is done you should be able to browse to eZ Publish setup wizard by goi
 
 ##### VM
 
-To enter virual machine:
+To enter virtual machine:
 - ```vagrant ssh```
 
 From there you can check running containers:
 - ```docker ps```
 
-And inspect the eZ Publish folder which was rsynced into the vm and is used as volume for eZ Publish cotainer:
+And inspect the eZ Publish folder which was rsynced into the vm and is used as volume for eZ Publish container:
 - ```ls -al /vagrant/ezpublish/```
 
 
 ##### Container
 
 To run php/mysql commands you'll need to get inside vm & the ezpublish container. As that is
-difficult we just enter bash of a identical container with same eZ Publish volumen attached & database container linked:
+difficult we just enter bash of a identical container with same eZ Publish volume attached & database container linked:
 - ```vagrant ssh```
 - ```docker run -i --link db-1:db -v '/vagrant/ezpublish/:/var/www:rw' -t ezsystems/ezpublish:dev /bin/bash```
 
