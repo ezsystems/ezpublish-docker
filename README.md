@@ -140,7 +140,7 @@ NB: This section reflects current status with images not reflecting spec above!
 
 When this is done you should be able to browse to eZ Publish setup wizard by going to http://localhost/:8080
 
-If you later want to do changes to your docker/vagrant files, you need to stop and remove the corresponding container ```docker stop [containerid]```, remove the image ```docker rmi [imageid]``` and then run ```vagrant provision``` instead of ```vagrant provision```
+If you later want to do changes to your docker/vagrant files, you need to stop and remove the corresponding container ```docker stop [containerid]```, remove the image ```docker rmi [imageid]``` and then run ```vagrant provision``` instead of ```vagrant up```
 
 #### SSH
 
