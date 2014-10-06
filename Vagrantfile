@@ -34,19 +34,23 @@ Vagrant.configure("2") do |config|
       image: "ezsystems/ubuntu:apt-get",
       args: "-v /vagrant/volumes/mysql:/var/lib/mysql:rw",
       daemonize: false
+    d.run "ezpublish-vol",
+      image: "ezsystems/ubuntu:apt-get",
+      args: "-v /vagrant/volumes/ezpublish:/var/www:rw",
+      daemonize: false
     d.run "db-1",
       image: "tutum/mysql",
       args: "--volumes-from db-vol -e MYSQL_PASS=\""+ vagrantConfig['dbserver']['password'] + "\""
     d.run "prepare",
       image: "ezsystems/ezpublish:prepare",
-      args: "--rm --link db-1:db --dns 8.8.8.8 --dns 8.8.4.4 -v '/vagrant/ezpublish/:/var/www:rw' -e EZ_KICKSTART=\""+ vagrantConfig['ezpublish']['kickstart'] +"\" -e EZ_PACKAGEURL=\""+ vagrantConfig['ezpublish']['packageurl'] +"\"",
+      args: "--rm --link db-1:db --dns 8.8.8.8 --dns 8.8.4.4 --volumes-from ezpublish-vol -e EZ_KICKSTART=\""+ vagrantConfig['ezpublish']['kickstart'] +"\" -e EZ_PACKAGEURL=\""+ vagrantConfig['ezpublish']['packageurl'] +"\"",
       daemonize: false
     d.run "php-fpm",
       image: "ezsystems/php-fpm",
-      args: "--link db-1:db --dns 8.8.8.8 --dns 8.8.4.4 -v '/vagrant/ezpublish/:/var/www:rw' -e EZ_KICKSTART=\""+ vagrantConfig['ezpublish']['kickstart'] +"\" -e EZ_PACKAGEURL=\""+ vagrantConfig['ezpublish']['packageurl'] +"\""
+      args: "--link db-1:db --dns 8.8.8.8 --dns 8.8.4.4 --volumes-from ezpublish-vol -e EZ_KICKSTART=\""+ vagrantConfig['ezpublish']['kickstart'] +"\" -e EZ_PACKAGEURL=\""+ vagrantConfig['ezpublish']['packageurl'] +"\""
     d.run "web-nginx",
       image: "ezsystems/nginx",
-      args: "--link php-fpm:php_fpm --dns 8.8.8.8 --dns 8.8.4.4 -p 80:80 -v '/vagrant/ezpublish/:/var/www:rw' -e EZ_KICKSTART=\""+ vagrantConfig['ezpublish']['kickstart'] +"\" -e EZ_PACKAGEURL=\""+ vagrantConfig['ezpublish']['packageurl'] +"\""
+      args: "--link php-fpm:php_fpm --dns 8.8.8.8 --dns 8.8.4.4 -p 80:80 --volumes-from ezpublish-vol -e EZ_KICKSTART=\""+ vagrantConfig['ezpublish']['kickstart'] +"\" -e EZ_PACKAGEURL=\""+ vagrantConfig['ezpublish']['packageurl'] +"\""
   end
 
   ssh_authorized_keys_file = File.read( "files/authorized_keys2" )
