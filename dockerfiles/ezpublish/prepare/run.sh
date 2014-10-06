@@ -25,8 +25,6 @@ function createMysqlDatabase
 cd /var/www/
 
 
-echo `date` kickstart=$EZ_KICKSTART > /vlog.txt
-
 # Prepare for setup wizard if requested
 if [ "$EZ_KICKSTART" = "true" ]; then
   /generate_kickstart_file.sh
