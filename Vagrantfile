@@ -47,10 +47,10 @@ Vagrant.configure("2") do |config|
       daemonize: false
     d.run "php-fpm",
       image: "ezsystems/php-fpm",
-      args: "--link db-1:db --dns 8.8.8.8 --dns 8.8.4.4 --volumes-from ezpublish-vol -e EZ_KICKSTART=\""+ vagrantConfig['ezpublish']['kickstart'] +"\" -e EZ_PACKAGEURL=\""+ vagrantConfig['ezpublish']['packageurl'] +"\""
+      args: "--link db-1:db --dns 8.8.8.8 --dns 8.8.4.4 --volumes-from ezpublish-vol
     d.run "web-nginx",
       image: "ezsystems/nginx",
-      args: "--link php-fpm:php_fpm --dns 8.8.8.8 --dns 8.8.4.4 -p 80:80 --volumes-from ezpublish-vol -e EZ_KICKSTART=\""+ vagrantConfig['ezpublish']['kickstart'] +"\" -e EZ_PACKAGEURL=\""+ vagrantConfig['ezpublish']['packageurl'] +"\""
+      args: "--link php-fpm:php_fpm --dns 8.8.8.8 --dns 8.8.4.4 -p 80:80 --volumes-from ezpublish-vol
   end
 
   ssh_authorized_keys_file = File.read( "files/authorized_keys2" )
