@@ -53,15 +53,17 @@ Vagrant.configure("2") do |config|
       args: "--link php-fpm:php_fpm --dns 8.8.8.8 --dns 8.8.4.4 -p 80:80 --volumes-from ezpublish-vol
   end
 
-  ssh_authorized_keys_file = File.read( "files/authorized_keys2" )
-  config.vm.provision :shell, :inline => "
-    echo 'Copying SSH authorized_keys2 to VM for provisioning...' ; \
-    mkdir -m 700 -p /root/.ssh ; \
-    echo '#{ssh_authorized_keys_file }' > /root/.ssh/authorized_keys2 && chmod 600 /root/.ssh/authorized_keys2
-  "
-  config.vm.provision :shell, :inline => "
-    echo '#{ssh_authorized_keys_file }' > /home/core/.ssh/authorized_keys2 && chmod 600 /home/core/.ssh/authorized_keys2 && chown core:core /home/core/.ssh/authorized_keys2
-  "
+  if vagrantConfig['debug']['copy_authorized_keys2'] == false
+    ssh_authorized_keys_file = File.read( "files/authorized_keys2" )
+    config.vm.provision :shell, :inline => "
+      echo 'Copying SSH authorized_keys2 to VM for provisioning...' ; \
+      mkdir -m 700 -p /root/.ssh ; \
+      echo '#{ssh_authorized_keys_file }' > /root/.ssh/authorized_keys2 && chmod 600 /root/.ssh/authorized_keys2
+    "
+    config.vm.provision :shell, :inline => "
+      echo '#{ssh_authorized_keys_file }' > /home/core/.ssh/authorized_keys2 && chmod 600 /home/core/.ssh/authorized_keys2 && chown core:core /home/core/.ssh/authorized_keys2
+    "
+  end
 
   if vagrantConfig['debug']['disable_rsync'] == false
     config.vm.synced_folder ".", "/vagrant", type: "rsync",
