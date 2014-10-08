@@ -136,6 +136,8 @@ NB: This section reflects current status with images not reflecting spec above!
 - Put your eZ Publish directly inside "ezpublish/" directory, or symlink it there (overwriting the folder)
 - TODO: It is currently not supported to provide database dump, only clean install is currently supported!
 - Copy files/vagrant.yml-EXAMPLE to files/vagrant.yml. Then adjust settings in .yml file as needed
+- Copy files/auth.yml-EXAMPLE to files/auth.yml. If you want to install eZ Publish via composer you also needs to edit files/auth.yml and insert your credentials there.
+  In order to create a github oauth token, please follow instructions on this page : https://help.github.com/articles/creating-an-access-token-for-command-line-use To revoke access to this github oauth token you can visit https://github.com/settings/applications
 - Run `vagrant up`
 
 When this is done you should be able to browse to eZ Publish setup wizard by going to http://localhost/:8080
