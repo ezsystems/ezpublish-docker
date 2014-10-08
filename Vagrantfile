@@ -7,7 +7,7 @@ vagrantConfig = YAML::load_file( "files/vagrant.yml" )
 
 Vagrant.configure("2") do |config|
   config.vm.box = "coreos-%s" % vagrantConfig['virtualmachine']['coreos_channel']
-  config.vm.box_version = ">= 308.0.1"
+  config.vm.box_version = ">= 410.1.0"
   config.vm.box_url = "http://%s.release.core-os.net/amd64-usr/current/coreos_production_vagrant.json" % vagrantConfig['virtualmachine']['coreos_channel']
 
   # Set the Timezone to something useful
@@ -20,33 +20,50 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.provision "docker" do |d|
-    d.build_image "/vagrant/dockerfiles/apache",          args: "-t 'ezsystems/apache'"
-    d.build_image "/vagrant/dockerfiles/apache-php/prod", args: "-t 'ezsystems/apache-php:prod'"
-    d.build_image "/vagrant/dockerfiles/apache-php/dev",  args: "-t 'ezsystems/apache-php:dev'"
-    #d.build_image "/vagrant/dockerfiles/ezpublish/prod", args: "-t 'ezsystems/ezpublish:prod'"
-    d.build_image "/vagrant/dockerfiles/ezpublish/dev",   args: "-t 'ezsystems/ezpublish:dev'"
+    d.build_image "/vagrant/dockerfiles/ubuntu",          args: "-t 'ezsystems/ubuntu:apt-get'"
+    d.build_image "/vagrant/dockerfiles/nginx",          args: "-t 'ezsystems/nginx'"
+    d.build_image "/vagrant/dockerfiles/php-fpm",          args: "-t 'ezsystems/php-fpm'"
+    d.build_image "/vagrant/dockerfiles/php-cli/base",         args: "-t 'ezsystems/php-cli:base'"
+    d.build_image "/vagrant/dockerfiles/php-cli",         args: "-t 'ezsystems/php-cli'"
+    d.build_image "/vagrant/dockerfiles/ezpublish/prepare",   args: "-t 'ezsystems/ezpublish:prepare'"
   end
 
   # Startup the docker images we need
   config.vm.provision "docker" do |d|
-    # todo: we should persist the data to db dir in this folder (see https://github.com/tutumcloud/tutum-docker-mysql)
+    d.run "db-vol",
+      image: "ezsystems/ubuntu:apt-get",
+      args: "-v /vagrant/volumes/mysql:/var/lib/mysql:rw",
+      daemonize: false
+    d.run "ezpublish-vol",
+      image: "ezsystems/ubuntu:apt-get",
+      args: "-v /vagrant/volumes/ezpublish:/var/www:rw",
+      daemonize: false
     d.run "db-1",
       image: "tutum/mysql",
-      args: "-e MYSQL_PASS=\""+ vagrantConfig['dbserver']['password'] + "\""
-    d.run "web-1",
-      image: "ezsystems/ezpublish:dev",
-      args: "--link db-1:db --dns 8.8.8.8 --dns 8.8.4.4 -p 80:80 -p 22 -v '/vagrant/ezpublish/:/var/www:rw' -e EZ_KICKSTART=\""+ vagrantConfig['ezpublish']['kickstart'] +"\" -e EZ_PACKAGEURL=\""+ vagrantConfig['ezpublish']['packageurl'] +"\""
+      args: "--volumes-from db-vol -e MYSQL_PASS=\""+ vagrantConfig['dbserver']['password'] + "\""
+    d.run "prepare",
+      image: "ezsystems/ezpublish:prepare",
+      args: "--rm --link db-1:db --dns 8.8.8.8 --dns 8.8.4.4 --volumes-from ezpublish-vol -e EZ_KICKSTART=\""+ vagrantConfig['ezpublish']['kickstart'] +"\" -e EZ_PACKAGEURL=\""+ vagrantConfig['ezpublish']['packageurl'] +"\"",
+      daemonize: false
+    d.run "php-fpm",
+      image: "ezsystems/php-fpm",
+      args: "--link db-1:db --dns 8.8.8.8 --dns 8.8.4.4 --volumes-from ezpublish-vol"
+    d.run "web-nginx",
+      image: "ezsystems/nginx",
+      args: "--link php-fpm:php_fpm --dns 8.8.8.8 --dns 8.8.4.4 -p 80:80 --volumes-from ezpublish-vol"
   end
 
-  ssh_authorized_keys_file = File.read( "files/authorized_keys2" )
-  config.vm.provision :shell, :inline => "
-    echo 'Copying SSH authorized_keys2 to VM for provisioning...' ; \
-    mkdir -m 700 -p /root/.ssh ; \
-    echo '#{ssh_authorized_keys_file }' > /root/.ssh/authorized_keys2 && chmod 600 /root/.ssh/authorized_keys2
-  "
-  config.vm.provision :shell, :inline => "
-    echo '#{ssh_authorized_keys_file }' > /home/core/.ssh/authorized_keys2 && chmod 600 /home/core/.ssh/authorized_keys2 && chown core:core /home/core/.ssh/authorized_keys2
-  "
+  if vagrantConfig['debug']['copy_authorized_keys2'] == false
+    ssh_authorized_keys_file = File.read( "files/authorized_keys2" )
+    config.vm.provision :shell, :inline => "
+      echo 'Copying SSH authorized_keys2 to VM for provisioning...' ; \
+      mkdir -m 700 -p /root/.ssh ; \
+      echo '#{ssh_authorized_keys_file }' > /root/.ssh/authorized_keys2 && chmod 600 /root/.ssh/authorized_keys2
+    "
+    config.vm.provision :shell, :inline => "
+      echo '#{ssh_authorized_keys_file }' > /home/core/.ssh/authorized_keys2 && chmod 600 /home/core/.ssh/authorized_keys2 && chown core:core /home/core/.ssh/authorized_keys2
+    "
+  end
 
   if vagrantConfig['debug']['disable_rsync'] == false
     config.vm.synced_folder ".", "/vagrant", type: "rsync",

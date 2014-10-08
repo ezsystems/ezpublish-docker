@@ -1,7 +1,29 @@
 #!/bin/bash
 
+MAXTRY=10
+
+# db container might not be ready, so let's wait for it in such case
+function createMysqlDatabase
+{
+    local DBUP
+    local TRY
+    DBUP=false
+    TRY=1
+    while [ $DBUP == "false" ]; do
+        echo Contacting mysql, attempt :$TRY
+        mysql -uadmin --password=$DB_ENV_MYSQL_PASS --protocol=tcp --host=db -e "CREATE DATABASE IF NOT EXISTS ezp CHARACTER SET=utf8" && DBUP="true"
+        let TRY=$TRY+1
+        if [ $TRY -eq $MAXTRY ]; then
+            echo Max limit reached. Not able to connect to mysql
+            exit 1;
+        fi
+        sleep 2;
+    done
+}
+
 # Make sure we are within root www dir
 cd /var/www/
+
 
 # Prepare for setup wizard if requested
 if [ "$EZ_KICKSTART" = "true" ]; then
@@ -30,9 +52,6 @@ php ezpublish/console ezpublish:legacy:assets_install --symlink --relative --env
 # Create ezp database if we intend to run setup wizard (need to be run last to make sure db is up)
 if [ "$EZ_KICKSTART" = "true" ]; then
   echo "Creating database if it does not exists"
-  mysql -uadmin --password=$DB_ENV_MYSQL_PASS --protocol=tcp --host=$DB_PORT_3306_TCP_ADDR -e "CREATE DATABASE IF NOT EXISTS ezp CHARACTER SET=utf8"
+  createMysqlDatabase
 fi
 
-
-# start services
-exec supervisord -n

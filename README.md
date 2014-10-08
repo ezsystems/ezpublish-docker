@@ -116,11 +116,11 @@ These should be refactored in the future to be something like the following list
 - Clustering:
  - Cache: Memcached|Redis|..
  - HTTP cache: Varnish|Nginx|..
- - FS: NFS|GridFS|..  (services like S3 might not need a continer, but could have a contianer acting as proxy)
+ - FS: NFS|GridFS|..  (services like S3 might not need a container, but could have a container acting as proxy)
 
-**Note** We should take advantage of offical images from Docker as much as possible, however they now use Debian
+**Note** We should take advantage of official images from Docker as much as possible, however they now use Debian
 as it takes less space then Ubuntu, and for lowest space use (and memory?) base images should be the same across
-all our offical images.
+all our official images.
 
 And development mode or not should probably rather be a global parameter then special images.
 
@@ -140,39 +140,55 @@ NB: This section reflects current status with images not reflecting spec above!
 
 When this is done you should be able to browse to eZ Publish setup wizard by going to http://localhost/:8080
 
+If you later want to do changes to your docker/vagrant files, you need to stop and remove the corresponding container ```docker stop [containerid]```, remove the image ```docker rmi [imageid]``` and then run ```vagrant provision``` instead of ```vagrant up```
+
 #### SSH
 
 ##### VM
 
-To enter virual machine:
+To enter virtual machine:
 - ```vagrant ssh```
 
 From there you can check running containers:
 - ```docker ps```
 
-And inspect the eZ Publish folder which was rsynced into the vm and is used as volume for eZ Publish cotainer:
+And inspect the eZ Publish folder which was rsynced into the vm and is used as volume for eZ Publish container:
 - ```ls -al /vagrant/ezpublish/```
 
 
-##### Container
+##### Running php-cli and mysql commands
 
-To run php/mysql commands you'll need to get inside vm & the ezpublish container. As that is
-difficult we just enter bash of a identical container with same eZ Publish volumen attached & database container linked:
+To run php/mysql commands you'll need to start a new container which contains php-cli:
 - ```vagrant ssh```
-- ```docker run -i --link db-1:db -v '/vagrant/ezpublish/:/var/www:rw' -t ezsystems/ezpublish:dev /bin/bash```
+- ```docker run --rm -i -t --link db-1:db --dns 8.8.8.8 --dns 8.8.4.4 -v '/vagrant/ezpublish/:/var/www:rw' ezsystems/php-cli /bin/bash```
 
 From there you can run symfony commands like normal:
-- ```cd /var/www```
 - ```php ezpublish/console ezpublish:legacy:assets_install --symlink --relative --env dev``
 
-You can also access mysql from this contianer as it has client installed:
-- ```mysql -uadmin --password=$DB_ENV_MYSQL_PASS --protocol=tcp --host=$DB_PORT_3306_TCP_ADDR```
+You can also access mysql from this container as it has the mysql client installed:
+- ```mysql -uadmin --password=[mysqlpasswd] --protocol=tcp --host=db```
+
+Mysql password is defined in files/vagrant.yml
 
 ( For other environment variables see ```env```, basically these typically comes from parent images and links )
 
 To get out, type ```exit``` two times ;)
 
 
+##### The containers
+
+Once you have the system up, doing a ```docker ps -a``` will reveal that the following containers:
+ - web-nginx
+ - php-fpm
+ - db-1
+ - db-vol
+ - ezpublish-vol
+
+The db-vol and ezpublish-vol containers are stopped ( meaning no processes are running in them ). This is correct. These containers are only data volume containers for the mysql raw db files and ezpublish.
+The content of the db-vol data volume container is mapped to /vagrant/volumes/mysql/ on VM. 
+The content of the ezpublish-vol data volume container is mapped to /vagrant/volumes/ezpublish/ on VM. 
+If you want to reset the mysql databases, you'll need to stop and remove the db-1 container, remove all files in volumes/mysql and make sure that is synced to VM ( /vagrant/volumes/mysql ), then recreate db-1 container
+For replacing the ezpublish files, you simply needs to change the files in volumes/ezpublish and sync this over to the VM
 
 ##### Running vagrant from windows
 

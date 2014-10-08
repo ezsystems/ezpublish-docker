@@ -14,7 +14,7 @@ Type=mysqli
 
 [database_init]
 #Continue=true
-Server=${DB_PORT_3306_TCP_ADDR}
+Server=db
 Port=${DB_PORT_3306_TCP_PORT}
 Database=ezp
 User=admin
