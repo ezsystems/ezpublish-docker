@@ -21,8 +21,15 @@ ezpublish:
     #  Pre downloads packages from provided url if set for setup wizard speed up
     packageurl: http://packages.ez.no/ezpublish/5.4/5.4.0alpha1/
 
-    # - composer : Makes a fresh install using composer. Assumes volume/ezpublish is empty...
-    install_type: "composer"
+    # Specify how to prepare ezpublish
+    # - composer : Makes a fresh install using composer. Assumes volume/ezpublish is empty...Will not do any changes do database, except make sure ezp database exists
+    # - donothing : Will not do any changes at all in docroot, or with database
+    # - default : Assumes ezp is already installed in doc root and will
+    #    - process kickstart and packageurl settings.
+    #    - make sure permissions are set correctly ( writable for web user )
+    #    - install assets
+    #    - make sure ezp database exists
+    install_type: "default"
 
     # Version of eZ Publish to install via composer. Examples are "v5.3.0" and "dev-master"
     composer_version: "v5.3.0"

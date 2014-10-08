@@ -90,6 +90,10 @@ function processCommandLineOptions
     if [ $EZ_INSTALLTYPE == "composer" ]; then
         installViaComposer
     fi
+
+    if [ $EZ_INSTALLTYPE == "donothing" ]; then
+        exit 0
+    fi
 }
 
 # db container might not be ready, so let's wait for it in such case
