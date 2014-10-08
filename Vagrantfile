@@ -19,6 +19,9 @@ Vagrant.configure("2") do |config|
       images: ["ubuntu:trusty", "tutum/mysql"]
   end
 
+
+  FileUtils.cp( "files/auth.json", "dockerfiles/ezpublish/prepare" )
+
   config.vm.provision "docker" do |d|
     d.build_image "/vagrant/dockerfiles/ubuntu",          args: "-t 'ezsystems/ubuntu:apt-get'"
     d.build_image "/vagrant/dockerfiles/nginx",          args: "-t 'ezsystems/nginx'"
