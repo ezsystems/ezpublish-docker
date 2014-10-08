@@ -1,7 +1,7 @@
 ---
 
 virtualmachine:
-    ram: 512
+    ram: 2048
     cpus: 1
     timezone: CET
     gui: false
@@ -20,6 +20,15 @@ ezpublish:
 
     #  Pre downloads packages from provided url if set for setup wizard speed up
     packageurl: http://packages.ez.no/ezpublish/5.4/5.4.0alpha1/
+
+    # - composer : Makes a fresh install using composer. Assumes volume/ezpublish is empty...
+    install_type: "composer"
+
+    # Version of eZ Publish to install via composer. Examples are "v5.3.0" and "dev-master"
+    composer_version: "v5.3.0"
+
+    # Set to "" if you want to downloaded everything from github
+    composer_repository_url: "https://updates.ez.no/ttl"
 
 debug:
     disable_rsync: false

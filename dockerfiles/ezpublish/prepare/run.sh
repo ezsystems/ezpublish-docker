@@ -1,6 +1,96 @@
 #!/bin/bash
 
+
+# Script accepts the following environment variable:
+# - EZ_KICKSTART ( "true" or "false" )
+# - EZ_PACKAGEURL ( url, pointing to url where packages are located )
+# - EZ_INSTALLTYPE ( "composer" )
+# - EZ_COMPOSERVERSION ( What version of eZ Publish to install using composer )
+# - EZ_COMPOSERREPOSITORYURL ( Url to composer repository which should be used )
+#
+# Parameters can also be given as options, in the same order:
+# ./run.sh [ EZ_KICKSTART ] [ EZ_PACKAGEURL ] ....
+
 MAXTRY=10
+
+function parseCommandlineOptions
+{
+    if [ "aa$1" != "aa" ]; then
+        EZ_KICKSTART=$1
+    fi
+    if [ "aa$2" != "aa" ]; then
+        EZ_PACKAGEURL=$2
+        export EZ_PACKAGEURL
+    fi
+    if [ "aa$3" != "aa" ]; then
+        EZ_INSTALLTYPE=$3
+    fi
+    if [ "aa$4" != "aa" ]; then
+        EZ_COMPOSERVERSION=$4
+    fi
+    if [ "aa$5" != "aa" ]; then
+        EZ_COMPOSERREPOSITORYURL=$5
+    fi
+
+
+    if [ "aa$APACHE_RUN_USER" == "aa" ]; then
+        APACHE_RUN_USER=www-data
+    fi
+}
+
+function validateDocRootIsEmpty
+{
+#    if [ "$(ls /tmp/aaa)" ]; then
+    if [ "$(ls /var/www)" ]; then
+        echo "Error : Docroot is not empty"
+        exit 1
+    else
+        return 0
+    fi
+}
+
+function installViaComposer
+{
+    validateDocRootIsEmpty
+    cd /tmp
+    local tmpDir
+    local repositoryParameter
+
+    tmpDir=`mktemp -d`
+    #tmpDir="tmp.747Uy8crCV"
+
+    cd $tmpDir
+    curl -sS https://getcomposer.org/installer | php
+
+    mkdir -p /.composer
+    cp /auth.json /.composer
+
+    if [ "aa$EZ_COMPOSERREPOSITORYURL" == "aa" ]; then
+        repositoryParameter=""
+    else
+        repositoryParameter="--repository-url=$EZ_COMPOSERREPOSITORYURL "
+    fi
+
+    php composer.phar --no-interaction create-project --prefer-dist ${repositoryParameter}ezsystems/ezpublish-community ezp $EZ_COMPOSERVERSION;
+
+    # Remove ezpublish/cache/prod, needed since we'll move ezpublish root
+    rm -Rf ezp/ezpublish/cache/prod
+
+    mv ezp/* /var/www
+
+    cd ..
+    rm -Rf $tmpDir
+
+    rm /.composer/auth.json
+
+}
+
+function processCommandLineOptions
+{
+    if [ $EZ_INSTALLTYPE == "composer" ]; then
+        installViaComposer
+    fi
+}
 
 # db container might not be ready, so let's wait for it in such case
 function createMysqlDatabase
@@ -20,6 +110,10 @@ function createMysqlDatabase
         sleep 2;
     done
 }
+
+parseCommandlineOptions $1 $2 $3 $4 $5
+
+processCommandLineOptions
 
 # Make sure we are within root www dir
 cd /var/www/

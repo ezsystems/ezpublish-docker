@@ -46,7 +46,12 @@ Vagrant.configure("2") do |config|
       args: "--volumes-from db-vol -e MYSQL_PASS=\""+ vagrantConfig['dbserver']['password'] + "\""
     d.run "prepare",
       image: "ezsystems/ezpublish:prepare",
-      args: "--rm --link db-1:db --dns 8.8.8.8 --dns 8.8.4.4 --volumes-from ezpublish-vol -e EZ_KICKSTART=\""+ vagrantConfig['ezpublish']['kickstart'] +"\" -e EZ_PACKAGEURL=\""+ vagrantConfig['ezpublish']['packageurl'] +"\"",
+      args: "--rm --link db-1:db --dns 8.8.8.8 --dns 8.8.4.4 -m 1024m --volumes-from ezpublish-vol \
+        -e EZ_KICKSTART=\""+ vagrantConfig['ezpublish']['kickstart'] +"\" \
+        -e EZ_PACKAGEURL=\""+ vagrantConfig['ezpublish']['packageurl'] +"\" \
+        -e EZ_INSTALLTYPE=\""+ vagrantConfig['ezpublish']['install_type'] +"\"  \
+        -e EZ_COMPOSERVERSION=\""+ vagrantConfig['ezpublish']['composer_version'] +"\"  \
+        -e EZ_COMPOSERREPOSITORYURL=\""+ vagrantConfig['ezpublish']['composer_repository_url'] +"\"",
       daemonize: false
     d.run "php-fpm",
       image: "ezsystems/php-fpm",
