@@ -1,6 +1,7 @@
 ---
 
 virtualmachine:
+    # If you want to use composer install you'll need more than 1024
     ram: 2048
     cpus: 1
     timezone: CET
