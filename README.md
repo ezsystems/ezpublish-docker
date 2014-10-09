@@ -24,8 +24,8 @@ Cover the following use cases (with time), including (in prioritized order):
 Host machine is running CoreOS allowing us to not have to maintain the host (autoupdate), have a light host OS,
 and allowing us to take advantage of its clustering capabilities in the future.
 
-eZ Publish is placed in .vagrant/ezpublish as mounted by Vagrant on boot, this is used as volume for all
-containers that need access to it.
+eZ Publish is placed in volumes/ezpublish as rsynced by Vagrant to /vagrant/volumes/ezpublish on virtual machine.
+Mysql raw files are in similar ways located in volumes/mysql
 
     Port (Listen): 80
     Software: CoreOs
@@ -142,7 +142,7 @@ NB: This section reflects current status with images not reflecting spec above!
 
 When this is done you should be able to browse to eZ Publish setup wizard by going to http://localhost/:8080
 
-If you later want to do changes to your docker/vagrant files, you need to stop and remove the corresponding container ```docker stop [containerid]```, remove the image ```docker rmi [imageid]``` and then run ```vagrant provision``` instead of ```vagrant up```
+If you later want to do changes to your docker/vagrant files, you need to stop and remove the corresponding container ```docker stop [containerid]; docker rm [containerid]```, remove the image ```docker rmi [imageid]``` and then run ```vagrant provision``` instead of ```vagrant up```
 
 #### SSH
 
@@ -162,7 +162,7 @@ And inspect the eZ Publish folder which was rsynced into the vm and is used as v
 
 To run php/mysql commands you'll need to start a new container which contains php-cli:
 - ```vagrant ssh```
-- ```docker run --rm -i -t --link db-1:db --dns 8.8.8.8 --dns 8.8.4.4 -v '/vagrant/ezpublish/:/var/www:rw' ezsystems/php-cli /bin/bash```
+- ```docker run --rm -i -t --link db-1:db --dns 8.8.8.8 --dns 8.8.4.4 --volumes-from ezpublish-vol ezsystems/php-cli /bin/bash```
 
 From there you can run symfony commands like normal:
 - ```php ezpublish/console ezpublish:legacy:assets_install --symlink --relative --env dev``
