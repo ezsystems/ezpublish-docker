@@ -23,6 +23,7 @@ ezpublish:
 
     # Specify how to prepare ezpublish
     # - composer : Makes a fresh install using composer. Assumes volume/ezpublish is empty...Will not do any changes do database, except make sure ezp database exists
+    # - tarball : Install eZ Publish from tarball. MAke sure you also specify tarball_filename setting
     # - donothing : Will not do any changes at all in docroot, or with database
     # - default : Assumes ezp is already installed in doc root and will
     #    - process kickstart and packageurl settings.
@@ -31,11 +32,17 @@ ezpublish:
     #    - make sure ezp database exists
     install_type: "default"
 
+    # Setting used when install_type: "composer"
     # Version of eZ Publish to install via composer. Examples are "v5.3.0" and "dev-master"
     composer_version: "v5.3.0"
 
+    # Setting used when install_type: "composer"
     # Set to "" if you want to downloaded everything from github
     composer_repository_url: "https://updates.ez.no/ttl"
+
+    # Setting used when install_type: "tarball"
+    # Path and file name of tarball. Must be an absolute path ( which is valid inside the VM )
+    tarball_filename: "/vagrant/ezpublish5-5.3.0-ee-ttl-full.tar.gz"
 
 debug:
     disable_rsync: false
