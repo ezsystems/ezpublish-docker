@@ -7,7 +7,7 @@ vagrantConfig = YAML::load_file( "files/vagrant.yml" )
 
 Vagrant.configure("2") do |config|
   config.vm.box = "coreos-%s" % vagrantConfig['virtualmachine']['coreos_channel']
-  config.vm.box_version = ">= 410.1.0"
+  config.vm.box_version = ">= 410.2.0"
   config.vm.box_url = "http://%s.release.core-os.net/amd64-usr/current/coreos_production_vagrant.json" % vagrantConfig['virtualmachine']['coreos_channel']
 
   # caches apt,composer,.. downloads, install with `vagrant plugin install vagrant-cachier`
