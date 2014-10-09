@@ -85,10 +85,36 @@ function installViaComposer
 
 }
 
+function installTarball
+{
+    validateDocRootIsEmpty
+    cd /tmp
+    local tmpDir
+    local repositoryParameter
+
+    tmpDir=`mktemp -d`
+    #tmpDir="tmp.747Uy8crCV"
+
+    cd $tmpDir
+
+    tar -xzf /tmp/ezpublish.tar.gz
+
+    mv ezpublish5/* /var/www
+
+    cd /var/www
+#    php ezpublish/console assets:install --relative --symlink web
+#    php ezpublish/console ezpublish:legacy:assets_install --relative --symlink web
+#    php ezpublish/console assetic:dump --env=prod web
+}
+
 function processCommandLineOptions
 {
     if [ $EZ_INSTALLTYPE == "composer" ]; then
         installViaComposer
+    fi
+
+    if [ $EZ_INSTALLTYPE == "tarball" ]; then
+        installTarball
     fi
 
     if [ $EZ_INSTALLTYPE == "donothing" ]; then

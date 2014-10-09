@@ -22,6 +22,12 @@ Vagrant.configure("2") do |config|
 
   FileUtils.cp( "files/auth.json", "dockerfiles/ezpublish/prepare" )
 
+  if vagrantConfig['ezpublish']['install_type'] == 'tarball'
+    tarballVolArg = "-v " + vagrantConfig['ezpublish']['tarball_filename'] + ":/tmp/ezpublish.tar.gz:ro"
+  else
+    tarballVolArg = ""
+  end
+
   config.vm.provision "docker" do |d|
     d.build_image "/vagrant/dockerfiles/ubuntu",          args: "-t 'ezsystems/ubuntu:apt-get'"
     d.build_image "/vagrant/dockerfiles/nginx",          args: "-t 'ezsystems/nginx'"
@@ -47,6 +53,7 @@ Vagrant.configure("2") do |config|
     d.run "prepare",
       image: "ezsystems/ezpublish:prepare",
       args: "--rm --link db-1:db --dns 8.8.8.8 --dns 8.8.4.4 -m 1024m --volumes-from ezpublish-vol \
+        " + tarballVolArg + "\
         -e EZ_KICKSTART=\""+ vagrantConfig['ezpublish']['kickstart'] +"\" \
         -e EZ_PACKAGEURL=\""+ vagrantConfig['ezpublish']['packageurl'] +"\" \
         -e EZ_INSTALLTYPE=\""+ vagrantConfig['ezpublish']['install_type'] +"\"  \
