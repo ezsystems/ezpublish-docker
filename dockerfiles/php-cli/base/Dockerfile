@@ -20,4 +20,6 @@ RUN apt-get install -y --force-yes \
     acl \
     tree
 
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin && mv /usr/local/bin/composer.phar /usr/local/bin/composer
+
 CMD /bin/true
