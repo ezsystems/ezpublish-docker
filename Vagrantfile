@@ -7,7 +7,7 @@ vagrantConfig = YAML::load_file( "files/vagrant.yml" )
 
 Vagrant.configure("2") do |config|
   config.vm.box = "coreos-%s" % vagrantConfig['virtualmachine']['coreos_channel']
-  config.vm.box_version = ">= 410.1.0"
+  config.vm.box_version = ">= 410.2.0"
   config.vm.box_url = "http://%s.release.core-os.net/amd64-usr/current/coreos_production_vagrant.json" % vagrantConfig['virtualmachine']['coreos_channel']
 
   # Set the Timezone to something useful
@@ -17,6 +17,15 @@ Vagrant.configure("2") do |config|
   if vagrantConfig['debug']['disable_docker_pull'] == false
     config.vm.provision "docker",
       images: ["ubuntu:trusty", "tutum/mysql"]
+  end
+
+
+  FileUtils.cp( "files/auth.json", "dockerfiles/ezpublish/prepare" )
+
+  if vagrantConfig['ezpublish']['install_type'] == 'tarball'
+    tarballVolArg = "-v /vagrant/" + vagrantConfig['ezpublish']['tarball_filename'] + ":/tmp/ezpublish.tar.gz:ro"
+  else
+    tarballVolArg = ""
   end
 
   config.vm.provision "docker" do |d|
@@ -43,7 +52,13 @@ Vagrant.configure("2") do |config|
       args: "--volumes-from db-vol -e MYSQL_PASS=\""+ vagrantConfig['dbserver']['password'] + "\""
     d.run "prepare",
       image: "ezsystems/ezpublish:prepare",
-      args: "--rm --link db-1:db --dns 8.8.8.8 --dns 8.8.4.4 --volumes-from ezpublish-vol -e EZ_KICKSTART=\""+ vagrantConfig['ezpublish']['kickstart'] +"\" -e EZ_PACKAGEURL=\""+ vagrantConfig['ezpublish']['packageurl'] +"\"",
+      args: "--rm --link db-1:db --dns 8.8.8.8 --dns 8.8.4.4 -m 1024m --volumes-from ezpublish-vol \
+        " + tarballVolArg + "\
+        -e EZ_KICKSTART=\""+ vagrantConfig['ezpublish']['kickstart'] +"\" \
+        -e EZ_PACKAGEURL=\""+ vagrantConfig['ezpublish']['packageurl'] +"\" \
+        -e EZ_INSTALLTYPE=\""+ vagrantConfig['ezpublish']['install_type'] +"\"  \
+        -e EZ_COMPOSERVERSION=\""+ vagrantConfig['ezpublish']['composer_version'] +"\"  \
+        -e EZ_COMPOSERREPOSITORYURL=\""+ vagrantConfig['ezpublish']['composer_repository_url'] +"\"",
       daemonize: false
     d.run "php-fpm",
       image: "ezsystems/php-fpm",
@@ -53,7 +68,7 @@ Vagrant.configure("2") do |config|
       args: "--link php-fpm:php_fpm --dns 8.8.8.8 --dns 8.8.4.4 -p 80:80 --volumes-from ezpublish-vol"
   end
 
-  if vagrantConfig['debug']['copy_authorized_keys2'] == false
+  if vagrantConfig['debug']['copy_authorized_keys2'] == true
     ssh_authorized_keys_file = File.read( "files/authorized_keys2" )
     config.vm.provision :shell, :inline => "
       echo 'Copying SSH authorized_keys2 to VM for provisioning...' ; \
@@ -91,8 +106,4 @@ Vagrant.configure("2") do |config|
     config.vbguest.auto_update = false
   end
 
-  # caches apt,composer,.. downloads, install with `vagrant plugin install vagrant-cachier`
-  if Vagrant.has_plugin?("vagrant-cachier")
-    config.cache.scope = :box
-  end
 end

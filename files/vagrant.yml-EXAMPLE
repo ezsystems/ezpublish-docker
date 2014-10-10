@@ -1,6 +1,7 @@
 ---
 
 virtualmachine:
+    # If you want to use composer install you'll need more than 1024
     ram: 512
     cpus: 1
     timezone: CET
@@ -20,6 +21,31 @@ ezpublish:
 
     #  Pre downloads packages from provided url if set for setup wizard speed up
     packageurl: http://packages.ez.no/ezpublish/5.4/5.4.0alpha1/
+
+    # Specify how to prepare ezpublish
+    # - composer : Makes a fresh install using composer. Assumes volume/ezpublish is empty...Will not do any changes do database, except make sure ezp database exists
+    #              Note that when using this setting you need to increase RAM in virtual machine to more than 1Gb ( 2Gb recommended )
+    # - tarball : Install eZ Publish from tarball. Make sure you also specify tarball_filename setting
+    # - donothing : Will not do any changes at all in docroot, or with database
+    # - default : Assumes ezp is already installed in doc root and will
+    #    - process kickstart and packageurl settings.
+    #    - make sure permissions are set correctly ( writable for web user )
+    #    - install assets
+    #    - make sure ezp database exists
+    install_type: "default"
+
+    # Setting used when install_type: "composer"
+    # Version of eZ Publish to install via composer. Examples are "v5.3.0" and "dev-master"
+    composer_version: "v5.3.0"
+
+    # Setting used when install_type: "composer"
+    # Set to "" if you want to downloaded everything from github
+    composer_repository_url: "https://updates.ez.no/ttl"
+
+    # Setting used when install_type: "tarball"
+    # Path and filename of tarball. Path must be relative to project root ( the directory where Vagrantfile is located )
+    # Path cannot escape the project root ( ie do not do "../ezpublish5-5.3.0-ee-ttl-full.tar.gz"
+    tarball_filename: "ezpublish5-5.3.0-ee-ttl-full.tar.gz"
 
 debug:
     disable_rsync: false

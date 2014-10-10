@@ -5,6 +5,7 @@ FROM ezsystems/php-cli:base
 ADD run.sh /run.sh
 ADD generate_kickstart_file.sh /generate_kickstart_file.sh
 ADD install_packages.sh /install_packages.sh
+ADD auth.json /auth.json
 RUN chmod 755 /*.sh
 
 CMD /run.sh
