@@ -47,12 +47,16 @@ Vagrant.configure("2") do |config|
       image: "ezsystems/ubuntu:apt-get",
       args: "-v /vagrant/volumes/ezpublish:/var/www:rw",
       daemonize: false
+    d.run "composercache-vol",
+      image: "ezsystems/ubuntu:apt-get",
+      args: "-v /vagrant/volumes/composercache:/.composer/cache:rw",
+      daemonize: false
     d.run "db-1",
       image: "tutum/mysql",
       args: "--volumes-from db-vol -e MYSQL_PASS=\""+ vagrantConfig['dbserver']['password'] + "\""
     d.run "prepare",
       image: "ezsystems/ezpublish:prepare",
-      args: "--rm --link db-1:db --dns 8.8.8.8 --dns 8.8.4.4 -m 1024m --volumes-from ezpublish-vol \
+      args: "--rm --link db-1:db --dns 8.8.8.8 --dns 8.8.4.4 -m 1024m --volumes-from ezpublish-vol --volumes-from composercache-vol \
         " + tarballVolArg + "\
         -e EZ_KICKSTART=\""+ vagrantConfig['ezpublish']['kickstart'] +"\" \
         -e EZ_PACKAGEURL=\""+ vagrantConfig['ezpublish']['packageurl'] +"\" \

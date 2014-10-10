@@ -162,7 +162,7 @@ And inspect the eZ Publish folder which was rsynced into the vm and is used as v
 
 To run php/mysql commands you'll need to start a new container which contains php-cli:
 - ```vagrant ssh```
-- ```docker run --rm -i -t --link db-1:db --dns 8.8.8.8 --dns 8.8.4.4 --volumes-from ezpublish-vol ezsystems/php-cli /bin/bash```
+- ```docker run --rm -i -t --link db-1:db --dns 8.8.8.8 --dns 8.8.4.4 --volumes-from ezpublish-vol --volumes-from composercache-vol ezsystems/php-cli /bin/bash```
 
 From there you can run symfony commands like normal:
 - ```php ezpublish/console ezpublish:legacy:assets_install --symlink --relative --env dev``
