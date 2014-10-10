@@ -23,7 +23,7 @@ Vagrant.configure("2") do |config|
   FileUtils.cp( "files/auth.json", "dockerfiles/ezpublish/prepare" )
 
   if vagrantConfig['ezpublish']['install_type'] == 'tarball'
-    tarballVolArg = "-v " + vagrantConfig['ezpublish']['tarball_filename'] + ":/tmp/ezpublish.tar.gz:ro"
+    tarballVolArg = "-v /vagrant/" + vagrantConfig['ezpublish']['tarball_filename'] + ":/tmp/ezpublish.tar.gz:ro"
   else
     tarballVolArg = ""
   end
