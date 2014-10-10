@@ -2,7 +2,7 @@
 
 virtualmachine:
     # If you want to use composer install you'll need more than 1024
-    ram: 2048
+    ram: 512
     cpus: 1
     timezone: CET
     gui: false
@@ -24,6 +24,7 @@ ezpublish:
 
     # Specify how to prepare ezpublish
     # - composer : Makes a fresh install using composer. Assumes volume/ezpublish is empty...Will not do any changes do database, except make sure ezp database exists
+    #              Note that when using this setting you need to increase RAM in virtual machine to more than 1Gb ( 2Gb recommended )
     # - tarball : Install eZ Publish from tarball. MAke sure you also specify tarball_filename setting
     # - donothing : Will not do any changes at all in docroot, or with database
     # - default : Assumes ezp is already installed in doc root and will
