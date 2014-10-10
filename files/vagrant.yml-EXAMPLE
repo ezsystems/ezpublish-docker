@@ -1,8 +1,8 @@
 ---
 
 virtualmachine:
-    # If you want to use composer install you'll need more than 1024
-    ram: 512
+    # If you do not intend to install ezpublish using composer, you'll likely do fine with 512 or 756
+    ram: 2048
     cpus: 1
     timezone: CET
     gui: false
@@ -24,23 +24,23 @@ ezpublish:
 
     # Specify how to prepare ezpublish
     # - composer : Makes a fresh install using composer. Assumes volume/ezpublish is empty...Will not do any changes do database, except make sure ezp database exists
-    #              Note that when using this setting you need to increase RAM in virtual machine to more than 1Gb ( 2Gb recommended )
+    #              Note that when using this setting you need to have more than 1Gb of RAM in virtual machine ( 2Gb recommended )
     # - tarball : Install eZ Publish from tarball. Make sure you also specify tarball_filename setting
-    # - donothing : Will not do any changes at all in docroot, or with database
-    # - default : Assumes ezp is already installed in doc root and will
+    # - basic : Assumes ezp is already installed in doc root and will
     #    - process kickstart and packageurl settings.
     #    - make sure permissions are set correctly ( writable for web user )
     #    - install assets
     #    - make sure ezp database exists
-    install_type: "default"
+    # - donothing : Will not do any changes at all in docroot, or with database
+    install_type: "composer"
 
     # Setting used when install_type: "composer"
     # Version of eZ Publish to install via composer. Examples are "v5.3.0" and "dev-master"
-    composer_version: "v5.3.0"
+    composer_version: "dev-master"
 
     # Setting used when install_type: "composer"
-    # Set to "" if you want to downloaded everything from github
-    composer_repository_url: "https://updates.ez.no/ttl"
+    # Set value to "" if you want to downloaded everything from github. Set value to "https://updates.ez.no/ttl" if you would like to install official patches too ( applicable when for you for instance have 'composer_version : "v5.3.0"' )
+    composer_repository_url: ""
 
     # Setting used when install_type: "tarball"
     # Path and filename of tarball. Path must be relative to project root ( the directory where Vagrantfile is located )
