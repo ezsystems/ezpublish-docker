@@ -10,11 +10,6 @@ Vagrant.configure("2") do |config|
   config.vm.box_version = ">= 410.2.0"
   config.vm.box_url = "http://%s.release.core-os.net/amd64-usr/current/coreos_production_vagrant.json" % vagrantConfig['virtualmachine']['coreos_channel']
 
-  # caches apt,composer,.. downloads, install with `vagrant plugin install vagrant-cachier`
-  if Vagrant.has_plugin?("vagrant-cachier")
-    config.cache.scope = :box
-  end
-
   # Set the Timezone to something useful
   config.vm.provision :shell, :inline => "echo \"" + vagrantConfig['virtualmachine']['timezone'] + "\" | sudo tee /etc/timezone"
 
