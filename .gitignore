@@ -3,6 +3,7 @@ files/vagrant.yml
 files/authorized_keys2
 files/auth.json
 volumes/mysql
+volumes/ezpublish
 dockerfiles/ezpublish/prepare/auth.json
 
 
