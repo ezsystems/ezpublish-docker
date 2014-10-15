@@ -60,7 +60,6 @@ function installViaComposer
     #tmpDir="tmp.747Uy8crCV"
 
     cd $tmpDir
-    curl -sS https://getcomposer.org/installer | php
 
     mkdir -p /.composer
     cp /auth.json /.composer
@@ -71,7 +70,7 @@ function installViaComposer
         repositoryParameter="--repository-url=$EZ_COMPOSERREPOSITORYURL "
     fi
 
-    php composer.phar --no-interaction create-project --prefer-dist ${repositoryParameter}ezsystems/ezpublish-community ezp $EZ_COMPOSERVERSION;
+    composer --no-interaction create-project --prefer-dist ${repositoryParameter}ezsystems/ezpublish-community ezp $EZ_COMPOSERVERSION;
 
     # Remove ezpublish/cache/prod, needed since we'll move ezpublish root
     rm -Rf ezp/ezpublish/cache/prod
