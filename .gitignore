@@ -4,6 +4,7 @@ files/authorized_keys2
 files/auth.json
 volumes/mysql
 volumes/ezpublish
+volumes/composercache
 dockerfiles/ezpublish/prepare/auth.json
 
 
