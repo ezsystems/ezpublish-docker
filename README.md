@@ -162,7 +162,7 @@ If you later just want to recreate specific images or containers, you then first
 
 ### Access your eZ Publish installation
 
-When the containers are created, you should be able to browse to eZ Publish setup wizard by going to http://localhost/:8080
+When the containers are created, you should be able to browse to eZ Publish setup wizard by going to http://localhost:8080/
 
 
 #### SSH
