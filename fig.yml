@@ -1,0 +1,60 @@
+# dummy container for base image
+ubuntu:
+  build: dockerfiles/ubuntu
+dbvol:
+  image: ezpublishdocker_ubuntu
+  volumes:
+   - volumes/mysql:/var/lib/mysql
+ezpublishvol:
+  image: ezpublishdocker_ubuntu
+  volumes:
+   - volumes/ezpublish:/var/www
+composercachevol:
+  image: ezpublishdocker_ubuntu
+  volumes:
+   - volumes/composercache:/.composer/cache
+db1:
+  image: tutum/mysql
+  volumes_from:
+   - dbvol
+  environment:
+   - MYSQL_PASS=youmaychangethis
+phpclibase:
+  build: dockerfiles/php-cli/base
+prepare:
+  build: dockerfiles/ezpublish/prepare
+  links:
+   - db1:db
+  volumes_from:
+   - ezpublishvol
+   - composercachevol
+  volumes:
+   - ezpublish5-5.3.0-ee-ttl-full.tar.gz:/tmp/ezpublish.tar.gz
+  environment:
+   - EZ_KICKSTART=true
+   - EZ_PACKAGEURL=http://packages.ez.no/ezpublish/5.4/5.4.0alpha1/
+#   - EZ_INSTALLTYPE=composer
+   - EZ_INSTALLTYPE=tarball
+#   - EZ_INSTALLTYPE=basic
+   - EZ_COMPOSERVERSION=dev-master
+   - EZ_COMPOSERREPOSITORYURL=
+phpfpm:
+  build: dockerfiles/php-fpm
+  links:
+   - db1:db
+  volumes_from:
+   - ezpublishvol
+phpcli:
+  build: dockerfiles/php-cli
+  links:
+   - db1:db
+  volumes_from:
+   - ezpublishvol
+nginx:
+  build: dockerfiles/nginx
+  links:
+   - phpfpm:php_fpm
+  volumes_from:
+   - ezpublishvol
+  ports:
+   - "8080:80"

@@ -1,4 +1,4 @@
-FROM ezsystems/ubuntu:apt-get
+FROM ezpublishdocker_ubuntu
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV TIMEZONE Europe/Warsaw

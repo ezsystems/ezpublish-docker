@@ -1,4 +1,4 @@
-FROM ezsystems/ubuntu:apt-get
+FROM ezpublishdocker_ubuntu
 
 ## This image is for decreasing the amount of coffee breaks during development.
 ## This base image prevents other images from also having to do apt-get install of php packages

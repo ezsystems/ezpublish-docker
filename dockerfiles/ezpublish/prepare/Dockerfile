@@ -1,4 +1,4 @@
-FROM ezsystems/php-cli:base
+FROM ezpublishdocker_phpclibase
 
 
 # As application is put in as volume we do all needed operation on run

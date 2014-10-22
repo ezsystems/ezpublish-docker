@@ -129,7 +129,9 @@ However right now following images exists:
 ## Installation
 
 NB: This section reflects current status with images not reflecting spec above!
+The containers can be created and started using either vagrant or fig. Vagrant will create a virtual machine where the containers are running while fig will create the containers on host ( requires linux....)
 
+### Vagrant
 - Ensure you have the following tools installed on our computer:
  - Vagrant 1.6+ (http://vagrantup.com)
  - VirtualBox 4.3.12+ (http://www.virtualbox.org)
@@ -140,9 +142,28 @@ NB: This section reflects current status with images not reflecting spec above!
   In order to create a github oauth token, please follow instructions on this page : https://help.github.com/articles/creating-an-access-token-for-command-line-use To revoke access to this github oauth token you can visit https://github.com/settings/applications
 - Run `vagrant up`
 
-When this is done you should be able to browse to eZ Publish setup wizard by going to http://localhost/:8080
-
 If you later want to do changes to your docker/vagrant files, you need to stop and remove the corresponding container ```docker stop [containerid]; docker rm [containerid]```, remove the image ```docker rmi [imageid]``` and then run ```vagrant provision``` instead of ```vagrant up```
+
+### Fig
+- Ensure you have the following tools installed on our computer:
+ - docker ( https://docs.docker.com/installation/ubuntulinux/ )
+ - Fig ( http://www.fig.sh/install.html )
+ - nsenter ( optionally, if you want to start a shell inside a running container : https://github.com/jpetazzo/nsenter )
+- TODO: It is currently not supported to provide database dump, only clean install is currently supported!
+- Edit fig.yml ( Set the environment variables according to your needs. The same eZ Publish installation methods as with Vagrant is supported, so look in files/vagrant.yml for more details regarding those
+- Copy files/auth.yml-EXAMPLE to files/auth.yml. If you want to install eZ Publish via composer you also needs to edit files/auth.yml and insert your credentials there.
+  In order to create a github oauth token, please follow instructions on this page : https://help.github.com/articles/creating-an-access-token-for-command-line-use To revoke access to this github oauth token you can visit https://github.com/settings/applications
+- Copy files/auth.yml to dockerfiles/ezpublish/prepare/
+- Run `fig -f fig_initial.yml up`. This is a workaround for https://github.com/docker/fig/issues/540
+- Run `fig up -d`
+
+If you later just want to recreate specific images or containers, you then first remove those using `docker rmi [image]` and `docker rm [container]`, and then run
+`fig up -d --no-recreate`
+
+### Access your eZ Publish installation
+
+When the containers are created, you should be able to browse to eZ Publish setup wizard by going to http://localhost:8080/
+
 
 #### SSH
 
@@ -162,7 +183,10 @@ And inspect the eZ Publish folder which was rsynced into the vm and is used as v
 
 To run php/mysql commands you'll need to start a new container which contains php-cli:
 - ```vagrant ssh```
-- ```docker run --rm -i -t --link db-1:db --dns 8.8.8.8 --dns 8.8.4.4 --volumes-from ezpublish-vol --volumes-from composercache-vol ezsystems/php-cli /bin/bash```
+- ```docker run --rm -i -t --link db-1:db --dns 8.8.8.8 --dns 8.8.4.4 --volumes-from ezpublish-vol --volumes-from composercache-vol ezpublishdocker_phpcli /bin/bash```
+
+If using fig instead of vagrant, use the following command in order to run the php-cli container:
+- ```docker run --rm -i -t --link ezpublishdocker_db1_1:db --dns 8.8.8.8 --dns 8.8.4.4 --volumes-from ezpublishdocker_ezpublishvol_1 --volumes-from ezpublishdocker_composercachevol_1 ezpublishdocker_phpcli /bin/bash```
 
 From there you can run symfony commands like normal:
 - ```php ezpublish/console ezpublish:legacy:assets_install --symlink --relative --env dev``
