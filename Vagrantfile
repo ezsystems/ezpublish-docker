@@ -107,6 +107,12 @@ Vagrant.configure("2") do |config|
      vb.customize ["modifyvm", :id, "--ostype", "Linux26_64"]
   end
 
+  CLOUD_CONFIG_PATH = "files/user-data"
+  if File.exist?(CLOUD_CONFIG_PATH)
+    config.vm.provision :file, :source => "#{CLOUD_CONFIG_PATH}", :destination => "/tmp/vagrantfile-user-data"
+    config.vm.provision :shell, :inline => "mv /tmp/vagrantfile-user-data /var/lib/coreos-vagrant/", :privileged => true
+  end
+
   # Vagrant plugin conflict with coreos
   if Vagrant.has_plugin?("vagrant-vbguest") then
     config.vbguest.auto_update = false
