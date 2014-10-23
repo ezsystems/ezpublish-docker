@@ -140,6 +140,7 @@ The containers can be created and started using either vagrant or fig. Vagrant w
 - Copy files/vagrant.yml-EXAMPLE to files/vagrant.yml. Then adjust settings in .yml file as needed
 - Copy files/auth.yml-EXAMPLE to files/auth.yml. If you want to install eZ Publish via composer you also needs to edit files/auth.yml and insert your credentials there.
   In order to create a github oauth token, please follow instructions on this page : https://help.github.com/articles/creating-an-access-token-for-command-line-use To revoke access to this github oauth token you can visit https://github.com/settings/applications
+- Copy files/user-data-EXAMPLE to files/user-data and provide a discovery token as instructed in the file
 - Run `vagrant up`
 
 If you later want to do changes to your docker/vagrant files, you need to stop and remove the corresponding container ```docker stop [containerid]; docker rm [containerid]```, remove the image ```docker rmi [imageid]``` and then run ```vagrant provision``` instead of ```vagrant up```

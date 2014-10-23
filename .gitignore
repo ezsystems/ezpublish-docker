@@ -2,6 +2,7 @@
 files/vagrant.yml
 files/authorized_keys2
 files/auth.json
+files/user-data
 volumes/mysql
 volumes/ezpublish
 volumes/composercache
