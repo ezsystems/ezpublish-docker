@@ -86,7 +86,7 @@ Vagrant.configure("2") do |config|
 
   if vagrantConfig['debug']['disable_rsync'] == false
     config.vm.synced_folder ".", "/vagrant", type: "rsync",
-      rsync__exclude: [ ".git/", "ezpublish/.git/"],
+      rsync__exclude: [ ".git/", "volumes/ezpublish/.git/"],
       rsync__auto: true
   end
 
