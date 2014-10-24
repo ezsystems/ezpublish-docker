@@ -14,11 +14,12 @@ composercachevol:
   volumes:
    - volumes/composercache:/.composer/cache
 db1:
-  image: tutum/mysql
+  build: dockerfiles/mysql
   volumes_from:
    - dbvol
   environment:
    - MYSQL_PASS=youmaychangethis
+   - ETCD_ENABLED=yes
 phpclibase:
   build: dockerfiles/php-cli/base
 prepare:
