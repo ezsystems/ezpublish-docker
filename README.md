@@ -156,11 +156,12 @@ If you later want to do changes to your docker/vagrant files, you need to stop a
 - Copy files/auth.yml-EXAMPLE to files/auth.yml. If you want to install eZ Publish via composer you also needs to edit files/auth.yml and insert your credentials there.
   In order to create a github oauth token, please follow instructions on this page : https://help.github.com/articles/creating-an-access-token-for-command-line-use To revoke access to this github oauth token you can visit https://github.com/settings/applications
 - Copy files/auth.yml to dockerfiles/ezpublish/prepare/
-- Run `fig -d -f fig_initial.yml up`. This is a workaround for https://github.com/docker/fig/issues/540
-- Run `fig up -d`
+- Run `./fig.sh up -d`
 
 If you later just want to recreate specific images or containers, you then first remove those using `docker rmi [image]` and `docker rm [container]`, and then run
-`fig up -d --no-recreate`
+`fig.sh up -d --no-recreate`
+
+fig.sh is a wrapper for fig which also do some internal provisioning. Any command line arguments used when starting the wrapper is passed on to fig.
 
 ### Access your eZ Publish installation
 

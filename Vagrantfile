@@ -39,6 +39,7 @@ Vagrant.configure("2") do |config|
   end
 
   FileUtils.cp( "files/auth.json", "dockerfiles/ezpublish/prepare" )
+  FileUtils.cp( "files/etcd_functions", "dockerfiles/mysql" )
 
   if vagrantConfig['ezpublish']['install_type'] == 'tarball'
     tarballVolArg = "-v /vagrant/" + vagrantConfig['ezpublish']['tarball_filename'] + ":/tmp/ezpublish.tar.gz:ro"
