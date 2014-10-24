@@ -147,7 +147,7 @@ If you later want to do changes to your docker/vagrant files, you need to stop a
 
 ### Fig
 - Ensure you have the following tools installed on our computer:
- - docker ( https://docs.docker.com/installation/ubuntulinux/ )
+ - docker version 1.2 or later ( https://docs.docker.com/installation/ubuntulinux/ ) PS : ubuntu ships with 0.9.1 and this version won't do due to lack of https://github.com/docker/docker/pull/5129/commits 
  - Fig ( http://www.fig.sh/install.html )
  - etcd ( http://blog.hackzilla.org/posts/2014/09/18/etcd-for-ubuntu )
  - nsenter ( optionally, if you want to start a shell inside a running container : https://github.com/jpetazzo/nsenter )
