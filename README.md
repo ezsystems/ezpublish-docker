@@ -149,6 +149,7 @@ If you later want to do changes to your docker/vagrant files, you need to stop a
 - Ensure you have the following tools installed on our computer:
  - docker ( https://docs.docker.com/installation/ubuntulinux/ )
  - Fig ( http://www.fig.sh/install.html )
+ - etcd ( http://blog.hackzilla.org/posts/2014/09/18/etcd-for-ubuntu )
  - nsenter ( optionally, if you want to start a shell inside a running container : https://github.com/jpetazzo/nsenter )
 - TODO: It is currently not supported to provide database dump, only clean install is currently supported!
 - Edit fig.yml ( Set the environment variables according to your needs. The same eZ Publish installation methods as with Vagrant is supported, so look in files/vagrant.yml for more details regarding those
