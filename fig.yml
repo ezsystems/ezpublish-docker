@@ -13,6 +13,18 @@ composercachevol:
   image: ezpublishdocker_ubuntu
   volumes:
    - volumes/composercache:/.composer/cache
+etcd:
+  build: dockerfiles/etcd
+  volumes:
+   - volumes/etcd:/volumes/etcd
+  environment:
+   - START_ETCD=yes
+#   - ETCD_DISCOVERY=https://discovery.etcd.io/b60c96ba8d445705ef31d63557b70ec6
+   - ETCD_DISCOVERY=autogenerate
+   - ETCD_NAME=etcdhost1
+  ports:
+   - "4001:4001"
+   - "7001:7001"
 db1:
   build: dockerfiles/mysql
   volumes_from:
