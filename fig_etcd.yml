@@ -1,0 +1,6 @@
+etcd:
+  build: dockerfiles/etcd
+  volumes:
+   - volumes/etcd:/volumes/etcd
+  environment:
+   - START_ETCD=no
