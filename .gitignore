@@ -7,6 +7,7 @@ volumes/mysql
 volumes/ezpublish
 volumes/composercache
 dockerfiles/ezpublish/prepare/auth.json
+dockerfiles/etcd/etcd_functions
 dockerfiles/mysql/etcd_functions
 
 

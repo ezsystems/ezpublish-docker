@@ -18,6 +18,7 @@ RUN cd /tmp; sudo dpkg -i etcd_0.4.6_amd64.deb
 
 RUN mkdir /var/lib/etcd /etc/etcd
 
+ADD etcd_functions /etcd_functions
 ADD etcd.conf /etc/etcd/etcd.conf
 ADD run.sh /run.sh
 
