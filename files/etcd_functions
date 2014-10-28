@@ -21,7 +21,7 @@ function wait_for_etcd_to_get_online
     TRY=1
     while [ $ETCDUP == "false" ]; do
         echo Contacting etcd, attempt :$TRY
-        etcdctl --peers="http://172.17.42.1:4001" ls / && ETCDUP="true"
+        etcdctl ls / > /dev/null && ETCDUP="true"
         let TRY=$TRY+1
         if [ $TRY -gt $MAXTRY ]; then
             echo Max limit reached. Not able to connect to etcd
@@ -35,18 +35,14 @@ function wait_for_etcd_to_get_online
 # $1 is key, for instance "/message"
 function get_etcd_value
 {
-    local bridge_ip
-    bridge_ip=`get_bridge_ip`
-    etcdctl --peers="http://$bridge_ip:4001" get $1
+    etcdctl get $1
 }
 
 # $1 is key, for instance "/message"
 # $2 is value, for instance "hello"
 function set_etcd_value
 {
-    local bridge_ip
-    bridge_ip=`get_bridge_ip`
-    etcdctl --peers="http://$bridge_ip:4001" set $1 $2
+    etcdctl set $1 $2
 }
 
 #
@@ -86,3 +82,6 @@ function replace_ip_in_hosts
     rm $tmphosts
 
 }
+
+export ETCDCTL_PEERS="http://`get_bridge_ip`:4001"
+
