@@ -1,3 +1,4 @@
+#!/bin/bash
 
 function get_bridge_ip
 {
@@ -27,3 +28,22 @@ function set_etcd_value
     curl -s -L -X PUT http://$bridge_ip:4001/v2/keys$1 -d value=$2 > /dev/null
 }
 
+# $1 is new IP, for instance "1.2.3.4"
+# $2 is hostname, for instace "db"
+function replace_ip_in_hosts
+{
+    local tmphosts
+    local newIP
+    local hostname
+
+    newIP=$1
+    hostname=$2
+    tmphosts=`mktemp`
+
+    cp /etc/hosts $tmphosts
+    perl -pi -e "s|^([\d]+)\.([\d]+)\.([\d]+)\.([\d]+)(\t${hostname})$|${newIP}\5|" $tmphosts
+
+    cp $tmphosts /etc/hosts
+    rm $tmphosts
+
+}
