@@ -1,5 +1,7 @@
 #!/bin/bash
 
+MAXTRY=10
+
 function get_bridge_ip
 {
     ip route| awk '/default/ { print $3 }'
@@ -9,6 +11,25 @@ function get_container_ip
 {
     # Will break if container has multiple IPs ( not counting loopbacks )
     hostname --all-ip-addresses
+}
+
+function wait_for_etcd_to_get_online
+{
+    local ETCDUP
+    local TRY
+    ETCDUP=false
+    TRY=1
+    while [ $ETCDUP == "false" ]; do
+        echo Contacting etcd, attempt :$TRY
+        etcdctl --peers="http://172.17.42.1:4001" ls / && ETCDUP="true"
+        let TRY=$TRY+1
+        if [ $TRY -gt $MAXTRY ]; then
+            echo Max limit reached. Not able to connect to etcd
+            exit 1;
+        fi
+        sleep 2;
+    done
+
 }
 
 # $1 is key, for instance "/message"
