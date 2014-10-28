@@ -18,8 +18,8 @@ if [ "aa$START_ETCD" == "aayes" ]; then
     # We'll not change discovery URL and node name if etcd has previously been started in this container
     if [ ! "$(ls -A /var/lib/etcd/)" ]; then
         echo Writing discovery URL and name to etcd.conf
-        perl -pi -e "s@^(discovery.*= \")(.*\")@\1$discovery\"@" /etc/etcd/etcd.conf
-        perl -pi -e "s@^(name.*= \")(.*\")@\1$ETCD_NAME\"@" /etc/etcd/etcd.conf
+        perl -pi -e "s@^(discovery.*= \")(.*\")@\${1}$discovery\"@" /etc/etcd/etcd.conf
+        perl -pi -e "s@^(name.*= \")(.*\")@\${1}$ETCD_NAME\"@" /etc/etcd/etcd.conf
     fi
 
     bridgeip=`get_bridge_ip`
