@@ -16,12 +16,30 @@ function get_etcd_value
 {
     local bridge_ip
     bridge_ip=`get_bridge_ip`
-    curl -s -L http://$bridge_ip:4001/v2/keys$1 | python -c 'import json,sys;obj=json.load(sys.stdin);print obj["node"]["value"];'
+    etcdctl --peers="http://$bridge_ip:4001" get $1
 }
 
 # $1 is key, for instance "/message"
 # $2 is value, for instance "hello"
 function set_etcd_value
+{
+    local bridge_ip
+    bridge_ip=`get_bridge_ip`
+    etcdctl --peers="http://$bridge_ip:4001" set $1 $2
+}
+
+#
+# $1 is key, for instance "/message"
+function get_etcd_value_curl
+{
+    local bridge_ip
+    bridge_ip=`get_bridge_ip`
+    curl -s -L http://$bridge_ip:4001/v2/keys$1 | python -c 'import json,sys;obj=json.load(sys.stdin);print obj["node"]["value"];'
+}
+
+# $1 is key, for instance "/message"
+# $2 is value, for instance "hello"
+function set_etcd_value_curl
 {
     local bridge_ip
     bridge_ip=`get_bridge_ip`
