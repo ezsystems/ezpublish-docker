@@ -18,7 +18,7 @@ fi
 cp /var/www/doc/nginx/etc/nginx/sites-available/mysite.com /etc/nginx/sites-available/ezpublish
 cp -a /var/www/doc/nginx/etc/nginx/ez_params.d /etc/nginx/
 
-ln -s /etc/nginx/sites-available/ezpublish /etc/nginx/sites-enabled/ezpublish
+ln -s -f /etc/nginx/sites-available/ezpublish /etc/nginx/sites-enabled/ezpublish
 
 # Make sure nginx forwards to php5-fpm on tcp port, not unix socket
 sed -i "s@  fastcgi_pass unix:/var/run/php5-fpm.sock;@  # fastcgi_pass unix:/var/run/php5-fpm.sock;@" /etc/nginx/sites-available/ezpublish
