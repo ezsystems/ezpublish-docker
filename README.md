@@ -131,31 +131,33 @@ However right now following images exists:
 NB: This section reflects current status with images not reflecting spec above!
 The containers can be created and started using either vagrant or fig. Vagrant will create a virtual machine where the containers are running while fig will create the containers on host ( requires linux....)
 
-### Vagrant
+### Common installation procedures
+The following steps needs to be executed both if you are using vagrant or fig
+
+- Copy files/auth.yml-EXAMPLE to files/auth.yml. If you want to install eZ Publish via composer you also needs to edit files/auth.yml and insert your credentials there.
+  In order to create a github oauth token, please follow instructions on this page : https://help.github.com/articles/creating-an-access-token-for-command-line-use To revoke access to this github oauth token you can visit https://github.com/settings/applications
+- If you have an existing ezpublish installation you want to use, do the following :
+ - Place the installation in volumes/ezpublish
+ - Make sure EZ_INSTALLTYPE is set to "basic"
+ - You need to manually import the database from the php-cli container ( see chapter "Running php-cli and mysql commands" )
+   For convenience, you should then also place the database dump in volumes/ezpublish so you may easily access it from the php-cli container
+
+### Vagrant specific procedures
 - Ensure you have the following tools installed on our computer:
  - Vagrant 1.6+ (http://vagrantup.com)
  - VirtualBox 4.3.12+ (http://www.virtualbox.org)
-- Put your eZ Publish directly inside "ezpublish/" directory, or symlink it there (overwriting the folder)
-- TODO: It is currently not supported to provide database dump, only clean install is currently supported!
 - Copy files/vagrant.yml-EXAMPLE to files/vagrant.yml. Then adjust settings in .yml file as needed
-- Copy files/auth.yml-EXAMPLE to files/auth.yml. If you want to install eZ Publish via composer you also needs to edit files/auth.yml and insert your credentials there.
-  In order to create a github oauth token, please follow instructions on this page : https://help.github.com/articles/creating-an-access-token-for-command-line-use To revoke access to this github oauth token you can visit https://github.com/settings/applications
 - Copy files/user-data-EXAMPLE to files/user-data and provide a discovery token as instructed in the file
 - Run `vagrant up`
 
 If you later want to do changes to your docker/vagrant files, you need to stop and remove the corresponding container ```docker stop [containerid]; docker rm [containerid]```, remove the image ```docker rmi [imageid]``` and then run ```vagrant provision``` instead of ```vagrant up```
 
-### Fig
+### Fig specific procedures
 - Ensure you have the following tools installed on our computer:
  - docker version 1.2 or later ( https://docs.docker.com/installation/ubuntulinux/ ) PS : ubuntu ships with 0.9.1 and this version won't do due to lack of https://github.com/docker/docker/pull/5129/commits 
  - Fig ( http://www.fig.sh/install.html )
- - etcd ( http://blog.hackzilla.org/posts/2014/09/18/etcd-for-ubuntu )
  - nsenter ( optionally, if you want to start a shell inside a running container : https://github.com/jpetazzo/nsenter )
-- TODO: It is currently not supported to provide database dump, only clean install is currently supported!
 - Edit fig.yml ( Set the environment variables according to your needs. The same eZ Publish installation methods as with Vagrant is supported, so look in files/vagrant.yml for more details regarding those
-- Copy files/auth.yml-EXAMPLE to files/auth.yml. If you want to install eZ Publish via composer you also needs to edit files/auth.yml and insert your credentials there.
-  In order to create a github oauth token, please follow instructions on this page : https://help.github.com/articles/creating-an-access-token-for-command-line-use To revoke access to this github oauth token you can visit https://github.com/settings/applications
-- Copy files/auth.yml to dockerfiles/ezpublish/prepare/
 - Run `./fig.sh up -d`
 
 If you later just want to recreate specific images or containers, you then first remove those using `docker rmi [image]` and `docker rm [container]`, and then run
