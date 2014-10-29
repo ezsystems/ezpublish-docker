@@ -131,6 +131,15 @@ However right now following images exists:
 NB: This section reflects current status with images not reflecting spec above!
 The containers can be created and started using either vagrant or fig. Vagrant will create a virtual machine where the containers are running while fig will create the containers on host ( requires linux....)
 
+### About etcd 
+If you want to be able to start and stop containers in arbitrary order ( like db, phpfpm and nginx containers ), you'll need have etcd ( https://coreos.com/docs/distributed-configuration/getting-started-with-etcd/ ) running.
+Etcd is a open-source distributed key value store that is used to provides shared configuration among the containers.
+If you do *not* run etcd, you have to make sure that containers are started in this order : ezpublishdocker_db1_1, ezpublishdocker_phpfpm_1, ezpublishdocker_nginx_1
+This means that if you for some reason has to restart ezpublishdocker_db1_1, you also have to restart the other two containers, and in correct order.
+
+See below for instructions for how to run etcd
+
+
 ### Common installation procedures
 The following steps needs to be executed both if you are using vagrant or fig
 
@@ -140,14 +149,20 @@ The following steps needs to be executed both if you are using vagrant or fig
  - Place the installation in volumes/ezpublish
  - Make sure EZ_INSTALLTYPE is set to "basic"
  - You need to manually import the database from the php-cli container ( see chapter "Running php-cli and mysql commands" )
-   For convenience, you should then also place the database dump in volumes/ezpublish so you may easily access it from the php-cli container
+   This needs to be done after all images and containers has been created ( after you have executed "vagrant up" or "./fig.sh up -d" )
+   For convenience, you should also place the database dump in volumes/ezpublish so you may easily access it from the php-cli container
 
 ### Vagrant specific procedures
 - Ensure you have the following tools installed on our computer:
  - Vagrant 1.6+ (http://vagrantup.com)
  - VirtualBox 4.3.12+ (http://www.virtualbox.org)
 - Copy files/vagrant.yml-EXAMPLE to files/vagrant.yml. Then adjust settings in .yml file as needed
-- Copy files/user-data-EXAMPLE to files/user-data and provide a discovery token as instructed in the file
+- In fig.yml, make sure "START_ETCD=no"
+- If you want to run etcd : 
+ - Copy files/user-data-EXAMPLE to files/user-data and provide a discovery token as instructed in the file
+ - In fig.yml, make sure "ETCD_ENABLED=yes" in all places
+- If you do *not* want to run etcd : 
+ - In fig.yml, make sure "ETCD_ENABLED=no" in all places
 - Run `vagrant up`
 
 If you later want to do changes to your docker/vagrant files, you need to stop and remove the corresponding container ```docker stop [containerid]; docker rm [containerid]```, remove the image ```docker rmi [imageid]``` and then run ```vagrant provision``` instead of ```vagrant up```
@@ -158,6 +173,14 @@ If you later want to do changes to your docker/vagrant files, you need to stop a
  - Fig ( http://www.fig.sh/install.html )
  - nsenter ( optionally, if you want to start a shell inside a running container : https://github.com/jpetazzo/nsenter )
 - Edit fig.yml ( Set the environment variables according to your needs. The same eZ Publish installation methods as with Vagrant is supported, so look in files/vagrant.yml for more details regarding those
+- If you want to run etcd, you have two options, running etcd on the host directly, or in a container
+ - If you want to run etcd on the hosts nad your distribution do not have etcd packages, this url might be of help:
+  - http://blog.hackzilla.org/posts/2014/09/18/etcd-for-ubuntu
+ - The easiest method is to run etcd in a container:
+  - In fig.yml, make sure "START_ETCD=yes"
+  - In fig.yml, make sure "ETCD_DISCOVERY=autogenerate" or "ETCD_DISCOVERY=https://discovery.etcd.io/[discovery_hash]"
+  - In fig.yml, make sure "ETCD_ENABLED=yes" in all places
+    If you want to manually create a discovery hash, access https://discovery.etcd.io/new
 - Run `./fig.sh up -d`
 
 If you later just want to recreate specific images or containers, you then first remove those using `docker rmi [image]` and `docker rm [container]`, and then run
