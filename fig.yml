@@ -73,3 +73,5 @@ nginx:
    - ezpublishvol
   ports:
    - "8080:80"
+  environment:
+   - ETCD_ENABLED=yes

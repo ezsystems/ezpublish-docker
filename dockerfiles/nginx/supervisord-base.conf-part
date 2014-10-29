@@ -1,0 +1,9 @@
+
+[supervisord]
+nodaemon=true
+
+[program:nginx]
+command=/usr/sbin/nginx
+autostart=true
+autorestart=true
+
