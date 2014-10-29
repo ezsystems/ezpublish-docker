@@ -57,6 +57,8 @@ phpfpm:
    - db1:db
   volumes_from:
    - ezpublishvol
+  environment:
+   - ETCD_ENABLED=yes
 phpcli:
   build: dockerfiles/php-cli
   links:

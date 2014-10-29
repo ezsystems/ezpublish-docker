@@ -20,7 +20,12 @@ RUN apt-get install -y \
     php5-gd \
     php5-curl \
     curl \
+    supervisor \
     mysql-client
+
+ADD etcd_0.4.6_amd64.deb /etcd_0.4.6_amd64.deb
+RUN dpkg -i /etcd_0.4.6_amd64.deb
+ADD etcd_functions /etcd_functions
 
 # Set timezone
 RUN echo $TIMEZONE > /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata
@@ -41,6 +46,14 @@ RUN sed -i "s@^;daemonize = yes*@daemonize = no@" /etc/php5/fpm/php-fpm.conf
 # Set listen socket for php-fpm
 RUN sed -i "s@^listen = /var/run/php5-fpm.sock@listen = $PORT@" /etc/php5/fpm/pool.d/www.conf
 
-CMD ["/usr/sbin/php5-fpm"]
+# configure supervisord
+RUN mkdir /var/run/sshd && chmod 0755 /var/run/sshd
+ADD supervisord-base.conf-part /supervisord-base.conf-part
+ADD supervisord-etcd.conf-part /supervisord-etcd.conf-part
+
+ADD watch_db_ip.sh /watch_db_ip.sh
+ADD run.sh /run.sh
+
+CMD ["/run.sh"]
 
 EXPOSE 9000

@@ -1,0 +1,9 @@
+
+[supervisord]
+nodaemon=true
+
+[program:phpfpm]
+command=/usr/sbin/php5-fpm
+autostart=true
+autorestart=true
+

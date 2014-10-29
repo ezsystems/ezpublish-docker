@@ -3,6 +3,7 @@
 cp files/auth.json dockerfiles/ezpublish/prepare
 cp files/etcd_functions dockerfiles/etcd
 cp files/etcd_functions dockerfiles/mysql
+cp files/etcd_functions dockerfiles/php-fpm
 
 # This is a workaround for https://github.com/docker/fig/issues/540
 fig -f fig_initial.yml "$@"
@@ -15,6 +16,7 @@ fi
 # Copy the etcd .deb to the dockerfile directory for images that need it
 if [ ! -f dockerfiles/mysql/etcd_0.4.6_amd64.deb ]; then
     cp volumes/etcd/etcd_0.4.6_amd64.deb dockerfiles/mysql
+    cp volumes/etcd/etcd_0.4.6_amd64.deb dockerfiles/php-fpm
 fi
 
 fig "$@"

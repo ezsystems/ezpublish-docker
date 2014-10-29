@@ -10,5 +10,6 @@ dockerfiles/ezpublish/prepare/auth.json
 dockerfiles/etcd/etcd_functions
 dockerfiles/mysql/etcd_functions
 dockerfiles/mysql/etcd_0.4.6_amd64.deb
-
+dockerfiles/php-fpm/etcd_functions
+dockerfiles/php-fpm/etcd_0.4.6_amd64.deb
 
