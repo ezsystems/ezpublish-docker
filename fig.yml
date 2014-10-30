@@ -12,7 +12,7 @@ ezpublishvol:
 composercachevol:
   image: ezpublishdocker_ubuntu
   volumes:
-   - volumes/composercache:/.composer/cache
+   - volumes/composercache:/volumes/composercache
 etcd:
   build: dockerfiles/etcd
   volumes:
