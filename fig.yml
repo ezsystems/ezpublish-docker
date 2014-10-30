@@ -18,10 +18,9 @@ etcd:
   volumes:
    - volumes/etcd:/volumes/etcd
   environment:
-   - START_ETCD=yes
-#   - ETCD_DISCOVERY=https://discovery.etcd.io/b60c96ba8d445705ef31d63557b70ec6
-   - ETCD_DISCOVERY=autogenerate
-   - ETCD_NAME=etcdhost1
+   - START_ETCD
+   - ETCD_DISCOVERY
+   - ETCD_NAME
   ports:
    - "4001:4001"
    - "7001:7001"
@@ -30,8 +29,8 @@ db1:
   volumes_from:
    - dbvol
   environment:
-   - MYSQL_PASS=youmaychangethis
-   - ETCD_ENABLED=yes
+   - MYSQL_PASS
+   - ETCD_ENABLED
 phpclibase:
   build: dockerfiles/php-cli/base
 prepare:
@@ -42,15 +41,13 @@ prepare:
    - ezpublishvol
    - composercachevol
   volumes:
-   - ezpublish5-5.3.0-ee-ttl-full.tar.gz:/tmp/ezpublish.tar.gz
+   - ${EZ_TARBALL_FILENAME}:/tmp/ezpublish.tar.gz
   environment:
-   - EZ_KICKSTART=true
-   - EZ_PACKAGEURL=http://packages.ez.no/ezpublish/5.4/5.4.0alpha1/
-#   - EZ_INSTALLTYPE=composer
-   - EZ_INSTALLTYPE=tarball
-#   - EZ_INSTALLTYPE=basic
-   - EZ_COMPOSERVERSION=dev-master
-   - EZ_COMPOSERREPOSITORYURL=
+   - EZ_KICKSTART
+   - EZ_PACKAGEURL
+   - EZ_INSTALLTYPE
+   - EZ_COMPOSERVERSION
+   - EZ_COMPOSERREPOSITORYURL
 phpfpm:
   build: dockerfiles/php-fpm
   links:
@@ -58,7 +55,7 @@ phpfpm:
   volumes_from:
    - ezpublishvol
   environment:
-   - ETCD_ENABLED=yes
+   - ETCD_ENABLED
 phpcli:
   build: dockerfiles/php-cli
   links:
@@ -74,4 +71,4 @@ nginx:
   ports:
    - "8080:80"
   environment:
-   - ETCD_ENABLED=yes
+   - ETCD_ENABLED

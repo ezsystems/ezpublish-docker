@@ -1,0 +1,65 @@
+
+#### ETCD settings ####
+
+# Should the containers share resources via etcd or not
+# if value is yes, you either need to run etcd on host, or also set START_ETCD=yes
+ETCD_ENABLED=no
+
+# Should etcd run in a container or not
+# Setting is only applicable if ETC_ENABLED=yes
+START_ETCD=no
+
+# How to deal with etcd discovery. Value can either be a url or "autogenerate"
+# If value is "autogenerate", a token will be automaticly generated the first time the etcd container start
+# In order to generate a token manually, access https://discovery.etcd.io/new in a browser
+# Setting is only applicable if START_ETC=yes
+#ETCD_DISCOVERY=https://discovery.etcd.io/b60c96ba8d445705ef31d63557b70ec6
+ETCD_DISCOVERY=autogenerate
+
+# etcd node name for the etcd container
+# Setting is only applicable if START_ETC=yes
+ETCD_NAME=etcdhost1
+
+#### DB settings ####
+
+# Password for the admin user in mariadb/mysql
+MYSQL_PASS=youmaychangethis
+
+#### eZ Publish deployment settings ####
+
+# Generates kickstart.ini file with database settings if true
+EZ_KICKSTART=true
+
+#  Pre downloads packages from provided url if set for setup wizard speed up
+EZ_PACKAGEURL=http://packages.ez.no/ezpublish/5.4/5.4.0alpha1/
+
+# Specify how to prepare ezpublish
+# - composer : Makes a fresh install using composer. Assumes volume/ezpublish is empty...Will not do any changes do database, except make sure ezp database exists
+#              Note that when using this setting you need to have more than 1Gb of RAM in virtual machine ( 2Gb recommended )
+# - tarball : Install eZ Publish from tarball. Make sure you also specify tarball_filename setting
+# - basic : Assumes ezp is already installed in doc root and will
+#    - process kickstart and packageurl settings.
+#    - make sure permissions are set correctly ( writable for web user )
+#    - install assets
+#    - make sure ezp database exists
+# - donothing : Will not do any changes at all in docroot, or with database
+EZ_INSTALLTYPE=composer
+
+# Setting used when install_type: "composer"
+# Version of eZ Publish to install via composer. Examples are "v5.3.0" and "dev-master"
+EZ_COMPOSERVERSION=dev-master
+
+# Setting used when install_type: "composer"
+# Set value to "" if you want to downloaded everything from github. Set value to "https://updates.ez.no/ttl" if you would like to install official patches too ( applicable when for you for instance have 'composer_version : "v5.3.0"' )
+EZ_COMPOSERREPOSITORYURL=
+
+# Setting used when install_type: "tarball"
+# Path and filename of tarball. Path must be relative to project root ( the directory where Vagrantfile is located )
+# Path cannot escape the project root ( ie do not do "../ezpublish5-5.3.0-ee-ttl-full.tar.gz"
+EZ_TARBALL_FILENAME=ezpublish5-5.3.0-ee-ttl-full.tar.gz
+
+
+
+export ETCD_ENABLED START_ETCD ETCD_DISCOVERY ETCD_NAME
+export MYSQL_PASS
+export EZ_KICKSTART EZ_PACKAGEURL EZ_INSTALLTYPE EZ_COMPOSERVERSION EZ_COMPOSERREPOSITORYURL EZ_TARBALL_FILENAME

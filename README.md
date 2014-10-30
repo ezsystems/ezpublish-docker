@@ -170,17 +170,17 @@ If you later want to do changes to your docker/vagrant files, you need to stop a
 ### Fig specific procedures
 - Ensure you have the following tools installed on our computer:
  - docker version 1.2 or later ( https://docs.docker.com/installation/ubuntulinux/ ) PS : ubuntu ships with 0.9.1 and this version won't do due to lack of https://github.com/docker/docker/pull/5129/commits 
- - Fig ( http://www.fig.sh/install.html )
+ - Fig version 1.0.0 or later ( http://www.fig.sh/install.html )
  - nsenter ( optionally, if you want to start a shell inside a running container : https://github.com/jpetazzo/nsenter )
-- Edit fig.yml ( Set the environment variables according to your needs. The same eZ Publish installation methods as with Vagrant is supported, so look in files/vagrant.yml for more details regarding those
+- Copy files/fig.config-EXAMPLE to files/fig.config ( and set the environment variables in files/fig.config according to your needs ). 
 - If you want to run etcd, you have two options, running etcd on the host directly, or in a container
  - If you want to run etcd on the hosts nad your distribution do not have etcd packages, this url might be of help:
   - http://blog.hackzilla.org/posts/2014/09/18/etcd-for-ubuntu
  - The easiest method is to run etcd in a container:
-  - In fig.yml, make sure "START_ETCD=yes"
-  - In fig.yml, make sure "ETCD_DISCOVERY=autogenerate" or "ETCD_DISCOVERY=https://discovery.etcd.io/[discovery_hash]"
-  - In fig.yml, make sure "ETCD_ENABLED=yes" in all places
-    If you want to manually create a discovery hash, access https://discovery.etcd.io/new
+  - In files/fig.config, make sure "START_ETCD=yes"
+  - In files/fig.config, make sure "ETCD_DISCOVERY=autogenerate" or "ETCD_DISCOVERY=https://discovery.etcd.io/[discovery_hash]"
+  - In files/fig.config, make sure "ETCD_ENABLED=yes" in all places
+    If you want to manually create a discovery hash, access https://discovery.etcd.io/new in a browser
 - Run `./fig.sh up -d`
 
 If you later just want to recreate specific images or containers, you then first remove those using `docker rmi [image]` and `docker rm [container]`, and then run
