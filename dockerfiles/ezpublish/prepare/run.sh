@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 # Script accepts the following environment variable:
 # - EZ_KICKSTART ( "true" or "false" )
 # - EZ_PACKAGEURL ( url, pointing to url where packages are located )
@@ -56,13 +55,16 @@ function installViaComposer
     local tmpDir
     local repositoryParameter
 
+    mkdir -p $HOME/.composer
+    ln -s -f /volumes/composercache $HOME/.composer/cache
+
     tmpDir=`mktemp -d`
     #tmpDir="tmp.747Uy8crCV"
 
     cd $tmpDir
 
-    mkdir -p /.composer
-    cp /auth.json /.composer
+    mkdir -p $HOME/.composer
+    cp /auth.json $HOME/.composer
 
     if [ "aa$EZ_COMPOSERREPOSITORYURL" == "aa" ]; then
         repositoryParameter=""
@@ -80,7 +82,7 @@ function installViaComposer
     cd ..
     rm -Rf $tmpDir
 
-    rm /.composer/auth.json
+    rm $HOME/.composer/auth.json
 
 }
 
