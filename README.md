@@ -158,6 +158,7 @@ The following steps needs to be executed both if you are using vagrant or fig
  - VirtualBox 4.3.12+ (http://www.virtualbox.org)
 - Copy files/vagrant.yml-EXAMPLE to files/vagrant.yml. Then adjust settings in .yml file as needed
 - In fig.yml, make sure "START_ETCD=no"
+- In files/fig.config, make sure "FIX_EXECUTION_PATH=/"
 - If you want to run etcd : 
  - Copy files/user-data-EXAMPLE to files/user-data and provide a discovery token as instructed in the file
  - In fig.yml, make sure "ETCD_ENABLED=yes" in all places

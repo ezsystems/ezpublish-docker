@@ -11,11 +11,11 @@ export FIG_PROJECT_NAME=ezpublishdocker
 source files/fig.config
 
 # This is a workaround for https://github.com/docker/fig/issues/540
-fig -f fig_initial.yml "$@"
+${FIX_EXECUTION_PATH}fig -f fig_initial.yml "$@"
 
 # We need to build etcd next so that the .deb package can be placed inside other images
 if [ ! -f volumes/etcd/etcd_0.4.6_amd64.deb ]; then
-    fig -f fig_etcd.yml "$@"
+    ${FIX_EXECUTION_PATH}fig -f fig_etcd.yml "$@"
 fi
 
 # Copy the etcd .deb to the dockerfile directory for images that need it
@@ -25,5 +25,5 @@ if [ ! -f dockerfiles/mysql/etcd_0.4.6_amd64.deb ]; then
     cp volumes/etcd/etcd_0.4.6_amd64.deb dockerfiles/nginx
 fi
 
-fig "$@"
+${FIX_EXECUTION_PATH}fig "$@"
 
