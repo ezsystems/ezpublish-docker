@@ -1,0 +1,87 @@
+#!/bin/bash
+
+MAXTRY=10
+
+function get_bridge_ip
+{
+    ip route| awk '/default/ { print $3 }'
+}
+
+function get_container_ip
+{
+    # Will break if container has multiple IPs ( not counting loopbacks )
+    hostname --all-ip-addresses
+}
+
+function wait_for_etcd_to_get_online
+{
+    local ETCDUP
+    local TRY
+    ETCDUP=false
+    TRY=1
+    while [ $ETCDUP == "false" ]; do
+        echo Contacting etcd, attempt :$TRY
+        etcdctl ls / > /dev/null && ETCDUP="true"
+        let TRY=$TRY+1
+        if [ $TRY -gt $MAXTRY ]; then
+            echo Max limit reached. Not able to connect to etcd
+            exit 1;
+        fi
+        sleep 2;
+    done
+
+}
+
+# $1 is key, for instance "/message"
+function get_etcd_value
+{
+    etcdctl get $1
+}
+
+# $1 is key, for instance "/message"
+# $2 is value, for instance "hello"
+function set_etcd_value
+{
+    etcdctl set $1 $2
+}
+
+#
+# $1 is key, for instance "/message"
+function get_etcd_value_curl
+{
+    local bridge_ip
+    bridge_ip=`get_bridge_ip`
+    curl -s -L http://$bridge_ip:4001/v2/keys$1 | python -c 'import json,sys;obj=json.load(sys.stdin);print obj["node"]["value"];'
+}
+
+# $1 is key, for instance "/message"
+# $2 is value, for instance "hello"
+function set_etcd_value_curl
+{
+    local bridge_ip
+    bridge_ip=`get_bridge_ip`
+    curl -s -L -X PUT http://$bridge_ip:4001/v2/keys$1 -d value=$2 > /dev/null
+}
+
+# $1 is new IP, for instance "1.2.3.4"
+# $2 is hostname, for instace "db"
+function replace_ip_in_hosts
+{
+    local tmphosts
+    local newIP
+    local hostname
+
+    newIP=$1
+    hostname=$2
+    tmphosts=`mktemp`
+
+    cp /etc/hosts $tmphosts
+    perl -pi -e "s|^([\d]+)\.([\d]+)\.([\d]+)\.([\d]+)(\t${hostname})$|${newIP}\5|" $tmphosts
+
+    cp $tmphosts /etc/hosts
+    rm $tmphosts
+
+}
+
+export ETCDCTL_PEERS="http://`get_bridge_ip`:4001"
+

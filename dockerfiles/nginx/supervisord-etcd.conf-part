@@ -1,0 +1,6 @@
+
+[program:watchdbip]
+command=/watch_phpfpm_ip.sh
+autostart=true
+autorestart=true
+

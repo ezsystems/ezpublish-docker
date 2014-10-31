@@ -2,9 +2,17 @@
 files/vagrant.yml
 files/authorized_keys2
 files/auth.json
+files/user-data
 volumes/mysql
 volumes/ezpublish
 volumes/composercache
+volumes/etcd
 dockerfiles/ezpublish/prepare/auth.json
-
+dockerfiles/etcd/etcd_functions
+dockerfiles/mysql/etcd_functions
+dockerfiles/mysql/etcd_0.4.6_amd64.deb
+dockerfiles/php-fpm/etcd_functions
+dockerfiles/php-fpm/etcd_0.4.6_amd64.deb
+dockerfiles/nginx/etcd_functions
+dockerfiles/nginx/etcd_0.4.6_amd64.deb
 
