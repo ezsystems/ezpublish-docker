@@ -6,6 +6,8 @@ cp files/etcd_functions dockerfiles/mysql
 cp files/etcd_functions dockerfiles/php-fpm
 cp files/etcd_functions dockerfiles/nginx
 
+export FIG_PROJECT_NAME=ezpublishdocker
+
 source files/fig.config
 
 # This is a workaround for https://github.com/docker/fig/issues/540
