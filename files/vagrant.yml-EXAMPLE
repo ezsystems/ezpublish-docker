@@ -12,44 +12,8 @@ virtualmachine:
     network:
         private_network_ip: 33.33.33.53
 
-dbserver:
-    password: youmaychangethis
-
-ezpublish:
-    # Generates kickstart.ini file with database settings if true
-    kickstart: "true"
-
-    #  Pre downloads packages from provided url if set for setup wizard speed up
-    packageurl: http://packages.ez.no/ezpublish/5.4/5.4.0alpha1/
-
-    # Specify how to prepare ezpublish
-    # - composer : Makes a fresh install using composer. Assumes volume/ezpublish is empty...Will not do any changes do database, except make sure ezp database exists
-    #              Note that when using this setting you need to have more than 1Gb of RAM in virtual machine ( 2Gb recommended )
-    # - tarball : Install eZ Publish from tarball. Make sure you also specify tarball_filename setting
-    # - basic : Assumes ezp is already installed in doc root and will
-    #    - process kickstart and packageurl settings.
-    #    - make sure permissions are set correctly ( writable for web user )
-    #    - install assets
-    #    - make sure ezp database exists
-    # - donothing : Will not do any changes at all in docroot, or with database
-    install_type: "composer"
-
-    # Setting used when install_type: "composer"
-    # Version of eZ Publish to install via composer. Examples are "v5.3.0" and "dev-master"
-    composer_version: "dev-master"
-
-    # Setting used when install_type: "composer"
-    # Set value to "" if you want to downloaded everything from github. Set value to "https://updates.ez.no/ttl" if you would like to install official patches too ( applicable when for you for instance have 'composer_version : "v5.3.0"' )
-    composer_repository_url: ""
-
-    # Setting used when install_type: "tarball"
-    # Path and filename of tarball. Path must be relative to project root ( the directory where Vagrantfile is located )
-    # Path cannot escape the project root ( ie do not do "../ezpublish5-5.3.0-ee-ttl-full.tar.gz"
-    tarball_filename: "ezpublish5-5.3.0-ee-ttl-full.tar.gz"
-
 debug:
     disable_rsync: false
-    disable_docker_pull: false
     disable_docker_provision: false
     # Copy customer authorized_keys2 to coreOS VM or not. Makes it possible to ssh directly to VM without doing a "vagrant ssh"
     copy_authorized_keys2: false

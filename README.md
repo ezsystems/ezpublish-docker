@@ -151,13 +151,14 @@ The following steps needs to be executed both if you are using vagrant or fig
  - You need to manually import the database from the php-cli container ( see chapter "Running php-cli and mysql commands" )
    This needs to be done after all images and containers has been created ( after you have executed "vagrant up" or "./fig.sh up -d" )
    For convenience, you should also place the database dump in volumes/ezpublish so you may easily access it from the php-cli container
+- Copy files/fig.config-EXAMPLE to files/fig.config ( and set the environment variables in files/fig.config according to your needs ). 
 
 ### Vagrant specific procedures
 - Ensure you have the following tools installed on our computer:
  - Vagrant 1.6+ (http://vagrantup.com)
  - VirtualBox 4.3.12+ (http://www.virtualbox.org)
 - Copy files/vagrant.yml-EXAMPLE to files/vagrant.yml. Then adjust settings in .yml file as needed
-- In fig.yml, make sure "START_ETCD=no"
+- In files/fig.config, make sure "START_ETCD=no"
 - In files/fig.config, make sure "FIX_EXECUTION_PATH=/"
 - If you want to run etcd : 
  - Copy files/user-data-EXAMPLE to files/user-data and provide a discovery token as instructed in the file
@@ -168,12 +169,12 @@ The following steps needs to be executed both if you are using vagrant or fig
 
 If you later want to do changes to your docker/vagrant files, you need to stop and remove the corresponding container ```docker stop [containerid]; docker rm [containerid]```, remove the image ```docker rmi [imageid]``` and then run ```vagrant provision``` instead of ```vagrant up```
 
-### Fig specific procedures
-- Ensure you have the following tools installed on our computer:
- - docker version 1.2 or later ( https://docs.docker.com/installation/ubuntulinux/ ) PS : ubuntu ships with 0.9.1 and this version won't do due to lack of https://github.com/docker/docker/pull/5129/commits 
+### Specific procedures when running containers on local host, not in VM using Vagrant
+- Ensure you have the following tools installed on your computer:
+ - docker version 1.2 or later ( https://docs.docker.com/installation/ubuntulinux/ ) 
+   PS : ubuntu ships with 0.9.1 and this version won't do due to lack of https://github.com/docker/docker/pull/5129/commits 
  - Fig version 1.0.0 or later ( http://www.fig.sh/install.html )
  - nsenter ( optionally, if you want to start a shell inside a running container : https://github.com/jpetazzo/nsenter )
-- Copy files/fig.config-EXAMPLE to files/fig.config ( and set the environment variables in files/fig.config according to your needs ). 
 - If you want to run etcd, you have two options, running etcd on the host directly, or in a container
  - If you want to run etcd on the hosts nad your distribution do not have etcd packages, this url might be of help:
   - http://blog.hackzilla.org/posts/2014/09/18/etcd-for-ubuntu
@@ -184,14 +185,14 @@ If you later want to do changes to your docker/vagrant files, you need to stop a
     If you want to manually create a discovery hash, access https://discovery.etcd.io/new in a browser
 - Run `./fig.sh up -d`
 
-If you later just want to recreate specific images or containers, you then first remove those using `docker rmi [image]` and `docker rm [container]`, and then run
+If you later just want to recreate specific images or containers, you then first remove those using `docker rm [container]` and `docker rmi [image]`, and then run
 `fig.sh up -d --no-recreate`
 
 fig.sh is a wrapper for fig which also do some internal provisioning. Any command line arguments used when starting the wrapper is passed on to fig.
 
 ### Access your eZ Publish installation
 
-When the containers are created, you should be able to browse to eZ Publish setup wizard by going to http://localhost:8080/
+When the containers are created, you should be able to browse to eZ Publish setup wizard by going to http://[VM_IP_ADDR]:8080/ if using vagrant and http://localhost:8080/ if running the containers on localhost 
 
 
 #### SSH
