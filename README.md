@@ -234,16 +234,16 @@ To get out, type ```exit``` two times ;)
 ##### The containers
 
 Once you have the system up, doing a ```docker ps -a``` will reveal that the following containers:
- - web-nginx
- - php-fpm
- - db-1
- - db-vol
- - ezpublish-vol
+ - ezpublishdocker_nginx_1
+ - ezpublishdocker_phpfpm_1
+ - ezpublishdocker_db1_1
+ - ezpublishdocker_dbvol_1
+ - ezpublishdocker_ezpublishvol_1
 
-The db-vol and ezpublish-vol containers are stopped ( meaning no processes are running in them ). This is correct. These containers are only data volume containers for the mysql raw db files and ezpublish.
-The content of the db-vol data volume container is mapped to /vagrant/volumes/mysql/ on VM. 
-The content of the ezpublish-vol data volume container is mapped to /vagrant/volumes/ezpublish/ on VM. 
-If you want to reset the mysql databases, you'll need to stop and remove the db-1 container, remove all files in volumes/mysql and make sure that is synced to VM ( /vagrant/volumes/mysql ), then recreate db-1 container
+The ezpublishdocker_dbvol_1 and ezpublishdocker_ezpublishvol_1 containers are stopped ( meaning no processes are running in them ). This is correct. These containers are only data volume containers for the mysql raw db files and ezpublish.
+The content of the  ezpublishdocker_dbvol_1 data volume container is mapped to /vagrant/volumes/mysql/ on VM ( volumes/mysql/ if running containers on localhost ). 
+The content of the ezpublishdocker_ezpublishvol_1 data volume container is mapped to /vagrant/volumes/ezpublish/ on VM. 
+If you want to reset the mysql databases, you'll need to stop and remove the ezpublishdocker_dbvol_1 container, remove all files in volumes/mysql and make sure that is synced to VM ( /vagrant/volumes/mysql ), then recreate ezpublishdocker_dbvol_1 container
 For replacing the ezpublish files, you simply needs to change the files in volumes/ezpublish and sync this over to the VM
 
 ##### Running vagrant from windows
