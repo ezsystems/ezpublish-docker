@@ -213,10 +213,9 @@ And inspect the eZ Publish folder which was rsynced into the vm and is used as v
 
 To run php/mysql commands you'll need to start a new container which contains php-cli:
 - ```vagrant ssh```
-- ```docker run --rm -i -t --link db-1:db --dns 8.8.8.8 --dns 8.8.4.4 --volumes-from ezpublish-vol --volumes-from composercache-vol ezpublishdocker_phpcli /bin/bash```
-
-If using fig instead of vagrant, use the following command in order to run the php-cli container:
 - ```docker run --rm -i -t --link ezpublishdocker_db1_1:db --dns 8.8.8.8 --dns 8.8.4.4 --volumes-from ezpublishdocker_ezpublishvol_1 --volumes-from ezpublishdocker_composercachevol_1 ezpublishdocker_phpcli /bin/bash```
+
+If running the containers on localhost, you have to skip the ```vagrant ssh``` of course
 
 From there you can run symfony commands like normal:
 - ```php ezpublish/console ezpublish:legacy:assets_install --symlink --relative --env dev``
@@ -224,7 +223,7 @@ From there you can run symfony commands like normal:
 You can also access mysql from this container as it has the mysql client installed:
 - ```mysql -uadmin --password=[mysqlpasswd] --protocol=tcp --host=db```
 
-Mysql password is defined in files/vagrant.yml
+Mysql password is defined in files/fig.config
 
 ( For other environment variables see ```env```, basically these typically comes from parent images and links )
 
