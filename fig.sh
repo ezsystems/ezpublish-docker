@@ -10,12 +10,19 @@ export FIG_PROJECT_NAME=ezpublishdocker
 
 source files/fig.config
 
+# Make a argumentlist where any "-d" is removed
+for i in "$@"; do
+    if [ $i != "-d" ]; then
+        arglistnodetach="$arglistnodetach $i"
+    fi
+done
+
 # This is a workaround for https://github.com/docker/fig/issues/540
 ${FIX_EXECUTION_PATH}fig -f fig_initial.yml "$@"
 
 # We need to build etcd next so that the .deb package can be placed inside other images
 if [ ! -f volumes/etcd/etcd_0.4.6_amd64.deb ]; then
-    ${FIX_EXECUTION_PATH}fig -f fig_etcd.yml "$@"
+    ${FIX_EXECUTION_PATH}fig -f fig_etcd.yml $arglistnodetach
 fi
 
 # Copy the etcd .deb to the dockerfile directory for images that need it
