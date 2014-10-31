@@ -134,7 +134,7 @@ The containers can be created and started using either vagrant or fig. Vagrant w
 ### About etcd 
 If you want to be able to start and stop containers in arbitrary order ( like db, phpfpm and nginx containers ), you'll need have etcd ( https://coreos.com/docs/distributed-configuration/getting-started-with-etcd/ ) running.
 Etcd is a open-source distributed key value store that is used to provides shared configuration among the containers.
-If you do *not* run etcd, you have to make sure that containers are started in this order : ezpublishdocker_db1_1, ezpublishdocker_phpfpm_1, ezpublishdocker_nginx_1
+If you do *not* run etcd and you start/stop containers without using fig.sh, you have to make sure that containers are started in this order : ezpublishdocker_db1_1, ezpublishdocker_phpfpm_1, ezpublishdocker_nginx_1
 This means that if you for some reason has to restart ezpublishdocker_db1_1, you also have to restart the other two containers, and in correct order.
 
 See below for instructions for how to run etcd
