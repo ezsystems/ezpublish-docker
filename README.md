@@ -162,9 +162,9 @@ The following steps needs to be executed both if you are using vagrant or fig
 - In files/fig.config, make sure "FIX_EXECUTION_PATH=/"
 - If you want to run etcd : 
  - Copy files/user-data-EXAMPLE to files/user-data and provide a discovery token as instructed in the file
- - In fig.yml, make sure "ETCD_ENABLED=yes" in all places
+ - In files/fig.config, make sure "ETCD_ENABLED=yes" in all places
 - If you do *not* want to run etcd : 
- - In fig.yml, make sure "ETCD_ENABLED=no" in all places
+ - In files/fig.config, make sure "ETCD_ENABLED=no" in all places
 - Run `vagrant up`
 
 If you later want to do changes to your docker/vagrant files, you need to stop and remove the corresponding container ```docker stop [containerid]; docker rm [containerid]```, remove the image ```docker rmi [imageid]``` and then run ```vagrant provision``` instead of ```vagrant up```
