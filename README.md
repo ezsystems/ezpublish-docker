@@ -176,7 +176,7 @@ If you later want to do changes to your docker/vagrant files, you need to stop a
  - Fig version 1.0.0 or later ( http://www.fig.sh/install.html )
  - nsenter ( optionally, if you want to start a shell inside a running container : https://github.com/jpetazzo/nsenter )
 - If you want to run etcd, you have two options, running etcd on the host directly, or in a container
- - If you want to run etcd on the hosts nad your distribution do not have etcd packages, this url might be of help:
+ - If you want to run etcd on the hosts and your distribution do not have etcd packages, this url might be of help:
   - http://blog.hackzilla.org/posts/2014/09/18/etcd-for-ubuntu
  - The easiest method is to run etcd in a container:
   - In files/fig.config, make sure "START_ETCD=yes"
