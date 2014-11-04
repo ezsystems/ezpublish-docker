@@ -13,13 +13,6 @@ Vagrant.configure("2") do |config|
   # Set the Timezone to something useful
   config.vm.provision :shell, :inline => "echo \"" + vagrantConfig['virtualmachine']['timezone'] + "\" | sudo tee /etc/timezone"
 
-  # Pull in the external docker images we need
-  if vagrantConfig['debug']['disable_docker_pull'] == false
-    config.vm.provision "docker",
-      images: ["ubuntu:trusty", "tutum/mysql"]
-  end
-
-
   if vagrantConfig['debug']['copy_authorized_keys2'] == true
     ssh_authorized_keys_file = File.read( "files/authorized_keys2" )
     config.vm.provision :shell, :inline => "
@@ -41,56 +34,17 @@ Vagrant.configure("2") do |config|
   FileUtils.cp( "files/auth.json", "dockerfiles/ezpublish/prepare" )
   FileUtils.cp( "files/etcd_functions", "dockerfiles/mysql" )
 
-  if vagrantConfig['ezpublish']['install_type'] == 'tarball'
-    tarballVolArg = "-v /vagrant/" + vagrantConfig['ezpublish']['tarball_filename'] + ":/tmp/ezpublish.tar.gz:ro"
-  else
-    tarballVolArg = ""
-  end
-
+  # Install fig on vagrant machine
+  config.vm.provision :shell, :inline => "
+    if [ ! -f /fig ]; then \
+      curl -L https://github.com/docker/fig/releases/download/1.0.0/fig-`uname -s`-`uname -m` > /fig; chmod +x /fig; \
+    fi
+  "
   if vagrantConfig['debug']['disable_docker_provision'] == false
-    config.vm.provision "docker" do |d|
-      d.build_image "/vagrant/dockerfiles/ubuntu",          args: "-t 'ezpublishdocker_ubuntu'"
-      d.build_image "/vagrant/dockerfiles/nginx",          args: "-t 'ezpublishdocker_nginx'"
-      d.build_image "/vagrant/dockerfiles/php-fpm",          args: "-t 'ezpublishdocker_phpfpm'"
-      d.build_image "/vagrant/dockerfiles/php-cli/base",         args: "-t 'ezpublishdocker_phpclibase'"
-      d.build_image "/vagrant/dockerfiles/php-cli",         args: "-t 'ezpublishdocker_phpcli'"
-      d.build_image "/vagrant/dockerfiles/ezpublish/prepare",   args: "-t 'ezpublishdocker_prepare'"
-    end
-
-    # Startup the docker images we need
-    config.vm.provision "docker" do |d|
-      d.run "db-vol",
-        image: "ezpublishdocker_ubuntu",
-        args: "-v /vagrant/volumes/mysql:/var/lib/mysql:rw",
-        daemonize: false
-      d.run "ezpublish-vol",
-        image: "ezpublishdocker_ubuntu",
-        args: "-v /vagrant/volumes/ezpublish:/var/www:rw",
-        daemonize: false
-      d.run "composercache-vol",
-        image: "ezpublishdocker_ubuntu",
-        args: "-v /vagrant/volumes/composercache:/.composer/cache:rw",
-        daemonize: false
-      d.run "db-1",
-        image: "tutum/mysql",
-        args: "--volumes-from db-vol -e MYSQL_PASS=\""+ vagrantConfig['dbserver']['password'] + "\""
-      d.run "prepare",
-        image: "ezpublishdocker_prepare",
-        args: "--rm --link db-1:db --dns 8.8.8.8 --dns 8.8.4.4 -m 1024m --volumes-from ezpublish-vol --volumes-from composercache-vol \
-          " + tarballVolArg + "\
-          -e EZ_KICKSTART=\""+ vagrantConfig['ezpublish']['kickstart'] +"\" \
-          -e EZ_PACKAGEURL=\""+ vagrantConfig['ezpublish']['packageurl'] +"\" \
-          -e EZ_INSTALLTYPE=\""+ vagrantConfig['ezpublish']['install_type'] +"\"  \
-          -e EZ_COMPOSERVERSION=\""+ vagrantConfig['ezpublish']['composer_version'] +"\"  \
-          -e EZ_COMPOSERREPOSITORYURL=\""+ vagrantConfig['ezpublish']['composer_repository_url'] +"\"",
-        daemonize: false
-      d.run "php-fpm",
-        image: "ezpublishdocker_phpfpm",
-        args: "--link db-1:db --dns 8.8.8.8 --dns 8.8.4.4 --volumes-from ezpublish-vol"
-      d.run "web-nginx",
-        image: "ezpublishdocker_nginx",
-        args: "--link php-fpm:php_fpm --dns 8.8.8.8 --dns 8.8.4.4 -p 80:80 --volumes-from ezpublish-vol"
-    end
+  config.vm.provision :shell, :inline => "
+    cd /vagrant; \
+    ./fig.sh up -d --no-recreate
+  "
   end
 
   config.vm.network :forwarded_port, guest: 80, host: 8080

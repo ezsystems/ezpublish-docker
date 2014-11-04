@@ -14,9 +14,15 @@ if [ aa$ETCD_ENABLED == "aayes" ]; then
 
 fi
 
-# copy nginx config from [ezp_base_dir]/doc/nginx
-cp /var/www/doc/nginx/etc/nginx/sites-available/mysite.com /etc/nginx/sites-available/ezpublish
-cp -a /var/www/doc/nginx/etc/nginx/ez_params.d /etc/nginx/
+# copy nginx config from [ezp_base_dir]/doc/nginx if it exists, if not use fallback config
+if [ -d /var/www/doc/nginx/etc/nginx/sites-available ]; then
+    sleep 2
+    cp /var/www/doc/nginx/etc/nginx/sites-available/mysite.com /etc/nginx/sites-available/ezpublish
+    cp -a /var/www/doc/nginx/etc/nginx/ez_params.d /etc/nginx/
+else
+    cp /ezpublish_config_fallback/nginx/etc/nginx/sites-available/mysite.com /etc/nginx/sites-available/ezpublish
+    cp -a /ezpublish_config_fallback/nginx/etc/nginx/ez_params.d /etc/nginx/
+fi
 
 ln -s -f /etc/nginx/sites-available/ezpublish /etc/nginx/sites-enabled/ezpublish
 

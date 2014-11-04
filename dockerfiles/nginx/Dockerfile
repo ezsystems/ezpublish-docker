@@ -28,6 +28,8 @@ ADD supervisord-etcd.conf-part /supervisord-etcd.conf-part
 ADD watch_phpfpm_ip.sh /watch_phpfpm_ip.sh
 ADD run.sh /run.sh
 
+ADD ezpublish_config_fallback /ezpublish_config_fallback
+
 CMD ["/run.sh"]
 
 EXPOSE 80

@@ -134,7 +134,7 @@ The containers can be created and started using either vagrant or fig. Vagrant w
 ### About etcd 
 If you want to be able to start and stop containers in arbitrary order ( like db, phpfpm and nginx containers ), you'll need have etcd ( https://coreos.com/docs/distributed-configuration/getting-started-with-etcd/ ) running.
 Etcd is a open-source distributed key value store that is used to provides shared configuration among the containers.
-If you do *not* run etcd, you have to make sure that containers are started in this order : ezpublishdocker_db1_1, ezpublishdocker_phpfpm_1, ezpublishdocker_nginx_1
+If you do *not* run etcd and you start/stop containers without using fig.sh, you have to make sure that containers are started in this order : ezpublishdocker_db1_1, ezpublishdocker_phpfpm_1, ezpublishdocker_nginx_1
 This means that if you for some reason has to restart ezpublishdocker_db1_1, you also have to restart the other two containers, and in correct order.
 
 See below for instructions for how to run etcd
@@ -151,46 +151,48 @@ The following steps needs to be executed both if you are using vagrant or fig
  - You need to manually import the database from the php-cli container ( see chapter "Running php-cli and mysql commands" )
    This needs to be done after all images and containers has been created ( after you have executed "vagrant up" or "./fig.sh up -d" )
    For convenience, you should also place the database dump in volumes/ezpublish so you may easily access it from the php-cli container
+- Copy files/fig.config-EXAMPLE to files/fig.config ( and set the environment variables in files/fig.config according to your needs ). 
 
 ### Vagrant specific procedures
 - Ensure you have the following tools installed on our computer:
  - Vagrant 1.6+ (http://vagrantup.com)
  - VirtualBox 4.3.12+ (http://www.virtualbox.org)
 - Copy files/vagrant.yml-EXAMPLE to files/vagrant.yml. Then adjust settings in .yml file as needed
-- In fig.yml, make sure "START_ETCD=no"
+- In files/fig.config, make sure "START_ETCD=no"
+- In files/fig.config, make sure "FIX_EXECUTION_PATH=/"
 - If you want to run etcd : 
  - Copy files/user-data-EXAMPLE to files/user-data and provide a discovery token as instructed in the file
- - In fig.yml, make sure "ETCD_ENABLED=yes" in all places
+ - In files/fig.config, make sure "ETCD_ENABLED=yes"
 - If you do *not* want to run etcd : 
- - In fig.yml, make sure "ETCD_ENABLED=no" in all places
+ - In files/fig.config, make sure "ETCD_ENABLED=no"
 - Run `vagrant up`
 
 If you later want to do changes to your docker/vagrant files, you need to stop and remove the corresponding container ```docker stop [containerid]; docker rm [containerid]```, remove the image ```docker rmi [imageid]``` and then run ```vagrant provision``` instead of ```vagrant up```
 
-### Fig specific procedures
-- Ensure you have the following tools installed on our computer:
- - docker version 1.2 or later ( https://docs.docker.com/installation/ubuntulinux/ ) PS : ubuntu ships with 0.9.1 and this version won't do due to lack of https://github.com/docker/docker/pull/5129/commits 
- - Fig ( http://www.fig.sh/install.html )
+### Specific procedures when running containers on local host, not in VM using Vagrant
+- Ensure you have the following tools installed on your computer:
+ - docker version 1.2 or later ( https://docs.docker.com/installation/ubuntulinux/ ) 
+   PS : ubuntu ships with 0.9.1 and this version won't do due to lack of https://github.com/docker/docker/pull/5129/commits 
+ - Fig version 1.0.0 or later ( http://www.fig.sh/install.html )
  - nsenter ( optionally, if you want to start a shell inside a running container : https://github.com/jpetazzo/nsenter )
-- Edit fig.yml ( Set the environment variables according to your needs. The same eZ Publish installation methods as with Vagrant is supported, so look in files/vagrant.yml for more details regarding those
 - If you want to run etcd, you have two options, running etcd on the host directly, or in a container
- - If you want to run etcd on the hosts nad your distribution do not have etcd packages, this url might be of help:
+ - If you want to run etcd on the hosts and your distribution do not have etcd packages, this url might be of help:
   - http://blog.hackzilla.org/posts/2014/09/18/etcd-for-ubuntu
  - The easiest method is to run etcd in a container:
-  - In fig.yml, make sure "START_ETCD=yes"
-  - In fig.yml, make sure "ETCD_DISCOVERY=autogenerate" or "ETCD_DISCOVERY=https://discovery.etcd.io/[discovery_hash]"
-  - In fig.yml, make sure "ETCD_ENABLED=yes" in all places
-    If you want to manually create a discovery hash, access https://discovery.etcd.io/new
+  - In files/fig.config, make sure "START_ETCD=yes"
+  - In files/fig.config, make sure "ETCD_DISCOVERY=autogenerate" or "ETCD_DISCOVERY=https://discovery.etcd.io/[discovery_hash]"
+  - In files/fig.config, make sure "ETCD_ENABLED=yes" in all places
+    If you want to manually create a discovery hash, access https://discovery.etcd.io/new in a browser
 - Run `./fig.sh up -d`
 
-If you later just want to recreate specific images or containers, you then first remove those using `docker rmi [image]` and `docker rm [container]`, and then run
+If you later just want to recreate specific images or containers, you then first remove those using `docker rm [container]` and `docker rmi [image]`, and then run
 `fig.sh up -d --no-recreate`
 
 fig.sh is a wrapper for fig which also do some internal provisioning. Any command line arguments used when starting the wrapper is passed on to fig.
 
 ### Access your eZ Publish installation
 
-When the containers are created, you should be able to browse to eZ Publish setup wizard by going to http://localhost:8080/
+When the containers are created, you should be able to browse to eZ Publish setup wizard by going to http://[VM_IP_ADDR]:8080/ if using vagrant and http://localhost:8080/ if running the containers on localhost 
 
 
 #### SSH
@@ -211,10 +213,9 @@ And inspect the eZ Publish folder which was rsynced into the vm and is used as v
 
 To run php/mysql commands you'll need to start a new container which contains php-cli:
 - ```vagrant ssh```
-- ```docker run --rm -i -t --link db-1:db --dns 8.8.8.8 --dns 8.8.4.4 --volumes-from ezpublish-vol --volumes-from composercache-vol ezpublishdocker_phpcli /bin/bash```
-
-If using fig instead of vagrant, use the following command in order to run the php-cli container:
 - ```docker run --rm -i -t --link ezpublishdocker_db1_1:db --dns 8.8.8.8 --dns 8.8.4.4 --volumes-from ezpublishdocker_ezpublishvol_1 --volumes-from ezpublishdocker_composercachevol_1 ezpublishdocker_phpcli /bin/bash```
+
+If running the containers on localhost, you have to skip the ```vagrant ssh``` of course
 
 From there you can run symfony commands like normal:
 - ```php ezpublish/console ezpublish:legacy:assets_install --symlink --relative --env dev``
@@ -222,7 +223,7 @@ From there you can run symfony commands like normal:
 You can also access mysql from this container as it has the mysql client installed:
 - ```mysql -uadmin --password=[mysqlpasswd] --protocol=tcp --host=db```
 
-Mysql password is defined in files/vagrant.yml
+Mysql password is defined in files/fig.config
 
 ( For other environment variables see ```env```, basically these typically comes from parent images and links )
 
@@ -232,17 +233,33 @@ To get out, type ```exit``` two times ;)
 ##### The containers
 
 Once you have the system up, doing a ```docker ps -a``` will reveal that the following containers:
- - web-nginx
- - php-fpm
- - db-1
- - db-vol
- - ezpublish-vol
-
-The db-vol and ezpublish-vol containers are stopped ( meaning no processes are running in them ). This is correct. These containers are only data volume containers for the mysql raw db files and ezpublish.
-The content of the db-vol data volume container is mapped to /vagrant/volumes/mysql/ on VM. 
-The content of the ezpublish-vol data volume container is mapped to /vagrant/volumes/ezpublish/ on VM. 
-If you want to reset the mysql databases, you'll need to stop and remove the db-1 container, remove all files in volumes/mysql and make sure that is synced to VM ( /vagrant/volumes/mysql ), then recreate db-1 container
-For replacing the ezpublish files, you simply needs to change the files in volumes/ezpublish and sync this over to the VM
+ - ezpublishdocker_nginx_1
+  - This container runs the nginx process
+  - This container will on startup look for nginx configuration files in volumes/ezpublish/doc/nginx/etc/nginx/. If this directory do not exists when the container start, it will fallback to use configuration files stored inside the container.
+  - It is important to understand that the folder volumes/ezpublish/doc/nginx/etc/nginx/ will typically not exists if volumes/ezpublish is empty when you start fig.sh as the nginx container will start before the ezpublishdocker_prepare_1 container is completed.
+ - ezpublishdocker_phpfpm_1
+  - This is the container that runs the phpfpm process
+ - ezpublishdocker_db1_1
+  - This is the container running the database
+ - ezpublishdocker_dbvol_1
+  - This container is stopped ( meaning no processes are running in it). This is correct. The container is only a data volume containers for the mysql raw db files
+  - The content of the data volume container is mapped to /vagrant/volumes/mysql/ on VM ( volumes/mysql/ if running containers on localhost ). 
+  - If you want to reset the mysql databases, you'll need to stop and remove this container, remove all files in volumes/mysql and make sure that is synced to VM ( /vagrant/volumes/mysql ), then recreate ezpublishdocker_dbvol_1 container
+ - ezpublishdocker_ezpublishvol_1
+  - This container is stopped ( meaning no processes are running in it ). This is correct. The container is only a data volume containers for the ezpublish files
+  - The content of the data volume container is mapped to /vagrant/volumes/ezpublish/ on VM. 
+  - For replacing the ezpublish files, you simply needs to change the files in volumes/ezpublish and ( if using  vagrant : ) sync this over to the VM 
+ - ezpublishdocker_prepare_1
+  - This is the container responsible for configuring eZ Publish ( according to EZ_INSTALLTYPE and other settings ). Once eZ Publish is configured, the container will stop 
+ - ezpublishdocker_phpcli_1
+  - This container is not used for anything, but fig do not currently support create a image from dockerfiles without also creating a container.
+ - ezpublishdocker_etcd_1
+ - ezpublishdocker_phpclibase_1
+  - This container is not used for anything, but fig do not currently support create a image from dockerfiles without also creating a container.
+ - ezpublishdocker_composercachevol_1
+  - This container is a data volume container for the composer cache
+ - ezpublishdocker_ubuntu_1
+  - This container is not used for anything, but fig do not currently support create a image from dockerfiles without also creating a container.
 
 ##### Running vagrant from windows
 
