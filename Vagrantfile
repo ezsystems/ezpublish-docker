@@ -58,6 +58,9 @@ Vagrant.configure("2") do |config|
     config.vm.synced_folder ".", "/vagrant", type: "rsync",
       rsync__exclude: [ ".git/", "volumes/ezpublish/.git/"],
       rsync__auto: true
+  else
+    config.vm.synced_folder ".", "/vagrant", type: "rsync",
+      disabled: true
   end
 
   FileUtils.cp( "files/auth.json", "dockerfiles/ezpublish/prepare" )
