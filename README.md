@@ -157,6 +157,7 @@ The following steps needs to be executed both if you are using vagrant or fig
 - Ensure you have the following tools installed on our computer:
  - Vagrant 1.6+ (http://vagrantup.com)
  - VirtualBox 4.3.12+ (http://www.virtualbox.org)
+ - If using AWS : Vagrant AWS plugin. To install run vagrant ```sudo vagrant plugin install vagrant-aws```
 - Copy files/vagrant.yml-EXAMPLE to files/vagrant.yml. Then adjust settings in .yml file as needed
 - In files/fig.config, make sure "START_ETCD=no"
 - In files/fig.config, make sure "FIX_EXECUTION_PATH=/"
@@ -165,6 +166,8 @@ The following steps needs to be executed both if you are using vagrant or fig
  - In files/fig.config, make sure "ETCD_ENABLED=yes"
 - If you do *not* want to run etcd : 
  - In files/fig.config, make sure "ETCD_ENABLED=no"
+- If you are going to use AWS, you'll need to create a dummy box:
+  ```vagrant box add dummy https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box```
 - Run `vagrant up`
 
 If you later want to do changes to your docker/vagrant files, you need to stop and remove the corresponding container ```docker stop [containerid]; docker rm [containerid]```, remove the image ```docker rmi [imageid]``` and then run ```vagrant provision``` instead of ```vagrant up```

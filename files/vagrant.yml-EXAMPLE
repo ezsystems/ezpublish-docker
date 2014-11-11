@@ -12,6 +12,18 @@ virtualmachine:
     network:
         private_network_ip: 33.33.33.53
 
+aws:
+    use_aws: true
+    access_key_id: FOO
+    secret_access_key: BAR
+    region: eu-west-1
+    instance_type: t2.small
+    subnet_id: subnet-foobar
+    associate_public_ip: "true"
+    security_groups: ["sg-foobar"]
+    # coreos HVM
+    ami: ami-58e14e2f
+
 debug:
     disable_rsync: false
     disable_docker_provision: false
