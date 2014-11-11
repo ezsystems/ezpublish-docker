@@ -92,7 +92,7 @@ Vagrant.configure("2") do |config|
   end
 
   CLOUD_CONFIG_PATH = "files/user-data"
-  if File.exist?(CLOUD_CONFIG_PATH)
+  if File.exist?(CLOUD_CONFIG_PATH) and vagrantConfig['aws']['use_aws'] = false
     config.vm.provision :file, :source => "#{CLOUD_CONFIG_PATH}", :destination => "/tmp/vagrantfile-user-data"
     config.vm.provision :shell, :inline => "mv /tmp/vagrantfile-user-data /var/lib/coreos-vagrant/", :privileged => true
   end
