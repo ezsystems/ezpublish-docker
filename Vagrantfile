@@ -26,7 +26,7 @@ Vagrant.configure("2") do |config|
                 aws.security_groups = vagrantConfig['aws']['security_groups']
 
                 aws.ami = vagrantConfig['aws']['ami']
-               # SSH login credentials
+                # SSH login credentials
                 aws.keypair_name = "Vagrant"
                 override.ssh.private_key_path = "files/vagrant.pem"
                 override.ssh.username = "core" # should be "admin" for debian images
