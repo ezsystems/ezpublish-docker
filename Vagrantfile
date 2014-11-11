@@ -6,6 +6,8 @@ require 'yaml'
 vagrantConfig = YAML::load_file( "files/vagrant.yml" )
 
 Vagrant.configure("2") do |config|
+  CLOUD_CONFIG_PATH = "files/user-data"
+
   if vagrantConfig['aws']['use_aws'] == true
         config.vm.box = "dummy"
 
@@ -32,6 +34,10 @@ Vagrant.configure("2") do |config|
                 aws.keypair_name = "Vagrant"
                 override.ssh.private_key_path = "files/vagrant.pem"
                 override.ssh.username = "core" # should be "admin" for debian images
+
+                if File.exist?(CLOUD_CONFIG_PATH)
+                    aws.user_data = File.read( CLOUD_CONFIG_PATH );
+                end
         end
   else
       config.vm.box = "coreos-%s" % vagrantConfig['virtualmachine']['coreos_channel']
@@ -94,7 +100,6 @@ Vagrant.configure("2") do |config|
      vb.customize ["modifyvm", :id, "--ostype", "Linux26_64"]
   end
 
-  CLOUD_CONFIG_PATH = "files/user-data"
   if File.exist?(CLOUD_CONFIG_PATH) and vagrantConfig['aws']['use_aws'] = false
     config.vm.provision :file, :source => "#{CLOUD_CONFIG_PATH}", :destination => "/tmp/vagrantfile-user-data"
     config.vm.provision :shell, :inline => "mv /tmp/vagrantfile-user-data /var/lib/coreos-vagrant/", :privileged => true

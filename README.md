@@ -162,7 +162,7 @@ The following steps needs to be executed both if you are using vagrant or fig
 - In files/fig.config, make sure "START_ETCD=no"
 - In files/fig.config, make sure "FIX_EXECUTION_PATH=/"
 - If you want to run etcd : 
- - Copy files/user-data-EXAMPLE to files/user-data and provide a discovery token as instructed in the file
+ - Copy files/user-data-EXAMPLE (optionally files/user-data-EXAMPLE-AWS ) to files/user-data and provide a discovery token as instructed in the file
  - In files/fig.config, make sure "ETCD_ENABLED=yes"
 - If you do *not* want to run etcd : 
  - In files/fig.config, make sure "ETCD_ENABLED=no"
