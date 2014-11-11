@@ -21,14 +21,10 @@ Vagrant.configure("2") do |config|
 
                 # 10.127.229.0/24 subnet
                 aws.subnet_id = vagrantConfig['aws']['subnet_id']
-#               aws.private_ip_address = "10.127.229.123"
                 aws.associate_public_ip = vagrantConfig['aws']['associate_public_ip']
 
                 aws.security_groups = vagrantConfig['aws']['security_groups']
 
-#               Debian instance template
-#                aws.ami = "ami-d8f851af"
-#                aws.ami = "ami-7bde0b0c"
                 aws.ami = vagrantConfig['aws']['ami']
                # SSH login credentials
                 aws.keypair_name = "Vagrant"
