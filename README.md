@@ -168,6 +168,7 @@ The following steps needs to be executed both if you are using vagrant or fig
  - In files/fig.config, make sure "ETCD_ENABLED=no"
 - If you are going to use AWS, you'll need to create a dummy box:
   ```vagrant box add dummy https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box```
+- If you are going to use AWS, you likely want web server to listen on port 80, not port 8080. If so, you need to change "8080:80" into "80:80" in the nginx section in fig.yml ( unfortunately, this cannot be a setting in files/fig.config ) 
 - Run `vagrant up`
 
 If you later want to do changes to your docker/vagrant files, you need to stop and remove the corresponding container ```docker stop [containerid]; docker rm [containerid]```, remove the image ```docker rmi [imageid]``` and then run ```vagrant provision``` instead of ```vagrant up```
