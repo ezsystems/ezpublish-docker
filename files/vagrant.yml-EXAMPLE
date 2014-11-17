@@ -13,7 +13,6 @@ virtualmachine:
         private_network_ip: 33.33.33.53
 
 aws:
-    use_aws: true
     access_key_id: FOO
     secret_access_key: BAR
     region: eu-west-1
