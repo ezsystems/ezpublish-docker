@@ -6,7 +6,7 @@
 ETCD_ENABLED=no
 
 # Should etcd run in a container or not
-# Setting is only applicable if ETC_ENABLED=yes
+# Setting is only applicable if ETCD_ENABLED=yes
 START_ETCD=no
 
 # How to deal with etcd discovery. Value can either be a url or "autogenerate"
