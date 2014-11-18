@@ -9,6 +9,10 @@ Vagrant.configure("2") do |config|
   CLOUD_CONFIG_PATH = "files/user-data"
   $use_aws = false
 
+  if !File.exist?( "files/fig.config" )
+      FileUtils.cp( "files/fig.config-EXAMPLE", "files/fig.config" )
+  end
+
   config.vm.provider :aws do |aws, override|
     $use_aws = true
 
@@ -68,7 +72,9 @@ Vagrant.configure("2") do |config|
       disabled: true
   end
 
-  FileUtils.cp( "files/auth.json", "dockerfiles/ezpublish/prepare" )
+  if File.exist?( "files/auth.json" )
+    FileUtils.cp( "files/auth.json", "dockerfiles/ezpublish/prepare" )
+  end
   FileUtils.cp( "files/etcd_functions", "dockerfiles/mysql" )
 
   # Install fig on vagrant machine
