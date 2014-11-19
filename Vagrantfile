@@ -83,7 +83,9 @@ Vagrant.configure("2") do |config|
   # Install fig on vagrant machine
   config.vm.provision :shell, :inline => "
     if [ ! -f /opt/bin/fig ]; then \
-      curl -L https://github.com/docker/fig/releases/download/1.0.0/fig-`uname -s`-`uname -m` > /opt/bin/fig; chmod +x /opt/bin/fig; \
+      mkdir -p /opt/bin
+      cp /vagrant/resources/fig /opt/bin
+      chmod +x /opt/bin/fig
     fi
   "
   if vagrantConfig['debug']['disable_docker_provision'] == false
