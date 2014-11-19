@@ -180,7 +180,7 @@ Note : If you opt not to copy the configurations files mentioned above ( the *.-
 - Run `vagrant up`
 
 If you later want to do changes to your docker/vagrant files, you need to stop and remove the corresponding container ```docker stop [containerid]; docker rm [containerid]```, remove the image ```docker rmi [imageid]``` and then run ```vagrant provision``` instead of ```vagrant up```
-IMPORTANT: Remember that ```vagrant up``` will not rsync your local changes over to the VM. So, if you do changes in configuration files or docker files you should do a ```vagrant rsync``` before first
+IMPORTANT: Remember that ```vagrant up``` will not rsync your local changes over to the VM. So, if you do changes in configuration files or docker files you should do a ```vagrant rsync``` first.
 
 ### Specific procedures when running containers on local host, not in VM using Vagrant
 - Ensure you have the following tools installed on your computer:
