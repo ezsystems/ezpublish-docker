@@ -3,6 +3,9 @@
 
 require 'yaml'
 
+if !File.exist?( "files/vagrant.yml" )
+  FileUtils.cp( "files/vagrant.yml-EXAMPLE", "files/vagrant.yml" )
+end
 vagrantConfig = YAML::load_file( "files/vagrant.yml" )
 
 Vagrant.configure("2") do |config|

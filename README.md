@@ -155,6 +155,7 @@ By default, the following system will be installed:
   - The setting for updates.ez.no is applicable if you want to install eZ Publish Enterprise and not the community version
   - The setting for github.com is applicable when doing installations via composer ( which is default ). It will raise certain API bandwidth limitations on github.
     In order to create a github oauth token, please follow instructions on this page : https://help.github.com/articles/creating-an-access-token-for-command-line-use To revoke access to this github oauth token you can visit https://github.com/settings/applications
+- Copy files/vagrant.yml-EXAMPLE to files/vagrant.yml. Then adjust settings in .yml file as needed
 - If you have an existing ezpublish installation you want to use, do the following :
  - Place the installation in volumes/ezpublish
  - Make sure EZ_INSTALLTYPE is set to "basic"
@@ -162,12 +163,13 @@ By default, the following system will be installed:
    This needs to be done after all images and containers has been created ( after you have executed "vagrant up" or "./fig.sh up -d" )
    For convenience, you should also place the database dump in volumes/ezpublish so you may easily access it from the php-cli container
 
+Note : If you opt not to copy the configurations files mentioned above ( the *.-EXAMPLE files ), the system will do so for you and use default settings.
+
 ### Vagrant specific procedures
 - Ensure you have the following tools installed on our computer:
  - Vagrant 1.6+ (http://vagrantup.com)
  - VirtualBox 4.3.12+ (http://www.virtualbox.org)
  - If using AWS : Vagrant AWS plugin. To install run vagrant ```sudo vagrant plugin install vagrant-aws```
-- Copy files/vagrant.yml-EXAMPLE to files/vagrant.yml. Then adjust settings in .yml file as needed
 - Optionally: Enable etcd ( See chapter "About etcd " about why you would run etcd )
  - In files/fig.config, make sure "START_ETCD=yes"
  - Copy files/user-data-EXAMPLE (optionally files/user-data-EXAMPLE-AWS ) to files/user-data and provide a discovery token as instructed in the file
