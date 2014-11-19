@@ -1,9 +1,7 @@
 #!/bin/bash
 
 if [ -f files/auth.json ]; then
-    echo bla1
     cp files/auth.json dockerfiles/ezpublish/prepare
-    echo bla2
 else
     touch dockerfiles/ezpublish/prepare/auth.json
 fi
