@@ -140,38 +140,47 @@ This means that if you for some reason has to restart ezpublishdocker_db1_1, you
 See below for instructions for how to run etcd
 
 
-### Common installation procedures
-The following steps needs to be executed both if you are using vagrant or fig
+### Default system
 
-- Copy files/auth.yml-EXAMPLE to files/auth.yml. If you want to install eZ Publish via composer you also needs to edit files/auth.yml and insert your credentials there.
-  In order to create a github oauth token, please follow instructions on this page : https://help.github.com/articles/creating-an-access-token-for-command-line-use To revoke access to this github oauth token you can visit https://github.com/settings/applications
+By default, the following system will be installed:
+ - Vagrant will create a virtual machine using VirtualBox. This VM will run CoreOS
+ - eZ Publish Community version v2014.11.0 will be installed
+ - eZ Publish will be available on port 8080 on the VM
+
+### Optional installation steps
+
+- Copy files/fig.config-EXAMPLE to files/fig.config ( and set the environment variables in files/fig.config according to your needs if you want to change the default setup ).
+- Copy files/auth.yml-EXAMPLE to files/auth.yml.
+  This file has two authentication sections:
+  - The setting for updates.ez.no is applicable if you want to install eZ Publish Enterprise and not the community version
+  - The setting for github.com is applicable when doing installations via composer ( which is default ). It will raise certain API bandwidth limitations on github.
+    In order to create a github oauth token, please follow instructions on this page : https://help.github.com/articles/creating-an-access-token-for-command-line-use To revoke access to this github oauth token you can visit https://github.com/settings/applications
+- Copy files/vagrant.yml-EXAMPLE to files/vagrant.yml. Then adjust settings in .yml file as needed
 - If you have an existing ezpublish installation you want to use, do the following :
  - Place the installation in volumes/ezpublish
  - Make sure EZ_INSTALLTYPE is set to "basic"
  - You need to manually import the database from the php-cli container ( see chapter "Running php-cli and mysql commands" )
    This needs to be done after all images and containers has been created ( after you have executed "vagrant up" or "./fig.sh up -d" )
    For convenience, you should also place the database dump in volumes/ezpublish so you may easily access it from the php-cli container
-- Copy files/fig.config-EXAMPLE to files/fig.config ( and set the environment variables in files/fig.config according to your needs ). 
+
+Note : If you opt not to copy the configurations files mentioned above ( the *.-EXAMPLE files ), the system will do so for you and use default settings.
 
 ### Vagrant specific procedures
 - Ensure you have the following tools installed on our computer:
  - Vagrant 1.6+ (http://vagrantup.com)
  - VirtualBox 4.3.12+ (http://www.virtualbox.org)
  - If using AWS : Vagrant AWS plugin. To install run vagrant ```sudo vagrant plugin install vagrant-aws```
-- Copy files/vagrant.yml-EXAMPLE to files/vagrant.yml. Then adjust settings in .yml file as needed
-- In files/fig.config, make sure "START_ETCD=no"
-- In files/fig.config, make sure "FIX_EXECUTION_PATH=/"
-- If you want to run etcd : 
+- Optionally: Enable etcd ( See chapter "About etcd " about why you would run etcd )
+ - In files/fig.config, make sure "START_ETCD=yes"
  - Copy files/user-data-EXAMPLE (optionally files/user-data-EXAMPLE-AWS ) to files/user-data and provide a discovery token as instructed in the file
- - In files/fig.config, make sure "ETCD_ENABLED=yes"
-- If you do *not* want to run etcd : 
- - In files/fig.config, make sure "ETCD_ENABLED=no"
+- In files/fig.config, make sure "FIX_EXECUTION_PATH=/"
 - If you are going to use AWS, you'll need to create a dummy box:
   ```vagrant box add dummy https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box```
 - If you are going to use AWS, you likely want web server to listen on port 80, not port 8080. If so, you need to change "8080:80" into "80:80" in the nginx section in fig.yml ( unfortunately, this cannot be a setting in files/fig.config ) 
 - Run `vagrant up`
 
 If you later want to do changes to your docker/vagrant files, you need to stop and remove the corresponding container ```docker stop [containerid]; docker rm [containerid]```, remove the image ```docker rmi [imageid]``` and then run ```vagrant provision``` instead of ```vagrant up```
+IMPORTANT: Remember that ```vagrant up``` will not rsync your local changes over to the VM. So, if you do changes in configuration files or docker files you should do a ```vagrant rsync``` first.
 
 ### Specific procedures when running containers on local host, not in VM using Vagrant
 - Ensure you have the following tools installed on your computer:
@@ -185,7 +194,7 @@ If you later want to do changes to your docker/vagrant files, you need to stop a
  - The easiest method is to run etcd in a container:
   - In files/fig.config, make sure "START_ETCD=yes"
   - In files/fig.config, make sure "ETCD_DISCOVERY=autogenerate" or "ETCD_DISCOVERY=https://discovery.etcd.io/[discovery_hash]"
-  - In files/fig.config, make sure "ETCD_ENABLED=yes" in all places
+  - In files/fig.config, make sure "ETCD_ENABLED=yes"
     If you want to manually create a discovery hash, access https://discovery.etcd.io/new in a browser
 - Run `./fig.sh up -d`
 

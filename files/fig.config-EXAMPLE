@@ -6,7 +6,7 @@
 ETCD_ENABLED=no
 
 # Should etcd run in a container or not
-# Setting is only applicable if ETC_ENABLED=yes
+# Setting is only applicable if ETCD_ENABLED=yes
 START_ETCD=no
 
 # How to deal with etcd discovery. Value can either be a url or "autogenerate"
@@ -31,7 +31,8 @@ MYSQL_PASS=youmaychangethis
 EZ_KICKSTART=true
 
 #  Pre downloads packages from provided url if set for setup wizard speed up
-EZ_PACKAGEURL=http://packages.ez.no/ezpublish/5.4/5.4.0alpha1/
+# EZ_PACKAGEURL=http://packages.ez.no/ezpublish/5.4/5.4.0alpha1/
+EZ_PACKAGEURL=
 
 # Specify how to prepare ezpublish
 # - composer : Makes a fresh install using composer. Assumes volume/ezpublish is empty...Will not do any changes do database, except make sure ezp database exists
@@ -47,7 +48,7 @@ EZ_INSTALLTYPE=composer
 
 # Setting used when install_type: "composer"
 # Version of eZ Publish to install via composer. Examples are "v5.3.0" and "dev-master"
-EZ_COMPOSERVERSION=dev-master
+EZ_COMPOSERVERSION=v2014.11.0
 
 # Setting used when install_type: "composer"
 # Set value to "" if you want to downloaded everything from github. Set value to "https://updates.ez.no/ttl" if you would like to install official patches too ( applicable when for you for instance have 'composer_version : "v5.3.0"' )
@@ -60,8 +61,6 @@ EZ_TARBALL_FILENAME=ezpublish5-5.3.0-ee-ttl-full.tar.gz
 
 #### FIG settings ####
 # Path to location of fig. If fig is in your PATH, you may leave it empty
-# If using vagrant, path will be "/"
-#export FIX_EXECUTION_PATH="/"
 export FIX_EXECUTION_PATH=""
 
 

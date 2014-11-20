@@ -1,0 +1,3 @@
+# Downloaded fig using:
+curl -L https://github.com/docker/fig/releases/download/1.0.0/fig-`uname -s`-`uname -m` > fig
+

@@ -1,6 +1,10 @@
 #!/bin/bash
 
-cp files/auth.json dockerfiles/ezpublish/prepare
+if [ -f files/auth.json ]; then
+    cp files/auth.json dockerfiles/ezpublish/prepare
+else
+    touch dockerfiles/ezpublish/prepare/auth.json
+fi
 cp files/etcd_functions dockerfiles/etcd
 cp files/etcd_functions dockerfiles/mysql
 cp files/etcd_functions dockerfiles/php-fpm
