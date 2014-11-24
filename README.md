@@ -180,7 +180,19 @@ Note : If you opt not to copy the configurations files mentioned above ( the *.-
 - Run `vagrant up`
 
 If you later want to do changes to your docker/vagrant files, you need to stop and remove the corresponding container ```docker stop [containerid]; docker rm [containerid]```, remove the image ```docker rmi [imageid]``` and then run ```vagrant provision``` instead of ```vagrant up```
-IMPORTANT: Remember that ```vagrant up``` will not rsync your local changes over to the VM. So, if you do changes in configuration files or docker files you should do a ```vagrant rsync``` first.
+
+#### IMPORTANT difference between provision on virutalbox vs AWS
+When using virutalbox as provisioner, ```vagrant provision``` will *not* rsync your local changes over to the VM. Only a ```vagrant up```will do that. 
+When using AWS as provisioner, ```vagrant provision``` *will* run rsync. This is likely NOT the behaviour you want as this will overwrite db and ezpublish volumes on AWS machine every time you provision.
+To prevent this from happening when provisioning on AWS, use the setting "disable_rsync: yes" in vagrant.yml
+
+If you do changes in configuration files or docker files you may run this commands in order to sync them the VM:
+```cd ezpublish-docker```
+```rsync -avq --delete --exclude ".git/" --exclude "volumes/ezpublish/.git/" --exclude ".vagrant" --exclude volumes . core@1.2.3.4:/vagrant```
+
+where "1.2.3.4" is the IP if the virtual machine
+
+Please note that running ```vagrant rsync```will also delete any volumes in VM and instead copy over those you have locally
 
 ### Specific procedures when running containers on local host, not in VM using Vagrant
 - Ensure you have the following tools installed on your computer:
