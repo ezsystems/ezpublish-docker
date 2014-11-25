@@ -20,6 +20,7 @@ aws:
     subnet_id: subnet-foobar
     associate_public_ip: "true"
     security_groups: ["sg-foobar"]
+    keypair_name: foobarkey
     # coreos HVM
     ami: ami-58e14e2f
 
