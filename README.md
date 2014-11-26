@@ -194,6 +194,15 @@ where "1.2.3.4" is the IP if the virtual machine
 
 Please note that running ```vagrant rsync```will also delete any volumes in VM and instead copy over those you have locally
 
+### Setting up etcd
+CoreOS has support for running etcd out of the box, it just needs to be configured:
+ - Visit https://discovery.etcd.io/new to generate a discovery token. This token will be used internally by etcd
+ - Copy files/user-data-EXAMPLE (optionally files/user-data-EXAMPLE-AWS ) to files/user-data and provide a discovery token
+ - In files/fig.config, make sure "ETCD_ENABLED=yes"
+ 
+Please note that if you recreates the VM ( for instance by doing ```vagrant destroy```, you'll need to regenerate a new token before running ```vagrant up```
+Failing to do so will prevent etcd from starting !
+
 ### Specific procedures when running containers on local host, not in VM using Vagrant
 - Ensure you have the following tools installed on your computer:
  - docker version 1.2 or later ( https://docs.docker.com/installation/ubuntulinux/ ) 
