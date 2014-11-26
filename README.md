@@ -169,14 +169,15 @@ Note : If you opt not to copy the configurations files mentioned above ( the *.-
 - Ensure you have the following tools installed on our computer:
  - Vagrant 1.6+ (http://vagrantup.com)
  - VirtualBox 4.3.12+ (http://www.virtualbox.org)
- - If using AWS : Vagrant AWS plugin. To install run vagrant ```sudo vagrant plugin install vagrant-aws```
+ - If using AWS : 
+  - Install Vagrant AWS plugin. To install run vagrant ```sudo vagrant plugin install vagrant-aws```
+  - In files/vagrant.yml, define "use_aws=true"
+  - Create a dummy box: ```vagrant box add dummy https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box```
+  - You likely want web server to listen on port 80, not port 8080. If so, you need to change "8080:80" into "80:80" in the nginx section in fig.yml ( unfortunately, this cannot be a setting in files/fig.config ) 
 - Optionally: Enable etcd ( See chapter "About etcd " about why you would run etcd )
  - In files/fig.config, make sure "START_ETCD=yes"
  - Copy files/user-data-EXAMPLE (optionally files/user-data-EXAMPLE-AWS ) to files/user-data and provide a discovery token as instructed in the file
 - In files/fig.config, make sure "FIX_EXECUTION_PATH=/"
-- If you are going to use AWS, you'll need to create a dummy box:
-  ```vagrant box add dummy https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box```
-- If you are going to use AWS, you likely want web server to listen on port 80, not port 8080. If so, you need to change "8080:80" into "80:80" in the nginx section in fig.yml ( unfortunately, this cannot be a setting in files/fig.config ) 
 - Run `vagrant up`
 
 If you later want to do changes to your docker/vagrant files, you need to stop and remove the corresponding container ```docker stop [containerid]; docker rm [containerid]```, remove the image ```docker rmi [imageid]``` and then run ```vagrant provision``` instead of ```vagrant up```
