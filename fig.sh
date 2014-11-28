@@ -21,6 +21,7 @@ if [ $DISTRIBUTION == "ubuntu" ]; then
     cp files/etcd_functions $BASE_DOCKERFILES/mysql
     cp files/etcd_functions $BASE_DOCKERFILES/php-fpm
     cp files/etcd_functions $BASE_DOCKERFILES/nginx
+    cp files/etcd_functions $BASE_DOCKERFILES/varnish
 fi
 
 # If {FIX_EXECUTION_PATH} is not set and fig is not in path, we'll test if it is located in /opt/bin. Needed for systemd service

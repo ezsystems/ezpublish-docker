@@ -88,3 +88,15 @@ behatphpcli:
    - sahi:sahi
   volumes_from:
    - ezpublishvol
+varnish:
+  build: dockerfiles/ubuntu/varnish
+  links:
+   - phpfpm:php_fpm
+   - nginx:nginx
+  volumes_from:
+   - ezpublishvol
+  ports:
+   - "8081:80"
+  environment:
+   - VARNISH_ENABLED
+
