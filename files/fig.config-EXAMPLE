@@ -38,6 +38,10 @@ ETCD_NAME=etcdhost1
 # Password for the admin user in mariadb/mysql
 MYSQL_PASS=youmaychangethis
 
+#### Varnish settings ####
+
+VARNISH_ENABLED=no
+
 #### eZ Publish deployment settings ####
 
 # Generates kickstart.ini file with database settings if true
@@ -88,8 +92,15 @@ EZ_PATCH_SW=false
 # Path to location of fig. If fig is in your PATH, you may leave it empty
 export FIX_EXECUTION_PATH=""
 
+#### Docker settings ####
+# This is the network address for the docker0 interface. This address is defined by docker and the setting here just needs to reflect that.
+# Docker defaults to the network address given here, so you should normally not need to change it
+DOCKER0NET="172.17.0.0/15"
+
 
 export ETCD_ENABLED START_ETCD ETCD_DISCOVERY ETCD_NAME
 export MYSQL_PASS
+export VARNISH_ENABLED
 export EZ_KICKSTART EZ_KICKSTART_FROM_TEMPLATE EZ_PACKAGEURL EZ_INSTALLTYPE EZ_COMPOSERVERSION EZ_COMPOSERREPOSITORYURL EZ_TARBALL_FILENAME EZ_ENVIRONMENT EZ_PATCH_SW
 export FIX_EXECUTION_PATH
+export DOCKER0NET

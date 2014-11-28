@@ -71,6 +71,8 @@ nginx:
   environment:
    - ETCD_ENABLED
    - EZ_ENVIRONMENT
+   - VARNISH_ENABLED
+   - DOCKER0NET
 sahi:
   build: dockerfiles/ubuntu/sahi
   links:

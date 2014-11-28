@@ -39,4 +39,10 @@ sed -i "s@%BASEDIR%@${BASEDIR}@" /etc/nginx/sites-available/ezpublish
 
 echo "fastcgi_read_timeout $FASTCGI_READ_TIMEOUT;" > /etc/nginx/conf.d/fastcgi_read_timeout.conf
 
+if [ aa$VARNISH_ENABLED == "aayes" ]; then
+    sed -i "s@  #fastcgi_param USE_HTTP_CACHE 1@  fastcgi_param USE_HTTP_CACHE 0;@" /etc/nginx/sites-available/ezpublish
+    sed -i "s@  #fastcgi_param TRUSTED_PROXIES \"%PROXY%\"@  fastcgi_param TRUSTED_PROXIES \"${DOCKER0NET}\";@" /etc/nginx/sites-available/ezpublish
+fi
+
+
 exec supervisord -n
