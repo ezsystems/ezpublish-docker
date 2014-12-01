@@ -9,4 +9,6 @@ if [ aa$ETCD_ENABLED == "aayes" ]; then
     set_etcd_value "/ezpublish/db_ip" `get_container_ip`
 fi
 
+chown -R mysql:mysql -R /var/lib/mysql
+
 /run.sh

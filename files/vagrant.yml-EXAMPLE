@@ -13,6 +13,7 @@ virtualmachine:
         private_network_ip: 33.33.33.53
 
 aws:
+    use_aws: false
     access_key_id: FOO
     secret_access_key: BAR
     region: eu-west-1
@@ -20,6 +21,7 @@ aws:
     subnet_id: subnet-foobar
     associate_public_ip: "true"
     security_groups: ["sg-foobar"]
+    keypair_name: foobarkey
     # coreos HVM
     ami: ami-58e14e2f
 

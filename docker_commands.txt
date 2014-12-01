@@ -17,3 +17,7 @@ name="web-1"; container=`docker ps -a | grep "$name " | awk '{print $1}'`; pid=`
 github, check rate limit:
 curl -i https://api.github.com/rate_limit?access_token=...
 
+
+systemctl status -l etcd
+journalctl -b -u etcd
+
