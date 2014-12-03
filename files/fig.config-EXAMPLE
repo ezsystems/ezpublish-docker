@@ -95,7 +95,7 @@ export FIX_EXECUTION_PATH=""
 #### Docker settings ####
 # This is the network address for the docker0 interface. This address is defined by docker and the setting here just needs to reflect that.
 # Docker defaults to the network address given here, so you should normally not need to change it
-DOCKER0NET="172.17.0.0/15"
+DOCKER0NET="172.17.0.0/16"
 
 
 export ETCD_ENABLED START_ETCD ETCD_DISCOVERY ETCD_NAME
