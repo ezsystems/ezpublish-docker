@@ -26,6 +26,7 @@ Vagrant.configure("2") do |config|
 
       aws.subnet_id = vagrantConfig['aws']['subnet_id']
       aws.associate_public_ip = vagrantConfig['aws']['associate_public_ip']
+      aws.elastic_ip = vagrantConfig['aws']['elastic_ip']
 
       aws.security_groups = vagrantConfig['aws']['security_groups']
 

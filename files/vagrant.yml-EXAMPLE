@@ -20,6 +20,8 @@ aws:
     instance_type: t2.small
     subnet_id: subnet-foobar
     associate_public_ip: "true"
+    # If using elastic_ip, then provide the allocation ID, not the IP it self. And set associate_public_ip to "false"
+    elastic_ip: false
     security_groups: ["sg-foobar"]
     keypair_name: foobarkey
     # coreos HVM
