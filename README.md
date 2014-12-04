@@ -189,7 +189,7 @@ As you can see, the wrapper will pass on any provided parameters to the vagrant 
 - Ensure you have the following tools installed on our computer:
  - Vagrant 1.6+ (http://vagrantup.com)
  - VirtualBox 4.3.12+ (http://www.virtualbox.org)
- - If using AWS: Install Vagrant AWS plugin. To install run vagrant ```sudo vagrant plugin install vagrant-aws```
+ - If using AWS: Install Vagrant AWS plugin. To install run vagrant ```vagrant plugin install vagrant-aws```
    If using the vagrant container above, this step is not needed
 - Optionally: Enable etcd ( See chapter "About etcd " about why you would run etcd )
  - In files/fig.config, make sure "START_ETCD=yes"
