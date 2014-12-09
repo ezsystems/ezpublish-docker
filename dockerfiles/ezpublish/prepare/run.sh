@@ -136,6 +136,10 @@ function createMysqlDatabase
         let TRY=$TRY+1
         if [ $TRY -eq $MAXTRY ]; then
             echo Max limit reached. Not able to connect to mysql
+            echo Command:
+            echo mysql -uadmin --password=$DB_ENV_MYSQL_PASS --protocol=tcp --host=db -e "CREATE DATABASE IF NOT EXISTS ezp CHARACTER SET=utf8"
+            echo /etc/hosts file :
+            cat /etc/hosts
             exit 1;
         fi
         sleep 2;

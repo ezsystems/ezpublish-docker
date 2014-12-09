@@ -167,7 +167,7 @@ Note : If you opt not to copy the configurations files mentioned above ( the *.-
 
 ### AWS specific procedures
 
-If you want to use an elastic IP you need a development version of the vagrant-aws plugin. The easiest way to do this is to use the provided container.
+If you want to use an elastic IP you need version 0.5.1 of the vagrant-aws plugin ( currently in development ). The easiest way to do this is to use the provided container.
 You may also use this container if you simply do not want to install vagrant on your system.
 
 In order to create the container image, run :
@@ -189,7 +189,7 @@ As you can see, the wrapper will pass on any provided parameters to the vagrant 
 - Ensure you have the following tools installed on our computer:
  - Vagrant 1.6+ (http://vagrantup.com)
  - VirtualBox 4.3.12+ (http://www.virtualbox.org)
- - If using AWS: Install Vagrant AWS plugin. To install run vagrant ```sudo vagrant plugin install vagrant-aws```
+ - If using AWS: Install Vagrant AWS plugin. To install run vagrant ```vagrant plugin install vagrant-aws```
    If using the vagrant container above, this step is not needed
 - Optionally: Enable etcd ( See chapter "About etcd " about why you would run etcd )
  - In files/fig.config, make sure "START_ETCD=yes"
@@ -220,9 +220,9 @@ CoreOS has support for running etcd out of the box, it just needs to be configur
  - Visit https://discovery.etcd.io/new to generate a discovery token. This token will be used internally by etcd
  - Copy files/user-data-EXAMPLE (optionally files/user-data-EXAMPLE-AWS ) to files/user-data and provide a discovery token
  - In files/fig.config, make sure "ETCD_ENABLED=yes"
- 
-Please note that if you recreates the VM ( for instance by doing ```vagrant destroy```, you'll need to regenerate a new token before running ```vagrant up```
-Failing to do so will prevent etcd from starting !
+
+Note: When running etcd on the host, you'll need to remove or change port numbers for etcd in fig.yml too (example : "4002:4001", "7002:7001" ), to prevent the etcd container from binding to the default etcd ports. This is only needed with docker 1.3 and later as earlier version would not complain if the given ports were already taken
+Note: If you recreates the VM ( for instance by doing ```vagrant destroy```, you'll need to regenerate a new token before running ```vagrant up```. Failing to do so will prevent etcd from starting !
 
 ### Specific procedures when running containers on local host, not in VM using Vagrant
 - Ensure you have the following tools installed on your computer:
