@@ -220,9 +220,9 @@ CoreOS has support for running etcd out of the box, it just needs to be configur
  - Visit https://discovery.etcd.io/new to generate a discovery token. This token will be used internally by etcd
  - Copy files/user-data-EXAMPLE (optionally files/user-data-EXAMPLE-AWS ) to files/user-data and provide a discovery token
  - In files/fig.config, make sure "ETCD_ENABLED=yes"
- 
-Please note that if you recreates the VM ( for instance by doing ```vagrant destroy```, you'll need to regenerate a new token before running ```vagrant up```
-Failing to do so will prevent etcd from starting !
+
+Note: When running etcd on the host, you'll need to remove or change port numbers for etcd in fig.yml too (example : "4002:4001", "7002:7001" ), to prevent the etcd container from binding to the default etcd ports. This is only needed with docker 1.3 and later as earlier version would not complain if the given ports were already taken
+Note: If you recreates the VM ( for instance by doing ```vagrant destroy```, you'll need to regenerate a new token before running ```vagrant up```. Failing to do so will prevent etcd from starting !
 
 ### Specific procedures when running containers on local host, not in VM using Vagrant
 - Ensure you have the following tools installed on your computer:
