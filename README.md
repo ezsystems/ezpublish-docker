@@ -165,11 +165,32 @@ By default, the following system will be installed:
 
 Note : If you opt not to copy the configurations files mentioned above ( the *.-EXAMPLE files ), the system will do so for you and use default settings.
 
+### AWS specific procedures
+
+If you want to use an elastic IP you need a development version of the vagrant-aws plugin. The easiest way to do this is to use the provided container.
+You may also use this container if you simply do not want to install vagrant on your system.
+
+In order to create the container image, run :
+```docker build --rm=true --force-rm=true -t ezpublishdocker_vagrantaws:latest dockerfiles/vagrant-aws/```
+
+In order to use this image, use the vagrant wrapper instead of using the vagrant installed directly on your system:
+./vagrant-aws.sh [vagrant options]
+
+Example #1:
+./vagrant-aws.sh up --provider=aws
+
+Example #2:
+./vagrant-aws.sh up provision
+
+As you can see, the wrapper will pass on any provided parameters to the vagrant process inside the container.
+
+
 ### Vagrant specific procedures
 - Ensure you have the following tools installed on our computer:
  - Vagrant 1.6+ (http://vagrantup.com)
  - VirtualBox 4.3.12+ (http://www.virtualbox.org)
  - If using AWS: Install Vagrant AWS plugin. To install run vagrant ```sudo vagrant plugin install vagrant-aws```
+   If using the vagrant container above, this step is not needed
 - Optionally: Enable etcd ( See chapter "About etcd " about why you would run etcd )
  - In files/fig.config, make sure "START_ETCD=yes"
  - Copy files/user-data-EXAMPLE (optionally files/user-data-EXAMPLE-AWS ) to files/user-data and provide a discovery token as instructed in the file
