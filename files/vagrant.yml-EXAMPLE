@@ -21,6 +21,7 @@ aws:
     subnet_id: subnet-foobar
     associate_public_ip: "true"
     # If using elastic_ip, then provide the allocation ID, not the IP itself. And set associate_public_ip to "false"
+    # Note that elastic_ip requires vagrant-aws plugin version 0.5.1 or later
     elastic_ip: false
     security_groups: ["sg-foobar"]
     keypair_name: foobarkey

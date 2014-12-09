@@ -167,7 +167,7 @@ Note : If you opt not to copy the configurations files mentioned above ( the *.-
 
 ### AWS specific procedures
 
-If you want to use an elastic IP you need a development version of the vagrant-aws plugin. The easiest way to do this is to use the provided container.
+If you want to use an elastic IP you need version 0.5.1 of the vagrant-aws plugin ( currently in development ). The easiest way to do this is to use the provided container.
 You may also use this container if you simply do not want to install vagrant on your system.
 
 In order to create the container image, run :
