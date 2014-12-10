@@ -31,7 +31,7 @@ MYSQL_PASS=youmaychangethis
 EZ_KICKSTART=true
 
 #  Pre downloads packages from provided url if set for setup wizard speed up
-# EZ_PACKAGEURL=http://packages.ez.no/ezpublish/5.4/5.4.0alpha1/
+# EZ_PACKAGEURL=http://packages.ez.no/ezpublish/5.4/5.4.0/
 EZ_PACKAGEURL=
 
 # Specify how to prepare ezpublish
