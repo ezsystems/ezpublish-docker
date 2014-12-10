@@ -1,10 +1,8 @@
 {
-    "config": {
-        "basic-auth": {
-            "updates.ez.no": {
-                "username": "",
-                "password": ""
-            }
+    "http-basic": {
+        "updates.ez.no": {
+            "username": "",
+            "password": ""
         }
     },
     "github-oauth": {
