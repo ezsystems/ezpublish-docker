@@ -38,3 +38,9 @@ fi
 
 ${FIX_EXECUTION_PATH}fig "$@"
 
+echo "Waiting for prepare container to complete"
+continue=1; while [ $continue -eq 1 ]; do docker ps -a|grep "ezpublishdocker_prepare:latest"|grep Exited > /dev/null; continue=$?; echo -n "."; sleep 3; done;
+
+echo "Last output from prepare container:"
+echo "###################################"
+docker logs -t ezpublishdocker_prepare_1|tail -n 15
