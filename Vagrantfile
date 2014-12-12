@@ -114,6 +114,12 @@ Vagrant.configure("2") do |config|
     "
   end
 
+  # Make sure containers starts automatically on boot
+  config.vm.provision :shell, :inline => "
+    sudo cp /vagrant/files/fig.service /etc/systemd/system/
+    sudo systemctl enable /etc/systemd/system/fig.service
+  "
+
   config.vm.network :forwarded_port, guest: 80, host: 8080
   config.vm.network :private_network, ip: vagrantConfig['virtualmachine']['network']['private_network_ip']
   config.vm.network "public_network"
