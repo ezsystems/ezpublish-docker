@@ -14,6 +14,16 @@ export FIG_PROJECT_NAME=ezpublishdocker
 
 source files/fig.config
 
+# If {FIX_EXECUTION_PATH} is not set and fig is not in path, we'll test if it is located in /opt/bin. Needed for systemd service
+if [ aa$FIX_EXECUTION_PATH == "aa" ]; then
+    if [ ! `which ${FIX_EXECUTION_PATH}fig > /dev/null` ]; then
+        if [ -x "/opt/bin/fig" ]; then
+            FIX_EXECUTION_PATH="/opt/bin/"
+        fi
+    fi
+fi
+
+
 # Make a argumentlist where any "-d" is removed
 for i in "$@"; do
     if [ $i != "-d" ]; then
