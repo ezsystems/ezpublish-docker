@@ -74,3 +74,20 @@ nginx:
   environment:
    - ETCD_ENABLED
    - EZ_ENVIRONMENT
+sahibase:
+  build: dockerfiles/sahi/base
+sahi:
+  build: dockerfiles/sahi
+  links:
+   - nginx:web
+  ports:
+   - "9999:9999"
+   - "5900:5900"
+behatphpcli:
+  build: dockerfiles/php-cli
+  links:
+   - db1:db
+   - nginx:web
+   - sahi:sahi
+  volumes_from:
+   - ezpublishvol
