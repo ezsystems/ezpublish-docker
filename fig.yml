@@ -48,6 +48,7 @@ prepare:
    - EZ_INSTALLTYPE
    - EZ_COMPOSERVERSION
    - EZ_COMPOSERREPOSITORYURL
+   - EZ_ENVIRONMENT
 phpfpm:
   build: dockerfiles/php-fpm
   links:
@@ -72,3 +73,4 @@ nginx:
    - "8080:80"
   environment:
    - ETCD_ENABLED
+   - EZ_ENVIRONMENT

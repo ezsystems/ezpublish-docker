@@ -59,6 +59,9 @@ EZ_COMPOSERREPOSITORYURL=
 # Path cannot escape the project root ( ie do not do "../ezpublish5-5.3.0-ee-ttl-full.tar.gz"
 EZ_TARBALL_FILENAME=ezpublish5-5.3.0-ee-ttl-full.tar.gz
 
+# Set the environment for ezpublish. Valid options are "prod", "dev", "behat"
+EZ_ENVIRONMENT=prod
+
 #### FIG settings ####
 # Path to location of fig. If fig is in your PATH, you may leave it empty
 export FIX_EXECUTION_PATH=""
@@ -66,5 +69,5 @@ export FIX_EXECUTION_PATH=""
 
 export ETCD_ENABLED START_ETCD ETCD_DISCOVERY ETCD_NAME
 export MYSQL_PASS
-export EZ_KICKSTART EZ_PACKAGEURL EZ_INSTALLTYPE EZ_COMPOSERVERSION EZ_COMPOSERREPOSITORYURL EZ_TARBALL_FILENAME
+export EZ_KICKSTART EZ_PACKAGEURL EZ_INSTALLTYPE EZ_COMPOSERVERSION EZ_COMPOSERREPOSITORYURL EZ_TARBALL_FILENAME EZ_ENVIRONMENT
 export FIX_EXECUTION_PATH
