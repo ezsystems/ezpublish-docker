@@ -1,0 +1,16 @@
+--- volumes/ezpublish/behat.yml.org	2015-01-06 13:16:47.850346963 +0100
++++ volumes/ezpublish/behat.yml	2015-01-06 13:25:27.974335851 +0100
+@@ -1,10 +1,12 @@
+ default:
+     extensions:
+         Behat\MinkExtension:
+-            base_url: 'http://localhost'
++            base_url: 'http://web'
+             goutte: ~
+             sahi:
+                 limit: 1200
++                host: sahi
++                port: 9999
+             selenium2:
+                 capabilities: { "browser": "firefox", "version": "17"}
+             javascript_session: sahi
