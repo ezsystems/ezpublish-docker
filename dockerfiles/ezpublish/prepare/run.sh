@@ -2,10 +2,14 @@
 
 # Script accepts the following environment variable:
 # - EZ_KICKSTART ( "true" or "false" )
+# - EZ_KICKSTART_FROM_TEMPLATE ( template file )
+#   Note that the value of this setting passed on to this script is the filename outside the container. Inside the container, the actuall file will always be named /kickstart_template.ini
+#   Therefore, the value of this setting will be rewritten internally in the script
 # - EZ_PACKAGEURL ( url, pointing to url where packages are located )
 # - EZ_INSTALLTYPE ( "composer" )
 # - EZ_COMPOSERVERSION ( What version of eZ Publish to install using composer )
 # - EZ_COMPOSERREPOSITORYURL ( Url to composer repository which should be used )
+# - EZ_PATCH_SW ( "true" or "false" ) : Whatever to patch setup wizard or not, so that the welcome page also can be kickstarted
 #
 # Parameters can also be given as options, in the same order:
 # ./run.sh [ EZ_KICKSTART ] [ EZ_PACKAGEURL ] ....
@@ -18,17 +22,23 @@ function parseCommandlineOptions
         EZ_KICKSTART=$1
     fi
     if [ "aa$2" != "aa" ]; then
-        EZ_PACKAGEURL=$2
-        export EZ_PACKAGEURL
+        EZ_KICKSTART_FROM_TEMPLATE=$2
     fi
     if [ "aa$3" != "aa" ]; then
-        EZ_INSTALLTYPE=$3
+        EZ_PACKAGEURL=$3
+        export EZ_PACKAGEURL
     fi
     if [ "aa$4" != "aa" ]; then
-        EZ_COMPOSERVERSION=$4
+        EZ_INSTALLTYPE=$4
     fi
     if [ "aa$5" != "aa" ]; then
-        EZ_COMPOSERREPOSITORYURL=$5
+        EZ_COMPOSERVERSION=$5
+    fi
+    if [ "aa$6" != "aa" ]; then
+        EZ_COMPOSERREPOSITORYURL=$6
+    fi
+    if [ "aa$7" != "aa" ]; then
+        EZ_PATCH_SW=$7
     fi
 
 
@@ -45,6 +55,20 @@ function validateDocRootIsEmpty
         exit 1
     else
         return 0
+    fi
+}
+
+
+function patchSetupWizard
+{
+    local pwd
+    pwd=`pwd`
+    echo patch setup wizard ? : $EZ_PATCH_SW
+    if [ "aa$EZ_PATCH_SW" == "aatrue" ]; then
+        cd /var/www
+        echo patching ....
+        patch -p0 < /setupwizard_ezstep_welcome.patch
+        cd - > /dev/null
     fi
 }
 
@@ -79,6 +103,8 @@ function installViaComposer
 
     mv ezp/* /var/www
 
+    patchSetupWizard
+
     cd ..
     rm -Rf $tmpDir
 
@@ -102,6 +128,8 @@ function installTarball
 
     mv ezpublish5/* /var/www
 
+    patchSetupWizard
+
     cd /var/www
 #    php ezpublish/console assets:install --relative --symlink web
 #    php ezpublish/console ezpublish:legacy:assets_install --relative --symlink web
@@ -110,6 +138,12 @@ function installTarball
 
 function processCommandLineOptions
 {
+    # Fix value of KICKSTART_FROM_TEMPLATE
+    if [ "aa$EZ_KICKSTART_FROM_TEMPLATE" != "aa" ]; then
+        EZ_KICKSTART_FROM_TEMPLATE="/kickstart_template.ini"
+    fi
+
+
     if [ $EZ_INSTALLTYPE == "composer" ]; then
         installViaComposer
     fi
@@ -156,7 +190,7 @@ cd /var/www/
 
 # Prepare for setup wizard if requested
 if [ "$EZ_KICKSTART" = "true" ]; then
-  /generate_kickstart_file.sh
+  /generate_kickstart_file.sh $EZ_KICKSTART_FROM_TEMPLATE
 fi
 
 # Dowload packages if requested

@@ -44,11 +44,13 @@ prepare:
    - ${EZ_TARBALL_FILENAME}:/tmp/ezpublish.tar.gz
   environment:
    - EZ_KICKSTART
+   - EZ_KICKSTART_FROM_TEMPLATE
    - EZ_PACKAGEURL
    - EZ_INSTALLTYPE
    - EZ_COMPOSERVERSION
    - EZ_COMPOSERREPOSITORYURL
    - EZ_ENVIRONMENT
+   - EZ_PATCH_SW
 phpfpm:
   build: dockerfiles/php-fpm
   links:

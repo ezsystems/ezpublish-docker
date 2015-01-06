@@ -23,6 +23,12 @@ if [ aa$FIX_EXECUTION_PATH == "aa" ]; then
     fi
 fi
 
+# Copy kickstart template to build dir
+if [ "aa$EZ_KICKSTART_FROM_TEMPLATE" != "aa" ]; then
+    cp files/$EZ_KICKSTART_FROM_TEMPLATE dockerfiles/ezpublish/prepare/kickstart_template.ini
+else
+    echo "" > dockerfiles/ezpublish/prepare/kickstart_template.ini
+fi
 
 # Make a argumentlist where any "-d" is removed
 for i in "$@"; do
