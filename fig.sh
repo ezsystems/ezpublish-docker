@@ -59,4 +59,4 @@ continue=1; while [ $continue -eq 1 ]; do docker ps -a|grep "${FIG_PROJECT_NAME}
 
 echo "Last output from prepare container:"
 echo "###################################"
-docker logs -t ezpublishdocker_prepare_1|tail -n 15
+docker logs -t ${FIG_PROJECT_NAME}_prepare_1|tail -n 15
