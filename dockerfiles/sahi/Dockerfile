@@ -7,7 +7,8 @@ RUN apt-get install -y \
 #wget -nv -O sahi_20130429.zip "http://downloads.sourceforge.net/project/sahi/sahi-v44/sahi_20130429.zip?r=http%3A%2F%2Fsourceforge.net%2Fprojects%2Fsahi%2Ffiles%2Fsahi-v44%2F&ts=1376728867&use_mirror=garr"
 ADD sahi_20130429.zip /tmp/sahi.zip
 
-wget https://github.com/ezsystems/ezpublish-community/blob/master/bin/.travis/sahi/browser_types.xml-dist
+# Travis tests uses this one : https://github.com/ezsystems/ezpublish-community/blob/master/bin/.travis/sahi/browser_types.xml-dist
+# However, we'll use the default one for now....
 #ADD browser_types.xml-dist /tmp/browser_types.xml-dist
 
 RUN adduser sahi
