@@ -28,8 +28,11 @@ aws:
     block_device_mapping:
         device_name: "/dev/xvda"
         volume_size: 12
-    # coreos HVM
-    ami: ami-58e14e2f
+    # Overview over AMIs : https://coreos.com/docs/running-coreos/cloud-providers/ec2/
+    # coreOS PV:
+    ami: ami-d6b80ba1
+    # coreos HVM:
+    #ami: ami-58e14e2f
 
 debug:
     disable_rsync: false
