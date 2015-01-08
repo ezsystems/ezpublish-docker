@@ -25,6 +25,9 @@ aws:
     elastic_ip: false
     security_groups: ["sg-foobar"]
     keypair_name: foobarkey
+    block_device_mapping:
+        device_name: "/dev/xvda"
+        volume_size: 12
     # coreos HVM
     ami: ami-58e14e2f
 

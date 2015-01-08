@@ -34,6 +34,8 @@ Vagrant.configure("2") do |config|
       # SSH login credentials
       aws.keypair_name = vagrantConfig['aws']['keypair_name']
 
+      aws.block_device_mapping = [{ 'DeviceName' => vagrantConfig['aws']['block_device_mapping']['device_name'], 'Ebs.VolumeSize' => vagrantConfig['aws']['block_device_mapping']['volume_size'] }]
+
       if File.exist?(CLOUD_CONFIG_PATH)
           aws.user_data = File.read( CLOUD_CONFIG_PATH );
       end
