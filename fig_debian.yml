@@ -16,3 +16,17 @@ db1:
    - dbvol
   environment:
    - MYSQL_PASS
+phpfpm:
+  build: dockerfiles/debian/php-fpm
+  links:
+   - db1:db
+  volumes_from:
+   - ezpublishvol
+nginx:
+  build: dockerfiles/debian/nginx
+  links:
+   - phpfpm:php_fpm
+  volumes_from:
+   - ezpublishvol
+  ports:
+   - "8080:80"
