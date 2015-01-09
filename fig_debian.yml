@@ -1,0 +1,18 @@
+dbvol:
+  image: debian:wheezy
+  volumes:
+   - volumes/mysql:/var/lib/mysql
+ezpublishvol:
+  image: debian:wheezy
+  volumes:
+   - volumes/ezpublish:/var/www
+composercachevol:
+  image: debian:wheezy
+  volumes:
+   - volumes/composercache:/volumes/composercache
+db1:
+  build: dockerfiles/debian/mysql
+  volumes_from:
+   - dbvol
+  environment:
+   - MYSQL_PASS
