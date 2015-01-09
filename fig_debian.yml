@@ -37,6 +37,12 @@ phpfpm:
    - db1:db
   volumes_from:
    - ezpublishvol
+phpcli:
+  build: dockerfiles/debian/php-cli
+  links:
+   - db1:db
+  volumes_from:
+   - ezpublishvol
 nginx:
   build: dockerfiles/debian/nginx
   links:
