@@ -23,6 +23,12 @@ if [ aa$FIX_EXECUTION_PATH == "aa" ]; then
     fi
 fi
 
+# Copy kickstart template to build dir
+if [ "aa$EZ_KICKSTART_FROM_TEMPLATE" != "aa" ]; then
+    cp files/$EZ_KICKSTART_FROM_TEMPLATE dockerfiles/ezpublish/prepare/kickstart_template.ini
+else
+    echo "" > dockerfiles/ezpublish/prepare/kickstart_template.ini
+fi
 
 # Make a argumentlist where any "-d" is removed
 for i in "$@"; do
@@ -49,8 +55,8 @@ fi
 ${FIX_EXECUTION_PATH}fig "$@"
 
 echo "Waiting for prepare container to complete"
-continue=1; while [ $continue -eq 1 ]; do docker ps -a|grep "ezpublishdocker_prepare:latest"|grep Exited > /dev/null; continue=$?; echo -n "."; sleep 3; done;
+continue=1; while [ $continue -eq 1 ]; do docker ps -a|grep "${FIG_PROJECT_NAME}_prepare:latest"|grep Exited > /dev/null; continue=$?; echo -n "."; sleep 3; done;
 
 echo "Last output from prepare container:"
 echo "###################################"
-docker logs -t ezpublishdocker_prepare_1|tail -n 15
+docker logs -t ${FIG_PROJECT_NAME}_prepare_1|tail -n 15

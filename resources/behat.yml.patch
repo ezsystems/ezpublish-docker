@@ -1,0 +1,50 @@
+--- volumes/ezpublish/behat.yml.org	2015-01-07 13:59:13.076206086 +0100
++++ volumes/ezpublish/behat.yml	2015-01-07 13:59:27.427961419 +0100
+@@ -1,10 +1,12 @@
+ default:
+     extensions:
+         Behat\MinkExtension:
+-            base_url: 'http://localhost'
++            base_url: 'http://web'
+             goutte: ~
+             sahi:
+                 limit: 1200
++                host: sahi
++                port: 9999
+             selenium2:
+                 capabilities: { "browser": "firefox", "version": "17"}
+             javascript_session: sahi
+@@ -27,21 +29,21 @@
+             paths: [ vendor/ezsystems/ezpublish-kernel/eZ/Bundle/EzPublishRestBundle/Features ]
+             contexts: 
+                 - eZ\Bundle\EzPublishRestBundle\Features\Context\RestContext:
+-                    url: http://localhost/api/ezp/v2/
++                    url: http://web/api/ezp/v2/
+                     driver: BuzzDriver
+                     type: json
+         fullXml:
+             paths: [ vendor/ezsystems/ezpublish-kernel/eZ/Bundle/EzPublishRestBundle/Features ]
+             contexts: 
+                 - eZ\Bundle\EzPublishRestBundle\Features\Context\RestContext:
+-                    url: http://localhost/api/ezp/v2/
++                    url: http://web/api/ezp/v2/
+                     driver: BuzzDriver
+                     type: xml
+         guzzle:
+             paths: [ vendor/ezsystems/ezpublish-kernel/eZ/Bundle/EzPublishRestBundle/Features ]
+             contexts: 
+                 - eZ\Bundle\EzPublishRestBundle\Features\Context\RestContext:
+-                    url: http://localhost/api/ezp/v2/
++                    url: http://web/api/ezp/v2/
+                     driver: GuzzleDriver
+                     type: json
+ 
+@@ -54,7 +56,7 @@
+ legacyAdmin:
+     extensions:
+         Behat\MinkExtension:
+-            base_url: http://localhost/behat_site_admin
++            base_url: http://web/behat_site_admin
+     suites:
+         full:
+             paths: [ vendor/ezsystems/ezpublish-kernel/eZ/Bundle/EzPublishLegacyBundle/Features/Admin ]
