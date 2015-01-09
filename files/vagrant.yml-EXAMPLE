@@ -25,8 +25,14 @@ aws:
     elastic_ip: false
     security_groups: ["sg-foobar"]
     keypair_name: foobarkey
-    # coreos HVM
-    ami: ami-58e14e2f
+    block_device_mapping:
+        device_name: "/dev/xvda"
+        volume_size: 12
+    # Overview over AMIs : https://coreos.com/docs/running-coreos/cloud-providers/ec2/
+    # coreOS PV:
+    ami: ami-d6b80ba1
+    # coreos HVM:
+    #ami: ami-58e14e2f
 
 debug:
     disable_rsync: false
