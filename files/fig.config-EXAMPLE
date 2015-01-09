@@ -1,4 +1,10 @@
 
+#### Distribution settings ####
+
+# Specify what distribution you want you containers to be based on
+# Valid values are "ubuntu" and "debian"
+DISTRIBUTION=ubuntu
+
 #### ETCD settings ####
 
 # Should the containers share resources via etcd or not
