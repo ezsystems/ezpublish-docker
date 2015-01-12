@@ -9,6 +9,7 @@ volumes/ezpublish
 volumes/composercache
 volumes/etcd
 dockerfiles/ubuntu/ezpublish/prepare/auth.json
+dockerfiles/debian/ezpublish/prepare/auth.json
 dockerfiles/ubuntu/etcd/etcd_functions
 dockerfiles/ubuntu/mysql/etcd_functions
 dockerfiles/ubuntu/mysql/etcd_0.4.6_amd64.deb
