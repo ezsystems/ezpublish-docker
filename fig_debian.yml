@@ -27,10 +27,13 @@ prepare:
    - ${EZ_TARBALL_FILENAME}:/tmp/ezpublish.tar.gz
   environment:
    - EZ_KICKSTART
+   - EZ_KICKSTART_FROM_TEMPLATE
    - EZ_PACKAGEURL
    - EZ_INSTALLTYPE
    - EZ_COMPOSERVERSION
    - EZ_COMPOSERREPOSITORYURL
+   - EZ_ENVIRONMENT
+   - EZ_PATCH_SW
 phpfpm:
   build: dockerfiles/debian/php-fpm
   links:
@@ -51,3 +54,20 @@ nginx:
    - ezpublishvol
   ports:
    - "8080:80"
+  environment:
+   - EZ_ENVIRONMENT
+sahi:
+  build: dockerfiles/debian/sahi
+  links:
+   - nginx:web
+  ports:
+   - "9999:9999"
+   - "5900:5900"
+behatphpcli:
+  build: dockerfiles/debian/php-cli
+  links:
+   - db1:db
+   - nginx:web
+   - sahi:sahi
+  volumes_from:
+   - ezpublishvol

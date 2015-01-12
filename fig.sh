@@ -32,11 +32,14 @@ if [ aa$FIX_EXECUTION_PATH == "aa" ]; then
     fi
 fi
 
+cp resources/setupwizard_ezstep_welcome.patch dockerfiles/ezpublish/prepare
+cp resources/setupwizard_ezstep_welcome.patch dockerfiles/debian/ezpublish/prepare
+
 # Copy kickstart template to build dir
 if [ "aa$EZ_KICKSTART_FROM_TEMPLATE" != "aa" ]; then
-    cp files/$EZ_KICKSTART_FROM_TEMPLATE dockerfiles/ezpublish/prepare/kickstart_template.ini
+    cp files/$EZ_KICKSTART_FROM_TEMPLATE $BASE_DOCKERFILES/ezpublish/prepare/kickstart_template.ini
 else
-    echo "" > dockerfiles/ezpublish/prepare/kickstart_template.ini
+    echo "" > $BASE_DOCKERFILES/ezpublish/prepare/kickstart_template.ini
 fi
 
 # Make a argumentlist where any "-d" is removed

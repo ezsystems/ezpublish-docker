@@ -17,4 +17,7 @@ dockerfiles/php-fpm/etcd_0.4.6_amd64.deb
 dockerfiles/nginx/etcd_functions
 dockerfiles/nginx/etcd_0.4.6_amd64.deb
 dockerfiles/ezpublish/prepare/kickstart_template.ini
+dockerfiles/ezpublish/prepare/setupwizard_ezstep_welcome.patch
+dockerfiles/debian/ezpublish/prepare/kickstart_template.ini
+dockerfiles/debian/ezpublish/prepare/setupwizard_ezstep_welcome.patch
 
