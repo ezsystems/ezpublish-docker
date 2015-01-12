@@ -1,7 +1,6 @@
 FROM tutum/mysql:latest
 
-RUN apt-get update -y
-RUN apt-get install -y --force-yes \
+RUN apt-get update -y && apt-get install -y --force-yes \
     python
 
 ADD etcd_0.4.6_amd64.deb /etcd_0.4.6_amd64.deb

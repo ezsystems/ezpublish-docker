@@ -1,4 +1,4 @@
-FROM ezpublishdocker_ubuntu
+FROM ubuntu:trusty
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -8,7 +8,7 @@ ENV BASEDIR /var/www
 ENV FASTCGI_READ_TIMEOUT 190
 
 
-RUN apt-get install -y \
+RUN apt-get update -y && apt-get install -y \
     supervisor \
     nginx
 

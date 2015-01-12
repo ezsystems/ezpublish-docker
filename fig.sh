@@ -51,8 +51,6 @@ done
 
 # This is a workaround for https://github.com/docker/fig/issues/540
 if [ $DISTRIBUTION == "ubuntu" ]; then
-    ${FIX_EXECUTION_PATH}fig -f fig_initial.yml "$@"
-
     # We need to build etcd next so that the .deb package can be placed inside other images
     if [ ! -f volumes/etcd/etcd_0.4.6_amd64.deb ]; then
         ${FIX_EXECUTION_PATH}fig -f fig_etcd.yml $arglistnodetach

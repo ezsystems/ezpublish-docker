@@ -1,7 +1,7 @@
-FROM ezpublishdocker_ubuntu
+FROM ubuntu:trusty
 
 
-RUN sudo apt-get install -y \
+RUN apt-get update -y && apt-get install -y \
     ruby-dev \
     gcc \
     make \

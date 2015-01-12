@@ -1,4 +1,4 @@
-FROM ezpublishdocker_ubuntu
+FROM ubuntu:trusty
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV TIMEZONE Europe/Warsaw
@@ -10,7 +10,7 @@ ENV PORT 9000
 RUN locale-gen en_US en_US.UTF-8
 ENV LANG en_US.UTF-8
 
-RUN apt-get install -y \
+RUN apt-get update -y && apt-get install -y \
     php5-fpm \
     php5-mysql \
     php5-json \

@@ -1,6 +1,12 @@
-FROM ezpublishdocker_sahibase
+FROM ubuntu:trusty
 
-RUN apt-get install -y \
+RUN apt-get update -y && apt-get install -y \
+    xvfb \
+    xterm \
+    x11vnc \
+    default-jre \
+    mwm \
+    unzip \
     firefox
 
 

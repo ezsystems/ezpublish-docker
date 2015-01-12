@@ -1,16 +1,13 @@
-# dummy container for base image
-ubuntu:
-  build: dockerfiles/ubuntu
 dbvol:
-  image: ezpublishdocker_ubuntu
+  image: ubuntu:trusty
   volumes:
    - volumes/mysql:/var/lib/mysql
 ezpublishvol:
-  image: ezpublishdocker_ubuntu
+  image: ubuntu:trusty
   volumes:
    - volumes/ezpublish:/var/www
 composercachevol:
-  image: ezpublishdocker_ubuntu
+  image: ubuntu:trusty
   volumes:
    - volumes/composercache:/volumes/composercache
 etcd:
@@ -31,8 +28,6 @@ db1:
   environment:
    - MYSQL_PASS
    - ETCD_ENABLED
-phpclibase:
-  build: dockerfiles/php-cli/base
 prepare:
   build: dockerfiles/ezpublish/prepare
   links:
@@ -76,8 +71,6 @@ nginx:
   environment:
    - ETCD_ENABLED
    - EZ_ENVIRONMENT
-sahibase:
-  build: dockerfiles/sahi/base
 sahi:
   build: dockerfiles/sahi
   links:
