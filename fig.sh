@@ -7,7 +7,7 @@ source files/fig.config
 if [ $DISTRIBUTION == "debian" ]; then
     BASE_DOCKERFILES="dockerfiles/debian"
 else
-    BASE_DOCKERFILES="dockerfiles"
+    BASE_DOCKERFILES="dockerfiles/ubuntu"
 fi
 
 if [ -f files/auth.json ]; then
@@ -32,8 +32,7 @@ if [ aa$FIX_EXECUTION_PATH == "aa" ]; then
     fi
 fi
 
-cp resources/setupwizard_ezstep_welcome.patch dockerfiles/ezpublish/prepare
-cp resources/setupwizard_ezstep_welcome.patch dockerfiles/debian/ezpublish/prepare
+cp resources/setupwizard_ezstep_welcome.patch $BASE_DOCKERFILES/ezpublish/prepare
 
 # Copy kickstart template to build dir
 if [ "aa$EZ_KICKSTART_FROM_TEMPLATE" != "aa" ]; then
@@ -58,12 +57,12 @@ if [ $DISTRIBUTION == "ubuntu" ]; then
 
     # Copy the etcd .deb to the dockerfile directory for images that need it
     if [ ! -f dockerfiles/mysql/etcd_0.4.6_amd64.deb ]; then
-        cp volumes/etcd/etcd_0.4.6_amd64.deb dockerfiles/mysql
-        cp volumes/etcd/etcd_0.4.6_amd64.deb dockerfiles/php-fpm
-        cp volumes/etcd/etcd_0.4.6_amd64.deb dockerfiles/nginx
+        cp volumes/etcd/etcd_0.4.6_amd64.deb $BASE_DOCKERFILES/mysql
+        cp volumes/etcd/etcd_0.4.6_amd64.deb $BASE_DOCKERFILES/php-fpm
+        cp volumes/etcd/etcd_0.4.6_amd64.deb $BASE_DOCKERFILES/nginx
     fi
 
-    ${FIX_EXECUTION_PATH}fig "$@"
+    ${FIX_EXECUTION_PATH}fig -f fig_ubuntu.yml "$@"
 else
     ${FIX_EXECUTION_PATH}fig -f fig_debian.yml "$@"
 fi

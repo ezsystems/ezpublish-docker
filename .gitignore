@@ -8,16 +8,16 @@ volumes/mysql
 volumes/ezpublish
 volumes/composercache
 volumes/etcd
-dockerfiles/ezpublish/prepare/auth.json
-dockerfiles/etcd/etcd_functions
-dockerfiles/mysql/etcd_functions
-dockerfiles/mysql/etcd_0.4.6_amd64.deb
-dockerfiles/php-fpm/etcd_functions
-dockerfiles/php-fpm/etcd_0.4.6_amd64.deb
-dockerfiles/nginx/etcd_functions
-dockerfiles/nginx/etcd_0.4.6_amd64.deb
-dockerfiles/ezpublish/prepare/kickstart_template.ini
-dockerfiles/ezpublish/prepare/setupwizard_ezstep_welcome.patch
+dockerfiles/ubuntu/ezpublish/prepare/auth.json
+dockerfiles/ubuntu/etcd/etcd_functions
+dockerfiles/ubuntu/mysql/etcd_functions
+dockerfiles/ubuntu/mysql/etcd_0.4.6_amd64.deb
+dockerfiles/ubuntu/php-fpm/etcd_functions
+dockerfiles/ubuntu/php-fpm/etcd_0.4.6_amd64.deb
+dockerfiles/ubuntu/nginx/etcd_functions
+dockerfiles/ubuntu/nginx/etcd_0.4.6_amd64.deb
+dockerfiles/ubuntu/ezpublish/prepare/kickstart_template.ini
+dockerfiles/ubuntu/ezpublish/prepare/setupwizard_ezstep_welcome.patch
 dockerfiles/debian/ezpublish/prepare/kickstart_template.ini
 dockerfiles/debian/ezpublish/prepare/setupwizard_ezstep_welcome.patch
 
