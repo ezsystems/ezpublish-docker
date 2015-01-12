@@ -52,9 +52,9 @@ A lot of existing images exists for ubuntu and debian.
 ##### Images varying by Base
 
 Base images are provided by Docker, and the once we would like to use are currently (prioritized):
-- `centos:centos7`
 - `ubuntu:trusty`
-- `debian:wheezy` (for later, might make sense ot wait for `debian:jessie`)
+- `debian:wheezy`
+- `centos:centos7`
 - `opensuse:latest` (for later, if/when we re add suse to supported platforms)
 
 For test coverage of our different supported platforms we would thus like to eventually have the following images
