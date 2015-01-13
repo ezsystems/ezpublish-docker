@@ -56,9 +56,13 @@ if [ $DISTRIBUTION == "ubuntu" ]; then
     fi
 
     # Copy the etcd .deb to the dockerfile directory for images that need it
-    if [ ! -f dockerfiles/mysql/etcd_0.4.6_amd64.deb ]; then
+    if [ ! -f $BASE_DOCKERFILES/mysql/etcd_0.4.6_amd64.deb ]; then
         cp volumes/etcd/etcd_0.4.6_amd64.deb $BASE_DOCKERFILES/mysql
+    fi
+    if [ ! -f $BASE_DOCKERFILES/php-fpm/etcd_0.4.6_amd64.deb ]; then
         cp volumes/etcd/etcd_0.4.6_amd64.deb $BASE_DOCKERFILES/php-fpm
+    fi
+    if [ ! -f $BASE_DOCKERFILES/nginx/etcd_0.4.6_amd64.deb ]; then
         cp volumes/etcd/etcd_0.4.6_amd64.deb $BASE_DOCKERFILES/nginx
     fi
 
