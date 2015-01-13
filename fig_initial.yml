@@ -1,3 +1,0 @@
-# dummy container for base image
-ubuntu:
-  build: dockerfiles/ubuntu

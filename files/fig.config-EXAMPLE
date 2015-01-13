@@ -1,5 +1,18 @@
 
+#### Project name ####
+
+# Prefix used by fig when creating images and containers
+#FIG_PROJECT_NAME=ezpublishdocker
+
+#### Distribution settings ####
+
+# Specify what distribution you want you containers to be based on
+# Valid values are "ubuntu" and "debian"
+DISTRIBUTION=ubuntu
+
 #### ETCD settings ####
+
+# ETCD settings are only applicable if DISTRIBUTION=ubuntu. ETCD is not supported by debian based containers
 
 # Should the containers share resources via etcd or not
 # if value is yes, you either need to run etcd on host, or also set START_ETCD=yes
