@@ -1,4 +1,9 @@
 
+#### Project name ####
+
+# Prefix used by fig when creating images and containers
+#FIG_PROJECT_NAME=ezpublishdocker
+
 #### Distribution settings ####
 
 # Specify what distribution you want you containers to be based on
