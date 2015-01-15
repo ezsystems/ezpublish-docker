@@ -14,7 +14,7 @@ Cover the following use cases (with time), including (in prioritized order):
 2.  Cluster support (Memcached, Varnish4, DFS)
 3.  Add additional containers for the different platforms we support to be able to automate Behat (BDD) testing across
     a wide range of platforms and combinations.
-4. (outside scope of this Repository) Investigate use of Meos++ for use with massive clustering
+4. (outside scope of this Repository) Investigate use of Mesos++ for use with massive clustering
 
 
 ### Spec
@@ -35,7 +35,7 @@ Mysql raw files are in similar ways located in volumes/mysql
 In the beginning VagrantFile will be used, and config is up to user to adjust eZ Publish install and VagrantFile.
 
 However eventually the following needs to be configured in a "Docker way"(TM):
-- Container linking (typically fig or Meos for cluster setup or manually using Weave)
+- Container linking (typically fig or Mesos for cluster setup or manually using Weave)
 - Configuring of eZ Publish (typically using Ansible)
     - database (example: mysql/postgres/oracle/..)
     - cache (example: memcached/file/redis/..)
