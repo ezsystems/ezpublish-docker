@@ -96,9 +96,9 @@ Vagrant.configure("2") do |config|
   end
 
   if File.exist?( "files/auth.json" )
-    FileUtils.cp( "files/auth.json", "dockerfiles/ezpublish/prepare" )
+    FileUtils.cp( "files/auth.json", "dockerfiles/ubuntu/ezpublish/prepare" )
   end
-  FileUtils.cp( "files/etcd_functions", "dockerfiles/mysql" )
+  FileUtils.cp( "files/etcd_functions", "dockerfiles/ubuntu/mysql" )
 
   # Install fig on vagrant machine
   config.vm.provision :shell, :inline => "
