@@ -46,6 +46,16 @@ prepare:
    - EZ_COMPOSERREPOSITORYURL
    - EZ_ENVIRONMENT
    - EZ_PATCH_SW
+varnishprepare:
+  build: dockerfiles/ubuntu/ezpublish/varnish_prepare
+  links:
+   - varnish:varnish
+   - db1:db
+  volumes_from:
+   - ezpublishvol
+  environment:
+   - VARNISH_ENABLED
+   - EZ_ENVIRONMENT
 phpfpm:
   build: dockerfiles/ubuntu/php-fpm
   links:

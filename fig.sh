@@ -42,6 +42,8 @@ else
     echo "" > $BASE_DOCKERFILES/ezpublish/prepare/kickstart_template.ini
 fi
 
+cp resources/ezpublish.yml_varnishpurge.diff $BASE_DOCKERFILES/ezpublish/varnish_prepare/
+
 # Make a argumentlist where any "-d" is removed
 for i in "$@"; do
     if [ $i != "-d" ]; then

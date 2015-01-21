@@ -1,0 +1,23 @@
+--- ezpublish/config/ezpublish.yml.org	2015-01-20 14:32:40.287422725 +0000
++++ ezpublish/config/ezpublish.yml	2015-01-20 14:32:56.191423023 +0000
+@@ -15,6 +15,10 @@
+         ezdemo_site_admin:
+             legacy_mode: true
+ ezpublish:
++    http_cache:
++        # As of 5.4 only use "http"
++        # "single_http" and "multiple_http" are deprecated but will still work.
++        purge_type: http 
+     imagemagick:
+         enabled: false
+     repositories:
+@@ -36,6 +40,9 @@
+             URIElement: '1'
+     system:
+         ezdemo_site_group:
++            http_cache:
++                # Fill in your Varnish server(s) address(es).
++                purge_servers: [http://varnishserver:80]
+             repository: eng_repository
+             languages:
+                 - eng-GB
