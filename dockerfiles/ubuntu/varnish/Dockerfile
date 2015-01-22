@@ -11,7 +11,6 @@ ADD varnish4.vcl /varnish_config_fallback/varnish4.vcl
 
 # The current stuff is yet not implemented:
 # - etcd support
-# - Configuration of http cache in ezpublish.yml according to https://doc.ez.no/display/EZP/Using+Varnish ( requires to be done after setup wizard )
 # - Setting varnis cache size and other varnish parameters not yet supported ( ref comment in dockerfiles/varnish/supervisord-base.conf-part )
 
 CMD /run.sh
