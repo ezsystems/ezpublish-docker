@@ -2,6 +2,10 @@
 
 export FIG_PROJECT_NAME=ezpublishdocker
 
+# Load default settings
+source files/fig.config-EXAMPLE
+
+# Load custom settings
 source files/fig.config
 
 if [ $DISTRIBUTION == "debian" ]; then
