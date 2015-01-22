@@ -4,7 +4,6 @@ if [ aa$VARNISH_ENABLED == "aayes" ]; then
 
     VARNISH_IP=`cat /etc/hosts|grep -E '\svarnish$' | cut -f 1|head -n 1`
     echo VARNISH_IP=$VARNISH_IP
-    cat /etc/hosts
 
     if [ -f ezpublish/config/ezpublish.yml ]; then
         # Hack : let's patch the diff in case we have installed ezdemo_site_clean ( and not ezdemo_site )
