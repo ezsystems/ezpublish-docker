@@ -23,4 +23,5 @@ dockerfiles/ubuntu/ezpublish/prepare/setupwizard_ezstep_welcome.patch
 dockerfiles/debian/ezpublish/prepare/kickstart_template.ini
 dockerfiles/debian/ezpublish/prepare/setupwizard_ezstep_welcome.patch
 dockerfiles/ubuntu/ezpublish/varnish_prepare/ezpublish.yml_varnishpurge.diff
+dockerfiles/debian/ezpublish/varnish_prepare/ezpublish.yml_varnishpurge.diff
 

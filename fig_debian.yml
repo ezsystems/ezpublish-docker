@@ -34,6 +34,16 @@ prepare:
    - EZ_COMPOSERREPOSITORYURL
    - EZ_ENVIRONMENT
    - EZ_PATCH_SW
+varnishprepare:
+  build: dockerfiles/debian/ezpublish/varnish_prepare
+  links:
+   - varnish:varnish
+   - db1:db
+  volumes_from:
+   - ezpublishvol
+  environment:
+   - VARNISH_ENABLED
+   - EZ_ENVIRONMENT
 phpfpm:
   build: dockerfiles/debian/php-fpm
   links:
@@ -56,6 +66,8 @@ nginx:
    - "8080:80"
   environment:
    - EZ_ENVIRONMENT
+   - VARNISH_ENABLED
+   - DOCKER0NET
 sahi:
   build: dockerfiles/debian/sahi
   links:
@@ -71,3 +83,14 @@ behatphpcli:
    - sahi:sahi
   volumes_from:
    - ezpublishvol
+varnish:
+  build: dockerfiles/debian/varnish
+  links:
+   - phpfpm:php_fpm
+   - nginx:nginx
+  volumes_from:
+   - ezpublishvol
+  ports:
+   - "8081:80"
+  environment:
+   - VARNISH_ENABLED
