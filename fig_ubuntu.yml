@@ -37,10 +37,21 @@ varnishprepare:
   environment:
    - VARNISH_ENABLED
    - EZ_ENVIRONMENT
+solrprepare:
+  build: dockerfiles/ubuntu/ezpublish/solr_prepare
+  links:
+    - solr:solr
+    - db1:db
+  volumes_from:
+    - ezpublishvol
+  environment:
+    - SOLR_ENABLED
+    - EZ_ENVIRONMENT
 phpfpm:
   build: dockerfiles/ubuntu/php-fpm
   links:
    - db1:db
+   - solr:solr
   volumes_from:
    - ezpublishvol
   environment:
@@ -49,6 +60,7 @@ phpcli:
   build: dockerfiles/ubuntu/php-cli
   links:
    - db1:db
+   - solr:solr
   volumes_from:
    - ezpublishvol
 nginx:
@@ -90,4 +102,11 @@ varnish:
    - "8081:80"
   environment:
    - VARNISH_ENABLED
+solr:
+  image: makuk66/docker-solr
+  ports:
+   - "8983:8983"
+  volumes:
+   - volumes/solr/schema/schema.xml:/opt/solr/example/solr/collection1/conf/schema.xml
+
 
