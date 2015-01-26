@@ -1,134 +1,50 @@
 # eZ Publish5 in Docker
 
-eZ Publish Inception, installed in docker containers, inside a virtual machine (configurable in VagrantFile).
 Project is work in progress!
+
+Aims to provide setup for _eZ Platform_(also implies _eZ Studio_) using Docker containers and Docker Compose(fig), either natively on linux if you have docker and fig installed, or via VM using Vagrant and Virtualbox/AWS.
+_Note: The use of Vagrant will probably be faded out in favour of Docker Machine in the future._
 
 ## Project goal
 
-Cover the following use cases (with time), including (in prioritized order):
+Aims to cover the following internal and later external user stories:
 
-1.  Single server images, for use by:
- 1.  Sprint / Release Demo (PS, Sales, PM)
- 2.  Testing (QA, Support, Dev)
- 3.  Production (internal Ops, but potentially also partners)
-2.  Cluster support (Memcached, Varnish4, DFS)
-3.  Add additional containers for the different platforms we support to be able to automate Behat (BDD) testing across
-    a wide range of platforms and combinations.
-4. (outside scope of this Repository) Investigate use of Mesos++ for use with massive clustering
+1. Single server for internal Product Development use _(more or less in order)_:
+ - As a PM I want a Virtual machine for eZ Platform
+ - As a PM I want Sprint demos of latest eZ Platform dev version on AWS
+ - As QA Engineer I want to run BDD Acceptance tests on containers, _in future across all supported platforms_
+ - As maintainer I want to use stock Docker containers, _& potentially move QA specific containers to separate repo_
+ - As PM I want demo system to use Solr/ES which is future recommendation for search over SQL
+ - As eZ QA Tester I want a reference certification environment for testing eZ Platform
+ - As eZ Developer/Support I want containers to be easier to use for debugging eZ Platform
+
+
+2. Additional internal user stories that will affect/reuse work done here _(not in order)_:
+ - As Sales/Partner I want access to demo setup for eZ Platform releases
+ - As PS/Partner I want access to:
+     - Install custom bundles
+     - Switch to dev mode
+     - Create own bundles and code for demo use (src)
+     - Configure eZ Platform
+ - As eZ Sysadmin I want a eZ Platform container setup able to scale performance wise .. ("Cluster")
+     - Implies investigation of solutions like Docker Swarm, Apache Mesos, Google Kubernetes, combinations, ..
+
+
+3. At some point we will also aim for covering external user story:
+ - As a Developer/Sysadmin I want official containers to run eZ Platform on a environment _tailored_ by eZ
 
 
 ### Spec
 
-#### "Host" (VM Guest when using Vagrant)
-
-Host machine is running CoreOS allowing us to not have to maintain the host (autoupdate), have a light host OS,
-and allowing us to take advantage of its clustering capabilities in the future.
-
-eZ Publish is placed in volumes/ezpublish as rsynced by Vagrant to /vagrant/volumes/ezpublish on virtual machine.
-Mysql raw files are in similar ways located in volumes/mysql
-
-    Port (Listen): 80
-    Software: CoreOs
-
-#### Configuration
-
-In the beginning VagrantFile will be used, and config is up to user to adjust eZ Publish install and VagrantFile.
-
-However eventually the following needs to be configured in a "Docker way"(TM):
-- Container linking (typically fig or Mesos for cluster setup or manually using Weave)
-- Configuring of eZ Publish (typically using Ansible)
-    - database (example: mysql/postgres/oracle/..)
-    - cache (example: memcached/file/redis/..)
-    - http cache (example: varnish4/nginx/file/..)
-    - search (example: solr/es/db/..)
-    - io (example: file/nfs/s3/..)
+All Docker service containers, aka micro services, like Nginx, Apache, Mysql, Varnish, Solr and so on should ideally have no direct knowledge of eZ Platform.
+Injection of configuration should be done at startup by either passing env variables and/or mounting generic configuration files.
+The motivation for this is to be able to contribute our generic extensibility needs upstream to official docker containers.
 
 
-#### Docker Images
-
-As much as possible we would like to reuse existing images out there by contributing features to them.
-A lot of existing images exists for ubuntu and debian.
-
-##### Images varying by Base
-
-Base images are provided by Docker, and the once we would like to use are currently (prioritized):
-- `ubuntu:trusty`
-- `debian:wheezy`
-- `centos:centos7`
-- `opensuse:latest` (for later, if/when we re add suse to supported platforms)
-
-For test coverage of our different supported platforms we would thus like to eventually have the following images
-either from docker hub or home grown implemented using all the listed base images above:
-
-###### DB
-
-    Port (Listen): <depends on server>
-    CMD: start db service
-    Software: mysql/mariadb, postgres, ..
-    On run:
-        Should 1. create database and give rights to a user, 2. accept existing database dump
-
-
-###### HTTPD
-
-    Port (Listen): 80
-    CMD: start httpd service
-    Software: Nginx, Apache
-    Volume: .vagrant/ezpublish mounted to for instance /var/www
-    Configuration:
-        FastCGI on port 9000
-        VirtualHost config with <volume-mount-dir>/web as configured as web root (at docker run before starting server?)
-
-
-###### PHP
-
-Image to use both as php-fpm (fast cgi) container, as cronjob container running php scripts and can be used
-for starting own instance on demand for running own php commands against the eZ install.
-
-    Port (Listen): 9000
-    Software: php-fpm, php-cli
-    Volume: .vagrant/ezpublish mounted to for instance /var/www
-    Configuration:
-        Configure php-fpm to execute on <volume-mount-dir>/web.
-
-Should probably be a dev version extending this adding all kind of debug things like xdebug and modifying settings.
-
-
-##### Other images
-
-List of images that does not need to be strictly tested on the misc distros.
-TBD but if we continue with a Reference platform these should use CentOS, if not we are free to choose.
-
-###### Memcached
-###### Varnish v4
-###### Solr
-###### Elastic Search
-###### NFS
-
-
-### Docker images
-
-These should be refactored in the future to be something like the following list of containers:
-- http server with fastcgi
-- php fpm for serving php
-- crontab container with php cli
-- Database: Mysql|Postgres|..
-- Clustering:
- - Cache: Memcached|Redis|..
- - HTTP cache: Varnish|Nginx|..
- - FS: NFS|GridFS|..  (services like S3 might not need a container, but could have a container acting as proxy)
-
-**Note** We should take advantage of official images from Docker as much as possible, however they now use Debian
-as it takes less space then Ubuntu, and for lowest space use (and memory?) base images should be the same across
-all our official images.
-
-And development mode or not should probably rather be a global parameter then special images.
-
-However right now following images exists:
+However this is currently not the case and we are looking for ways to best accomplish this while still being able to restart host and containers.
 
 ## Installation
 
-NB: This section reflects current status with images not reflecting spec above!
 The containers can be created and started using either vagrant or fig. Vagrant will create a virtual machine where the containers are running while fig will create the containers on host ( requires linux....)
 
 ### About etcd 
