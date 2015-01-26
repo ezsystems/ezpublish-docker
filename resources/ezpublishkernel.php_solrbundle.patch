@@ -1,0 +1,18 @@
+--- ezpublish/EzPublishKernel.php.org	2015-01-23 11:12:50.319999955 +0100
++++ ezpublish/EzPublishKernel.php	2015-01-23 11:13:19.748000508 +0100
+@@ -41,6 +41,7 @@
+ use Knp\Bundle\MenuBundle\KnpMenuBundle;
+ use Oneup\FlysystemBundle\OneupFlysystemBundle;
+ use Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle;
++use eZ\Bundle\EzPublishSolrBundle\EzPublishSolrBundle;
+ 
+ class EzPublishKernel extends Kernel
+ {
+@@ -79,6 +80,7 @@
+             new WhiteOctoberBreadcrumbsBundle(),
+             new NelmioCorsBundle(),
+             new KnpMenuBundle(),
++            new EzPublishSolrBundle(),
+             new OneupFlysystemBundle()
+         );
+ 
