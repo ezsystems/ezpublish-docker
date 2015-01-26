@@ -1,0 +1,6 @@
+
+[program:watchdbip]
+command=/watch_nginx_ip.sh
+autostart=true
+autorestart=true
+

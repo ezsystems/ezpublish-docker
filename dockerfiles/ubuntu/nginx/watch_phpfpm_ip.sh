@@ -16,5 +16,5 @@ while [ 1 ]; do
 
     newip=`etcdctl watch /ezpublish/phpfpm_ip`
 
-    echo `date` : Nginx has changed IP, new IP is $newip
+    echo `date` : phpfpm has changed IP, new IP is $newip
 done;

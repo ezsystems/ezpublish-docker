@@ -2,6 +2,10 @@
 
 export FIG_PROJECT_NAME=ezpublishdocker
 
+# Load default settings
+source files/fig.config-EXAMPLE
+
+# Load custom settings
 source files/fig.config
 
 if [ $DISTRIBUTION == "debian" ]; then
@@ -21,6 +25,7 @@ if [ $DISTRIBUTION == "ubuntu" ]; then
     cp files/etcd_functions $BASE_DOCKERFILES/mysql
     cp files/etcd_functions $BASE_DOCKERFILES/php-fpm
     cp files/etcd_functions $BASE_DOCKERFILES/nginx
+    cp files/etcd_functions $BASE_DOCKERFILES/varnish
 fi
 
 # If {FIX_EXECUTION_PATH} is not set and fig is not in path, we'll test if it is located in /opt/bin. Needed for systemd service
@@ -40,6 +45,8 @@ if [ "aa$EZ_KICKSTART_FROM_TEMPLATE" != "aa" ]; then
 else
     echo "" > $BASE_DOCKERFILES/ezpublish/prepare/kickstart_template.ini
 fi
+
+cp resources/ezpublish.yml_varnishpurge.diff $BASE_DOCKERFILES/ezpublish/varnish_prepare/
 
 # Make a argumentlist where any "-d" is removed
 for i in "$@"; do

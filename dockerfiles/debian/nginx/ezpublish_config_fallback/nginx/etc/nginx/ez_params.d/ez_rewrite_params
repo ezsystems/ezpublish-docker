@@ -1,14 +1,9 @@
-
 # Some custom rewrite (for eztag) TODO needed ?
-rewrite "^tags/treemenu/?" "index_treemenu_tags.php" break;
-rewrite "^index_treemenu_tags\.php" "/index_treemenu_tags.php" break;
+rewrite "^tags/treemenu/?" "index_treemenu_tags.php" last;
+rewrite "^index_treemenu_tags\.php" "/index_treemenu_tags.php" last;
 
 # v1 rest API is on Legacy
-rewrite "^/api/[^/]+/v1" "/index_rest.php" break;
-
-# If using cluster, uncomment the following two lines:
-#rewrite "^/var/([^/]+/)?storage/images(-versioned)?/(.*)" "/index_cluster.php" break;
-#rewrite "^/var/([^/]+/)?cache/(texttoimage|public)/(.*)" "/index_cluster.php" break;
+rewrite "^/api/[^/]+/v1" "/index_rest.php" last;
 
 rewrite "^/var/([^/]+/)?storage/images(-versioned)?/(.*)" "/var/$1storage/images$2/$3" break;
 rewrite "^/var/([^/]+/)?cache/(texttoimage|public)/(.*)" "/var/$1cache/$2/$3" break;
@@ -43,5 +38,5 @@ rewrite "^/w3c/p3p\.xml" "/w3c/p3p.xml" break;
 # Following rule is needed to correctly display assets from eZ Publish5 / Symfony bundles
 rewrite "^/bundles/(.*)" "/bundles/$1" break;
 
-rewrite "^(.*)$" "/index.php?$1" last;
+rewrite "^(.*)$" "/index.php$1" last;
 

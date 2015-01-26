@@ -1,0 +1,10 @@
+
+[supervisord]
+nodaemon=true
+
+[program:varnish]
+#command=/sbin/varnishd -F -u varnish  -f /etc/varnish/varnish4.vcl -s malloc,$CACHE_SIZE $VARNISHD_PARAMS -P /var/run/varnishd.pid
+command=/sbin/varnishd -F -u varnish  -f /etc/varnish/varnish4.vcl -s malloc -P /var/run/varnishd.pid
+autostart=true
+autorestart=true
+
