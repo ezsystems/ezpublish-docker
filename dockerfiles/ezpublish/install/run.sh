@@ -218,6 +218,6 @@ php ezpublish/console ezpublish:legacy:assets_install --symlink --relative --env
 # Create ezp database if we intend to run setup wizard (need to be run last to make sure db is up)
 if [ "$EZ_KICKSTART" = "true" ]; then
   echo "Creating database if it does not exists"
-  createMysqlDatabase
+#  createMysqlDatabase
 fi
 

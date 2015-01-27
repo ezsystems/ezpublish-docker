@@ -94,6 +94,15 @@ By default, the following system will be installed:
 
 Note : If you opt not to copy the configurations files mentioned above ( the *.-EXAMPLE files ), the system will do so for you and use default settings.
 
+### Setup eZ Publish
+
+First of all, you need a eZ Publish installation. If you already have one, then fine. You can use an existing installation by moving the files to volumes/ezpublish.
+If you do not already have a eZ Publish installation, the prepare container provided is able to install eZ Publish from tarball or composer.
+
+ - In files/fig.config set the EZ_* settings according to your needs
+ - Run ```fig -f fig_ezpinstall.yml up --no-recreate```
+
+
 ### AWS specific procedures
 
 If you want to use an elastic IP you need version 0.5.1 of the vagrant-aws plugin ( currently in development ). The easiest way to do this is to use the provided container.
