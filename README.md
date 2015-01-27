@@ -17,7 +17,7 @@ To make sure same environment can be used across every all steps from developer,
  - As PM I want demo system to use Solr/ES which is future recommendation for search over SQL
  - As eZ QA Tester I want a reference certification environment for testing eZ Platform, needs:
      - Apache
-     - CentOS
+     - CentOS (Reference platform)
      - Cluster (see below)
  - As eZ Developer/Support I want containers to be easier to use for debugging eZ Platform
 
@@ -35,6 +35,16 @@ To make sure same environment can be used across every all steps from developer,
 
 3. At some point we will also aim for covering external user story:
  - As a Developer/Sysadmin I want official containers to run eZ Platform on a environment _tailored_ by eZ
+
+
+The end result will most likely be a set of docker setups (fig/composer) using different sets of containers:
+ - Official use:
+     - Default: Reference platform (single server preset)
+     - Reference platform (cluster preset)
+ - Mainly for automated testing, but can also be used to investigate issues:
+     - Approved platform (single server preset)
+     - Approved platform (cluster preset)
+     - Compatible platforms (single server preset_s_) _using official docker images_
 
 
 ### Spec
