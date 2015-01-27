@@ -96,7 +96,7 @@ Vagrant.configure("2") do |config|
   end
 
   if File.exist?( "files/auth.json" )
-    FileUtils.cp( "files/auth.json", "dockerfiles/ubuntu/ezpublish/prepare" )
+    FileUtils.cp( "files/auth.json", "dockerfiles/ezpublish/install" )
   end
   FileUtils.cp( "files/etcd_functions", "dockerfiles/ubuntu/mysql" )
 
@@ -112,6 +112,7 @@ Vagrant.configure("2") do |config|
   if vagrantConfig['debug']['disable_docker_provision'] == false
     config.vm.provision :shell, :inline => "
       cd /vagrant; \
+      source files/fig.config %% ${FIX_EXECUTION_PATH}fig -f fig_ezpinstall.yml up --no-recreate \
       ./fig.sh up -d --no-recreate
     "
   end
