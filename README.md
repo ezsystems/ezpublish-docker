@@ -18,7 +18,7 @@ To make sure same environment can be used across every all steps from developer,
  - As eZ QA Tester I want a reference certification environment for testing eZ Platform, needs:
      - Apache
      - CentOS (Reference platform)
-     - Cluster (see below)
+     - Cluster (see #2 below)
  - As eZ Developer/Support I want containers to be easier to use for debugging eZ Platform
 
 
