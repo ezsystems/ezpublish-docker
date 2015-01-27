@@ -7,7 +7,7 @@ _Note: The use of Vagrant will probably be faded out in favour of Docker Machine
 
 ## Project goal
 
-Aims to cover the following internal and later external user stories:
+To make sure same environment can be used across every all steps from developer, QA, support to production further aims to cover the following internal and later external user stories:
 
 1. Single server for internal Product Development use _(more or less in order)_:
  - As a PM I want a Virtual machine for eZ Platform
@@ -15,7 +15,10 @@ Aims to cover the following internal and later external user stories:
  - As QA Engineer I want to run BDD Acceptance tests on containers, _in future across all supported platforms_
  - As maintainer I want to use stock Docker containers, _& potentially move QA specific containers to separate repo_
  - As PM I want demo system to use Solr/ES which is future recommendation for search over SQL
- - As eZ QA Tester I want a reference certification environment for testing eZ Platform
+ - As eZ QA Tester I want a reference certification environment for testing eZ Platform, needs:
+     - Apache
+     - CentOS
+     - Cluster (see below)
  - As eZ Developer/Support I want containers to be easier to use for debugging eZ Platform
 
 
