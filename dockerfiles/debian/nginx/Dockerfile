@@ -18,8 +18,6 @@ RUN echo "daemon off;" >> /etc/nginx/nginx.conf
 
 ADD run.sh /run.sh
 
-ADD ezpublish_config_fallback /ezpublish_config_fallback
-
 CMD ["/run.sh"]
 
 EXPOSE 80
