@@ -97,10 +97,12 @@ Note : If you opt not to copy the configurations files mentioned above ( the *.-
 ### Setup eZ Publish
 
 First of all, you need a eZ Publish installation. If you already have one, then fine. You can use an existing installation by moving the files to volumes/ezpublish.
-If you do not already have a eZ Publish installation, the prepare container provided is able to install eZ Publish from tarball or composer.
+If you do not already have a eZ Publish installation, the ezpinstall container provided is able to install eZ Publish from tarball or composer.
+If you copy a existing installation to volumes/ezpublish, the ezpinstall will only set file permissions correctly, so that they are writable for the webserver
 
  - In files/fig.config set the EZ_* settings according to your needs
- - Run ```fig -f fig_ezpinstall.yml up --no-recreate```
+ - Run ```source files/fig.config && ${FIX_EXECUTION_PATH}fig -f fig_ezpinstall.yml up --no-recreate```
+ 
 
 
 ### AWS specific procedures
