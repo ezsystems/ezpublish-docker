@@ -157,29 +157,6 @@ function processCommandLineOptions
     fi
 }
 
-# db container might not be ready, so let's wait for it in such case
-function createMysqlDatabase
-{
-    local DBUP
-    local TRY
-    DBUP=false
-    TRY=1
-    while [ $DBUP == "false" ]; do
-        echo Contacting mysql, attempt :$TRY
-        mysql -uadmin --password=$DB_ENV_MYSQL_PASS --protocol=tcp --host=db -e "CREATE DATABASE IF NOT EXISTS ezp CHARACTER SET=utf8" && DBUP="true"
-        let TRY=$TRY+1
-        if [ $TRY -eq $MAXTRY ]; then
-            echo Max limit reached. Not able to connect to mysql
-            echo Command:
-            echo mysql -uadmin --password=$DB_ENV_MYSQL_PASS --protocol=tcp --host=db -e "CREATE DATABASE IF NOT EXISTS ezp CHARACTER SET=utf8"
-            echo /etc/hosts file :
-            cat /etc/hosts
-            exit 1;
-        fi
-        sleep 2;
-    done
-}
-
 parseCommandlineOptions $1 $2 $3 $4 $5
 
 processCommandLineOptions
@@ -213,10 +190,4 @@ fi
 
 php ezpublish/console assets:install --symlink --relative --env $EZ_ENVIRONMENT
 php ezpublish/console ezpublish:legacy:assets_install --symlink --relative --env $EZ_ENVIRONMENT
-
-# Create ezp database if we intend to run setup wizard (need to be run last to make sure db is up)
-#if [ "$EZ_KICKSTART" = "true" ]; then
-#  echo "Creating database if it does not exists"
-#  createMysqlDatabase
-#fi
 

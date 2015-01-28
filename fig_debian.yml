@@ -10,8 +10,11 @@ db1:
   build: dockerfiles/debian/mysql
   volumes_from:
    - dbvol
+  volumes:
+   - dockerfiles/debian/mysql/create_ezp_db.sql:/create_ezp_db.sql
   environment:
    - MYSQL_PASS
+   - STARTUP_SQL=/create_ezp_db.sql
 varnishprepare:
   build: dockerfiles/debian/ezpublish/varnish_prepare
   links:

@@ -21,9 +21,12 @@ db1:
   build: dockerfiles/ubuntu/mysql
   volumes_from:
    - dbvol
+  volumes:
+   - dockerfiles/ubuntu/mysql/create_ezp_db.sql:/create_ezp_db.sql
   environment:
    - MYSQL_PASS
    - ETCD_ENABLED
+   - STARTUP_SQL=/create_ezp_db.sql
 varnishprepare:
   build: dockerfiles/ubuntu/ezpublish/varnish_prepare
   links:
