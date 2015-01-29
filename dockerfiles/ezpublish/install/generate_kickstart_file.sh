@@ -32,5 +32,5 @@ else
     sed -i "s@^Server=@Server=db@" ezpublish_legacy/kickstart.ini
     sed -i "s@^Database=@Database=ezp@" ezpublish_legacy/kickstart.ini
     sed -i "s@^User=@User=admin@" ezpublish_legacy/kickstart.ini
-    sed -i "s@^Password=@Password=${MYSQL_PASS}@" ezpublish_legacy/kickstart.ini
+    sed -i "s@^Password=\$@Password=${MYSQL_PASS}@" ezpublish_legacy/kickstart.ini
 fi
