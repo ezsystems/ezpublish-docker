@@ -1,5 +1,5 @@
 etcd:
-  build: dockerfiles/etcd
+  build: dockerfiles/ubuntu/etcd
   volumes:
    - volumes/etcd:/volumes/etcd
   environment:
