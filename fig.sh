@@ -14,12 +14,6 @@ else
     BASE_DOCKERFILES="dockerfiles/ubuntu"
 fi
 
-if [ -f files/auth.json ]; then
-    cp files/auth.json dockerfiles/ezpublish/install
-else
-    touch dockerfiles/ezpublish/install/auth.json
-fi
-
 if [ $DISTRIBUTION == "ubuntu" ]; then
     cp files/etcd_functions $BASE_DOCKERFILES/etcd
     cp files/etcd_functions $BASE_DOCKERFILES/mysql
@@ -35,15 +29,6 @@ if [ aa$FIX_EXECUTION_PATH == "aa" ]; then
             FIX_EXECUTION_PATH="/opt/bin/"
         fi
     fi
-fi
-
-cp resources/setupwizard_ezstep_welcome.patch dockerfiles/ezpublish/install
-
-# Copy kickstart template to build dir
-if [ "aa$EZ_KICKSTART_FROM_TEMPLATE" != "aa" ]; then
-    cp files/$EZ_KICKSTART_FROM_TEMPLATE dockerfiles/ezpublish/install/kickstart_template.ini
-else
-    echo "" > dockerfiles/ezpublish/install/kickstart_template.ini
 fi
 
 cp resources/ezpublish.yml_varnishpurge.diff $BASE_DOCKERFILES/ezpublish/varnish_prepare/

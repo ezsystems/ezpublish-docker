@@ -101,7 +101,7 @@ If you do not already have a eZ Publish installation, the ezpinstall container p
 If you copy a existing installation to volumes/ezpublish, the ezpinstall will only set file permissions correctly, so that they are writable for the webserver
 
  - In files/fig.config set the EZ_* settings according to your needs
- - Run ```source files/fig.config && ${FIX_EXECUTION_PATH}fig -f fig_ezpinstall.yml up --no-recreate```
+ - Run ```fig_ezpinstall.sh``` 
  
 
 
