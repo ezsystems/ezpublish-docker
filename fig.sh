@@ -15,9 +15,9 @@ else
 fi
 
 if [ -f files/auth.json ]; then
-    cp files/auth.json $BASE_DOCKERFILES/ezpublish/prepare
+    cp files/auth.json dockerfiles/ezpublish/install
 else
-    touch $BASE_DOCKERFILES/ezpublish/prepare/auth.json
+    touch dockerfiles/ezpublish/install/auth.json
 fi
 
 if [ $DISTRIBUTION == "ubuntu" ]; then
@@ -37,13 +37,13 @@ if [ aa$FIX_EXECUTION_PATH == "aa" ]; then
     fi
 fi
 
-cp resources/setupwizard_ezstep_welcome.patch $BASE_DOCKERFILES/ezpublish/prepare
+cp resources/setupwizard_ezstep_welcome.patch dockerfiles/ezpublish/install
 
 # Copy kickstart template to build dir
 if [ "aa$EZ_KICKSTART_FROM_TEMPLATE" != "aa" ]; then
-    cp files/$EZ_KICKSTART_FROM_TEMPLATE $BASE_DOCKERFILES/ezpublish/prepare/kickstart_template.ini
+    cp files/$EZ_KICKSTART_FROM_TEMPLATE dockerfiles/ezpublish/install/kickstart_template.ini
 else
-    echo "" > $BASE_DOCKERFILES/ezpublish/prepare/kickstart_template.ini
+    echo "" > dockerfiles/ezpublish/install/kickstart_template.ini
 fi
 
 cp resources/ezpublish.yml_varnishpurge.diff $BASE_DOCKERFILES/ezpublish/varnish_prepare/
@@ -79,9 +79,3 @@ else
 fi
 
 
-echo "Waiting for prepare container to complete"
-continue=1; while [ $continue -eq 1 ]; do docker ps -a|grep "${FIG_PROJECT_NAME}_prepare:latest"|grep Exited > /dev/null; continue=$?; echo -n "."; sleep 3; done;
-
-echo "Last output from prepare container:"
-echo "###################################"
-docker logs -t ${FIG_PROJECT_NAME}_prepare_1|tail -n 15
