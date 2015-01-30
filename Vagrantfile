@@ -112,7 +112,7 @@ Vagrant.configure("2") do |config|
   if vagrantConfig['debug']['disable_docker_provision'] == false
     config.vm.provision :shell, :inline => "
       cd /vagrant; \
-      source files/fig.config && ${FIX_EXECUTION_PATH}fig -f fig_ezpinstall.yml up --no-recreate \
+      source files/fig.config && ${FIX_EXECUTION_PATH}fig -f fig_ezpinstall.yml up --no-recreate; \
       ./fig.sh up -d --no-recreate
     "
   end
