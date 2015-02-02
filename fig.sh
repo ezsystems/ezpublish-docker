@@ -22,11 +22,11 @@ if [ $DISTRIBUTION == "ubuntu" ]; then
     cp files/etcd_functions $BASE_DOCKERFILES/varnish
 fi
 
-# If {FIX_EXECUTION_PATH} is not set and fig is not in path, we'll test if it is located in /opt/bin. Needed for systemd service
-if [ aa$FIX_EXECUTION_PATH == "aa" ]; then
-    if [ ! `which ${FIX_EXECUTION_PATH}fig > /dev/null` ]; then
+# If {FIG_EXECUTION_PATH} is not set and fig is not in path, we'll test if it is located in /opt/bin. Needed for systemd service
+if [ aa$FIG_EXECUTION_PATH == "aa" ]; then
+    if [ ! `which ${FIG_EXECUTION_PATH}fig > /dev/null` ]; then
         if [ -x "/opt/bin/fig" ]; then
-            FIX_EXECUTION_PATH="/opt/bin/"
+            FIG_EXECUTION_PATH="/opt/bin/"
         fi
     fi
 fi
@@ -44,7 +44,7 @@ done
 if [ $DISTRIBUTION == "ubuntu" ]; then
     # We need to build etcd next so that the .deb package can be placed inside other images
     if [ ! -f volumes/etcd/etcd_0.4.6_amd64.deb ]; then
-        ${FIX_EXECUTION_PATH}fig -f fig_etcd.yml $arglistnodetach
+        ${FIG_EXECUTION_PATH}fig -f fig_etcd.yml $arglistnodetach
     fi
 
     # Copy the etcd .deb to the dockerfile directory for images that need it
@@ -58,9 +58,9 @@ if [ $DISTRIBUTION == "ubuntu" ]; then
         cp volumes/etcd/etcd_0.4.6_amd64.deb $BASE_DOCKERFILES/nginx
     fi
 
-    ${FIX_EXECUTION_PATH}fig -f fig_ubuntu.yml "$@"
+    ${FIG_EXECUTION_PATH}fig -f fig_ubuntu.yml "$@"
 else
-    ${FIX_EXECUTION_PATH}fig -f fig_debian.yml "$@"
+    ${FIG_EXECUTION_PATH}fig -f fig_debian.yml "$@"
 fi
 
 

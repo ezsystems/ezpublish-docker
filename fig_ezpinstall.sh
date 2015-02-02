@@ -16,4 +16,4 @@ else
 fi
 
 
-source files/fig.config && ${FIX_EXECUTION_PATH}fig -f fig_ezpinstall.yml up --no-recreate
+source files/fig.config-EXAMPLE && source files/fig.config && ${FIG_EXECUTION_PATH}fig -f fig_ezpinstall.yml up --no-recreate
