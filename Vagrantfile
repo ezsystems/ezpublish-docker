@@ -112,7 +112,7 @@ Vagrant.configure("2") do |config|
   if vagrantConfig['debug']['disable_docker_provision'] == false
     config.vm.provision :shell, :inline => "
       cd /vagrant; \
-      ./fig_ezpinstall.sh \
+      ./fig_ezpinstall.sh; \
       ./fig.sh up -d --no-recreate
     "
   end
