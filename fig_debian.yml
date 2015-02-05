@@ -92,5 +92,5 @@ solr:
   ports:
    - "8983:8983"
   volumes:
-   - volumes/solr/schema/schema.xml:/opt/solr/example/solr/collection1/conf/schema.xml
+   - volumes/ezpublish/vendor/ezsystems/ezpublish-kernel/eZ/Publish/Core/Persistence/Solr/Content/Search/schema.xml:/opt/solr/example/solr/collection1/conf/schema.xml
 
