@@ -15,5 +15,19 @@ else
     echo "" > dockerfiles/ezpublish/install/kickstart_template.ini
 fi
 
+# Load default settings
+source files/fig.config-EXAMPLE
 
-source files/fig.config-EXAMPLE && source files/fig.config && ${FIG_EXECUTION_PATH}fig -f fig_ezpinstall.yml up --no-recreate
+# Load custom settings
+source files/fig.config
+
+# If {FIG_EXECUTION_PATH} is not set and fig is not in path, we'll test if it is located in /opt/bin. Needed for systemd service
+if [ aa$FIG_EXECUTION_PATH == "aa" ]; then
+    if [ ! `which ${FIG_EXECUTION_PATH}fig > /dev/null` ]; then
+        if [ -x "/opt/bin/fig" ]; then
+            FIG_EXECUTION_PATH="/opt/bin/"
+        fi
+    fi
+fi
+
+${FIG_EXECUTION_PATH}fig -f fig_ezpinstall.yml up --no-recreate
