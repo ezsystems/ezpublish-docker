@@ -1,5 +1,13 @@
 #!/bin/bash
 
+export FIG_PROJECT_NAME=ezpublishdocker
+
+# Load default settings
+source files/fig.config-EXAMPLE
+
+# Load custom settings
+source files/fig.config
+
 if [ -f files/auth.json ]; then
     cp files/auth.json dockerfiles/ezpublish/install
 else
@@ -12,7 +20,7 @@ cp resources/setupwizard_ezstep_welcome.patch dockerfiles/ezpublish/install
 if [ "aa$EZ_KICKSTART_FROM_TEMPLATE" != "aa" ]; then
     cp files/$EZ_KICKSTART_FROM_TEMPLATE dockerfiles/ezpublish/install/kickstart_template.ini
 else
-    echo "" > dockerfiles/ezpublish/install/kickstart_template.ini
+    echo "# Kickstart file not found. Please check your kickstart settings ( like EZ_KICKSTART_FROM_TEMPLATE ) in config/fig.config if you want a kickstart file " > dockerfiles/ezpublish/install/kickstart_template.ini
 fi
 
 
