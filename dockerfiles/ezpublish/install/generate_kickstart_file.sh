@@ -27,6 +27,7 @@ Socket=
 Database=ezp
 " > ezpublish_legacy/kickstart.ini
 else
+    echo "Creating kickstart.ini from template"
     cp $1 ezpublish_legacy/kickstart.ini
 
     sed -i "s@^Server=@Server=db@" ezpublish_legacy/kickstart.ini
