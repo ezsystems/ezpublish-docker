@@ -10,6 +10,7 @@
 # - EZ_COMPOSERVERSION ( What version of eZ Publish to install using composer )
 # - EZ_COMPOSERREPOSITORYURL ( Url to composer repository which should be used )
 # - EZ_PATCH_SW ( "true" or "false" ) : Whatever to patch setup wizard or not, so that the welcome page also can be kickstarted
+# - EZ_GENERATEPARAMETERS ( "true" or "false" ) : Whatever parameters.yml should be generated or not
 #
 # Parameters can also be given as options, in the same order:
 # ./run.sh [ EZ_KICKSTART ] [ EZ_PACKAGEURL ] ....
@@ -39,6 +40,9 @@ function parseCommandlineOptions
     fi
     if [ "aa$7" != "aa" ]; then
         EZ_PATCH_SW=$7
+    fi
+    if [ "aa$8" != "aa" ]; then
+        EZ_GENERATEPARAMETERS=$7
     fi
 
 
@@ -175,6 +179,9 @@ if [ "$EZ_PACKAGEURL" != "" ]; then
   /install_packages.sh
 fi
 
+if [ "$EZ_GENERATE_PARAMETERS" == "true" ]; then
+  /generate_parameters_file.sh
+fi
 
 echo "Setting permissions on eZ Publish folder as they might be broken if rsync is used"
 sudo setfacl -R -m u:$APACHE_RUN_USER:rwx -m u:`whoami`:rwx \
