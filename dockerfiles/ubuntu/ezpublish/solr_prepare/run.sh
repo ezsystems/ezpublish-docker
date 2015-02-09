@@ -16,9 +16,6 @@ if [ aa$SOLR_ENABLED == "aayes" ]; then
         # apply patch, ignore patch if already applied and do not create any .rej files
         patch -p0 -N -r - < /ezpublishkernel.php_solrbundle.patch
 
-        # Change to use solr engine
-        perl -pi -e "s|^(.*)engine: legacy$|\1engine: legacy_solr|" ezpublish/config/ezpublish.yml
-
         # Set solr host in parameters.yml
         # Temporary hackas parameters.yml created by SW is not very nice to work with. Let's extract Secret and re-generate it
         perl -pi -e "s|(^.*)secret: ([0-9a-zA-Z]*),.*$|\2|" ezpublish/config/parameters.yml ; EZPSECRET=`cat ezpublish/config/parameters.yml`
