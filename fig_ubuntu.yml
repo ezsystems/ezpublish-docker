@@ -6,6 +6,10 @@ ezpublishvol:
   image: ubuntu:trusty
   volumes:
    - volumes/ezpublish:/var/www
+composercachevol:
+  image: ubuntu:trusty
+  volumes:
+   - volumes/composercache:/volumes/composercache
 etcd:
   build: dockerfiles/ubuntu/etcd
   volumes:
@@ -63,6 +67,7 @@ phpcli:
    - solr:solr
   volumes_from:
    - ezpublishvol
+   - composercachevol
 nginx:
   build: dockerfiles/ubuntu/nginx
   links:

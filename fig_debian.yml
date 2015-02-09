@@ -6,6 +6,10 @@ ezpublishvol:
   image: debian:wheezy
   volumes:
    - volumes/ezpublish:/var/www
+composercachevol:
+  image: ubuntu:trusty
+  volumes:
+   - volumes/composercache:/volumes/composercache
 db1:
   build: dockerfiles/debian/mysql
   volumes_from:
@@ -49,6 +53,7 @@ phpcli:
    - solr:solr
   volumes_from:
    - ezpublishvol
+   - composercachevol
 nginx:
   build: dockerfiles/debian/nginx
   links:
