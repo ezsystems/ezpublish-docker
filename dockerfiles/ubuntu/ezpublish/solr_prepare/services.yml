@@ -1,3 +1,0 @@
-services:
-  ezpublish.spi.search_engine:
-        alias: ezpublish.spi.search.legacy_solr

@@ -1,9 +1,0 @@
---- ./vendor/ezsystems/ezpublish-kernel/eZ/Bundle/EzPublishSolrBundle/DependencyInjection/EzPublishSolrExtension.php.org	2015-02-09 13:26:08.444566553 +0000
-+++ ./vendor/ezsystems/ezpublish-kernel/eZ/Bundle/EzPublishSolrBundle/DependencyInjection/EzPublishSolrExtension.php	2015-02-09 13:26:21.848566804 +0000
-@@ -35,5 +35,6 @@
-         );
-         $loader->load( 'indexable_fieldtypes.yml' );
-         $loader->load( "search_engines/solr.yml" );
-+        $loader->load( "../../../Bundle/EzPublishSolrBundle/Resources/config/services.yml" );
-     }
- }
