@@ -14,6 +14,8 @@ RUN apt-get update -y && apt-get install -y --force-yes \
 
 
 ADD ezpublishkernel.php_solrbundle.patch /
+ADD EzPublishSolrExtension.php.patch /
+ADD services.yml /
 ADD run.sh /
 
 WORKDIR /var/www

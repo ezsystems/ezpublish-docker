@@ -4,10 +4,7 @@ if [ aa$SOLR_ENABLED == "aayes" ]; then
 
     if [ -f ezpublish/config/ezpublish.yml ]; then
         # Detect if we have already configured solr in this ezp installation
-        ALREADY_CONFIGURED=true
-        grep -E "^.*engine: legacy$" ezpublish/config/ezpublish.yml && ALREADY_CONFIGURED=false
-
-        if [ $ALREADY_CONFIGURED == "true" ]; then
+        if [ -f vendor/ezsystems/ezpublish-kernel/eZ/Bundle/EzPublishSolrBundle/Resources/config/services.yml ]; then
             echo Solr engine already configured in this installation.
             exit
         fi
@@ -15,6 +12,10 @@ if [ aa$SOLR_ENABLED == "aayes" ]; then
         # Added solr bundle to EzPublishKernel
         # apply patch, ignore patch if already applied and do not create any .rej files
         patch -p0 -N -r - < /ezpublishkernel.php_solrbundle.patch
+
+        mkdir -p vendor/ezsystems/ezpublish-kernel/eZ/Bundle/EzPublishSolrBundle/Resources/config
+        cp /services.yml vendor/ezsystems/ezpublish-kernel/eZ/Bundle/EzPublishSolrBundle/Resources/config/services.yml
+        patch -p0 < /EzPublishSolrExtension.php.patch
 
         # Set solr host in parameters.yml
         # Temporary hackas parameters.yml created by SW is not very nice to work with. Let's extract Secret and re-generate it
