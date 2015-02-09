@@ -33,7 +33,7 @@ fi
 
 cp resources/ezpublish.yml_varnishpurge.diff $BASE_DOCKERFILES/ezpublish/varnish_prepare/
 
-cp resources/ezpublishkernel.php_solrbundle.patch $BASE_DOCKERFILES/ezpublish/solr_prepare/
+cp resources/solr/ezpublishkernel.php_solrbundle.patch $BASE_DOCKERFILES/ezpublish/solr_prepare/
 cp resources/solr/EzPublishSolrExtension.php.patch $BASE_DOCKERFILES/ezpublish/solr_prepare/
 cp resources/solr/services.yml $BASE_DOCKERFILES/ezpublish/solr_prepare/
 
