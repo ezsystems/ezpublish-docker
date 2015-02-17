@@ -3,6 +3,10 @@
 # Parameter $1 is value of EZ_KICKSTART_FROM_TEMPLATE ( could be empty )
 
 if [ ! -f ezpublish_legacy/kickstart.ini-dist ]; then
+    if [ -d ezpublish ]; then
+        echo "WARNING: EZ_KICKSTART is set to true, but ezpublish_legacy do not seem to exists"
+        exit 1
+    fi
     echo "ERROR: Could not find ezpublish_legacy/kickstart.ini-dist, did you forget to place eZ Publish in vagrant/ezpublish folder?"
     exit 1;
 fi
