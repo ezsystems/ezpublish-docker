@@ -178,10 +178,13 @@ fi
 /generate_parameters_file.sh
 
 echo "Setting permissions on eZ Publish folder as they might be broken if rsync is used"
-sudo setfacl -R -m u:$APACHE_RUN_USER:rwx -m u:`whoami`:rwx \
-     ezpublish/{cache,logs,config,sessions} web
-sudo setfacl -dR -m u:$APACHE_RUN_USER:rwx -m u:`whoami`:rwx \
-     ezpublish/{cache,logs,config,sessions} web
+sudo setfacl -R -m u:$APACHE_RUN_USER:rwx -m u:`whoami`:rwx ezpublish/{cache,logs,config,sessions} web
+sudo setfacl -dR -m u:$APACHE_RUN_USER:rwx -m u:`whoami`:rwx ezpublish/{cache,logs,config,sessions} web
+
+if [ -d ezpublish_legacy ]; then
+    sudo setfacl -R -m u:$APACHE_RUN_USER:rwx -m u:`whoami`:rwx ezpublish_legacy/{design,extension,settings,var}
+    sudo setfacl -dR -m u:$APACHE_RUN_USER:rwx -m u:`whoami`:rwx ezpublish_legacy/{design,extension,settings,var}
+fi
 
 
 echo "Re-generate symlink assets in case rsync was used so asstets added during setup wizards are reachable"
@@ -190,5 +193,7 @@ if [ aa$EZ_ENVIRONMENT != "prod" ]; then
 fi
 
 php ezpublish/console assets:install --symlink --relative --env $EZ_ENVIRONMENT
-#php ezpublish/console ezpublish:legacy:assets_install --symlink --relative --env $EZ_ENVIRONMENT
+if [ -d ezpublish_legacy ]; then
+    php ezpublish/console ezpublish:legacy:assets_install --symlink --relative --env $EZ_ENVIRONMENT
+fi
 
