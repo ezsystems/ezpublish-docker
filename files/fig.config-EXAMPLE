@@ -83,6 +83,7 @@ EZ_COMPOSERREPOSITORYURL=
 EZ_TARBALL_FILENAME=ezpublish5-5.3.0-ee-ttl-full.tar.gz
 
 # Set the environment for ezpublish. Valid options are "prod", "dev", "behat"
+# WARNING: Only non dev env works (assets) atm as the standard Nginx rewrite rules does not take care to addapt for env!
 EZ_ENVIRONMENT=prod
 
 # Whatever to patch setup wizard so that the welcome page also can be kickstarted
