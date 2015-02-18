@@ -28,7 +28,6 @@ ADD auth.json /auth.json
 ADD setupwizard_ezstep_welcome.patch /setupwizard_ezstep_welcome.patch
 ADD kickstart_template.ini /kickstart_template.ini
 ADD generate_parameters_file.sh /generate_parameters_file.sh
-ADD parameters.yml.template /parameters.yml.template
 
 RUN chmod 755 /*.sh
 
