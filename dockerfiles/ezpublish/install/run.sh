@@ -66,9 +66,14 @@ function patchSetupWizard
     echo patch setup wizard ? : $EZ_PATCH_SW
     if [ "aa$EZ_PATCH_SW" == "aatrue" ]; then
         cd /var/www
-        echo patching ....
-        patch -p0 < /setupwizard_ezstep_welcome.patch
+        if [ -d ezpublish_legacy ]; then
+            echo patching ....
+            patch -p0 < /setupwizard_ezstep_welcome.patch
+        else
+            echo "Warning : Skipping patching setup wizard. ezpublish_legacy/ do not seem to be present"
+        fi
         cd - > /dev/null
+
     fi
 }
 
