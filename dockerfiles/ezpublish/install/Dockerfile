@@ -27,6 +27,7 @@ ADD install_packages.sh /install_packages.sh
 ADD auth.json /auth.json
 ADD setupwizard_ezstep_welcome.patch /setupwizard_ezstep_welcome.patch
 ADD kickstart_template.ini /kickstart_template.ini
+ADD generate_parameters_file.sh /generate_parameters_file.sh
 
 RUN chmod 755 /*.sh
 
