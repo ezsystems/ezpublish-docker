@@ -194,9 +194,10 @@ When the containers are created, you should be able to browse to eZ Publish setu
 It is possible to setup a fresh installation using the install script instead of using the setup wizard.
  - Run ```vagrant up``` ( or ```./fig_ezpinstall.sh``` and ```fig.sh up -d --no-recreate``` ) as usual.
  - If using Vagrant, run : ```vagrant ssh```
- - Run command : ```docker run --rm -i -t --link ezpublishdocker_db1_1:db --volumes-from ezpublishdocker_ezpublishvol_1 --volumes-from ezpublishdocker_composercachevol_1 ezpublishdocker_phpcli /bin/bash -c "php ezpublish/console ezplatform:install demo-clean; php ezpublish/console cache:clear --env=prod"```
+ - Run command : ```docker run --rm --link ezpublishdocker_db1_1:db --volumes-from ezpublishdocker_ezpublishvol_1 --volumes-from ezpublishdocker_composercachevol_1 ezpublishdocker_phpcli /bin/bash -c "php ezpublish/console ezplatform:install demo; php ezpublish/console cache:clear --env=prod"```
  
-FYI : ```docker run``` commands above assumes you have ```EZ_ENVIRONMENT=prod``` in files/fig.config. If you use a different setting, addjust the ```--env=....``` parameter accordingly 
+FYI : ```docker run``` commands above assumes you have ```EZ_ENVIRONMENT=prod``` in files/fig.config. If you use a different setting, adjust the ```--env=....``` parameter accordingly.
+You may also substitute "demo" with "demo_clean" if you want to install ezdemo without demo data, or "clean" if only want the very basics.
  
 
 ### Varnish
