@@ -1,4 +1,4 @@
-# eZ Publish5 in Docker
+# eZ Platform (/ Publish 5.3+) in Docker
 
 Project is work in progress!
 
@@ -166,7 +166,7 @@ Note: If you recreates the VM ( for instance by doing ```vagrant destroy```, you
 
 ### Specific procedures when running containers on local host, not in VM using Vagrant
 - Ensure you have the following tools installed on your computer:
- - docker version 1.2 or later ( https://docs.docker.com/installation/ubuntulinux/ ) 
+ - docker version 1.2 or later ( https://docs.docker.com/installation/ubuntulinux/ )
    PS : ubuntu ships with 0.9.1 and this version won't do due to lack of https://github.com/docker/docker/pull/5129/commits 
  - Fig version 1.0.0 or later ( http://www.fig.sh/install.html )
  - nsenter ( optionally, if you want to start a shell inside a running container : https://github.com/jpetazzo/nsenter )
