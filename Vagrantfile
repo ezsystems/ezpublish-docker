@@ -49,7 +49,7 @@ Vagrant.configure("2") do |config|
     # VirtualBox specific configuration
 
     config.vm.box = "coreos-%s" % vagrantConfig['virtualmachine']['coreos_channel']
-    config.vm.box_version = ">= 444.5.0"
+    config.vm.box_version = ">= 557.0.0"
     config.vm.box_url = "http://%s.release.core-os.net/amd64-usr/current/coreos_production_vagrant.json" % vagrantConfig['virtualmachine']['coreos_channel']
 
     if File.exist?(CLOUD_CONFIG_PATH)
@@ -121,6 +121,12 @@ Vagrant.configure("2") do |config|
   config.vm.provision :shell, :inline => "
     sudo cp /vagrant/files/fig.service /etc/systemd/system/
     sudo systemctl enable /etc/systemd/system/fig.service
+  "
+
+  # Add welcome/help text to VM ssh login
+  config.vm.provision :shell, :inline => "
+    if [ ! -d /etc/motd.d ] ; then sudo mkdir /etc/motd.d ; fi
+    sudo cp /vagrant/resources/motd_ez_welcome.conf /etc/motd.d/motd_ez_welcome.conf
   "
 
   config.vm.network :forwarded_port, guest: 80, host: 8080
