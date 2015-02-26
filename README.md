@@ -216,6 +216,17 @@ These are the steps needed in order to get varnish running
  - If container do not work as expected, you may inspect the log using ```docker logs ezpublishdocker_varnishprepare_1```
  - The ```docker logs ....``` will output the IP of the varnish container which you need in order to configure ezpublish.yml manually
 
+### Solr
+
+These are the steps needed in order to get solr running
+ - Set ```SOLR_ENABLED=yes"```in fig.config.
+ - Run ```fig.sh up -d``` or ```fig.sh up -d --no-recreate``` as usual
+ - Run the eZ Publish Setup Wizard
+ - Start the solrprepare container in order to configure eZ Publish solr engine : ```fig -f fig_[ubuntu|debian].yml start solrprepare```
+   This solrprepare container has some requirements:
+   - Please note that this container must be run *after* setup wizard has been created. If you run it before SW, the ezpublish.yml is yet not generated and the solrprepare container will abort 
+ - If container do not work as expected, you may inspect the log using ```docker logs ezpublishdocker_solrprepare_1```
+
 
 #### SSH
 

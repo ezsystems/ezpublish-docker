@@ -1,0 +1,9 @@
+services:
+#    ezpublish.spi.search_engine:
+#         alias: ezpublish.spi.search.elasticsearch
+
+#    ezpublish.spi.search_engine:
+#         alias: ezpublish.spi.search.legacy
+
+    ezpublish.spi.search_engine:
+         alias: ezpublish.spi.search.solr

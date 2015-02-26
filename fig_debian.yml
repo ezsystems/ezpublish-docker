@@ -6,6 +6,10 @@ ezpublishvol:
   image: debian:wheezy
   volumes:
    - volumes/ezpublish:/var/www
+composercachevol:
+  image: ubuntu:trusty
+  volumes:
+   - volumes/composercache:/volumes/composercache
 db1:
   build: dockerfiles/debian/mysql
   volumes_from:
@@ -25,18 +29,31 @@ varnishprepare:
   environment:
    - VARNISH_ENABLED
    - EZ_ENVIRONMENT
+solrprepare:
+  build: dockerfiles/ubuntu/ezpublish/solr_prepare
+  links:
+    - solr:solr
+    - db1:db
+  volumes_from:
+    - ezpublishvol
+  environment:
+    - SOLR_ENABLED
+    - EZ_ENVIRONMENT
 phpfpm:
   build: dockerfiles/debian/php-fpm
   links:
    - db1:db
+   - solr:solr
   volumes_from:
    - ezpublishvol
 phpcli:
   build: dockerfiles/debian/php-cli
   links:
    - db1:db
+   - solr:solr
   volumes_from:
    - ezpublishvol
+   - composercachevol
 nginx:
   build: dockerfiles/debian/nginx
   links:
@@ -75,3 +92,10 @@ varnish:
    - "8081:80"
   environment:
    - VARNISH_ENABLED
+solr:
+  image: makuk66/docker-solr
+  ports:
+   - "8983:8983"
+  volumes:
+   - volumes/ezpublish/vendor/ezsystems/ezpublish-kernel/eZ/Publish/Core/Search/Solr/Content/schema.xml:/opt/solr/example/solr/collection1/conf/schema.xml
+
