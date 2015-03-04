@@ -1,12 +1,37 @@
 #!/bin/bash
 
 export FIG_PROJECT_NAME=ezpublishdocker
+CONFIGFILE=files/fig.config
+CMDPARAMETERS="$@"
+
+# Check for parameter "-c alternative-config.file.config"
+function set_figconfig
+{
+    local value
+    value=0
+
+    for i in "$@"; do
+        if [ $i == "-c" ]; then
+            value=1
+            continue
+        fi
+        if [ $value == 1 ]; then
+            value=0
+            CONFIGFILE=$i
+            echo Config file overriden. Using $CONFIGFILE instead
+            continue
+        fi
+        CMDPARAMETERS="$CMDPARAMETERS $i"
+    done
+}
+
+set_figconfig "$@"
 
 # Load default settings
 source files/fig.config-EXAMPLE
 
 # Load custom settings
-source files/fig.config
+source $CONFIGFILE
 
 if [ -f files/auth.json ]; then
     cp files/auth.json dockerfiles/ezpublish/install

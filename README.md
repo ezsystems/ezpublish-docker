@@ -183,7 +183,13 @@ Note: If you recreates the VM ( for instance by doing ```vagrant destroy```, you
 If you later just want to recreate specific images or containers, you then first remove those using `docker rm [container]` and `docker rmi [image]`, and then run
 `fig.sh up -d --no-recreate`
 
-fig.sh is a wrapper for fig which also do some internal provisioning. Any command line arguments used when starting the wrapper is passed on to fig.
+
+### fig.sh
+
+fig.sh is a wrapper for fig which also do some internal provisioning. Any command line arguments (except "-c configfile" ) used when starting the wrapper is passed on to fig.
+fig.sh also accepts one special argument for specifying a alternative configuration file ( files/fig.config is the default one if "-c ..." is not provided ).
+Example : 
+```fig.sh -c files/my_customer_fig.config up -d --no-recreate```
 
 ### Access your eZ Publish installation
 
