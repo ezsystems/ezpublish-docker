@@ -96,3 +96,12 @@ create_distribution_container
 
 echo push_distribution_container
 push_distribution_container
+
+echo create_mysql_tarball
+create_mysql_tarball
+
+echo create_mysql_container
+create_mysql_container
+
+echo push_mysql_container
+push_mysql_container

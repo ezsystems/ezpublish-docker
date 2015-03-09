@@ -1,0 +1,3 @@
+ezpmysqldata:
+  build: dockerfiles/ezpublish/mysqldata
+
