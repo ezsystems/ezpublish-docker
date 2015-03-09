@@ -1,0 +1,13 @@
+
+
+source files/fig.config
+
+
+DOCKER_REPOSITORY=myrepository.local:5000
+
+EZ_INSTALLTYPE=composer
+
+
+
+export DOCKER_REPOSITORY
+export EZ_INSTALLTYPE

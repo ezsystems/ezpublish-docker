@@ -1,0 +1,5 @@
+ezpdistribution:
+  build: dockerfiles/ezpublish/distribution
+#  volumes:
+#   - volumes/ezpublish:/var/www_source
+
