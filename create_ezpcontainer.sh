@@ -57,8 +57,8 @@ function push_distribution_container
 
 function create_mysql_tarball
 {
-    ${FIG_EXECUTION_PATH}fig -f $MAINFIG run phpcli /bin/bash -c "mysqldump -u admin -p${MYSQL_PASS} -h db ezp | gzip > /tmp/ezp.sql.gz"
-    docker cp ${FIG_PROJECT_NAME}_phpcli_run_1:/tmp/ezp.sql.gz dockerfiles/ezpublish/mysqldata
+    ${FIG_EXECUTION_PATH}fig -f $MAINFIG run phpcli /bin/bash -c "mysqldump -u admin -p${MYSQL_PASS} -h db --databases ezp > /tmp/ezp.sql"
+    docker cp ${FIG_PROJECT_NAME}_phpcli_run_1:/tmp/ezp.sql dockerfiles/ezpublish/mysqldata
     docker rm ${FIG_PROJECT_NAME}_phpcli_run_1
 }
 

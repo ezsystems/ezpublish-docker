@@ -26,5 +26,5 @@ dockerfiles/debian/ezpublish/prepare/setupwizard_ezstep_welcome.patch
 dockerfiles/ubuntu/ezpublish/varnish_prepare/ezpublish.yml_varnishpurge.diff
 dockerfiles/debian/ezpublish/varnish_prepare/ezpublish.yml_varnishpurge.diff
 dockerfiles/ezpublish/distribution/ezpublish.tar.gz
-dockerfiles/ezpublish/mysqldata/ezp.sql.gz
+dockerfiles/ezpublish/mysqldata/ezp.sql
 
