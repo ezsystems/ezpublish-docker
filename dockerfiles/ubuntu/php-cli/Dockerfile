@@ -20,7 +20,7 @@ RUN apt-get update -y && apt-get install -y --force-yes \
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin && mv /usr/local/bin/composer.phar /usr/local/bin/composer
 
-ADD set_permissions.sh /set_permissions.sh
+ADD prepare_distribution_volume.sh /prepare_distribution_volume.sh
 
 WORKDIR /var/www
 
