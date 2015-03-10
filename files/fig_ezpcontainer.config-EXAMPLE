@@ -4,6 +4,7 @@ source files/fig.config
 
 
 DOCKER_REPOSITORY=myrepository.local:5000
+DOCKER_USER=myuser
 
 EZ_INSTALLTYPE=composer
 
