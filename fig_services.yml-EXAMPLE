@@ -1,0 +1,48 @@
+# There is currently hardcoded stuff in this file, which you likely want to change....
+
+dbvol:
+  image: debian:wheezy
+#  image: scratch // Fixme : "scratch" not supported by fig/compose atm
+  volumes:
+   - /var/lib/mysql
+mysiteezpublishvol:
+  image: mydockerrepo.ez.local:5000/myuser/ezpublish_distribution
+mysitemysqldata:
+  image: mydockerrepo.ez.local:5000/myuser/ezpublish_mysqldata
+db1:
+  image: mydockerrepo.ez.local:5000/myuser/db1
+  volumes_from:
+   - dbvol
+   - mysitemysqldata
+  environment:
+   - MYSQL_PASS=youmaychangethis
+   - ETCD_ENABLED=no
+   - STARTUP_SQL=/dbdump/ezp.sql
+phpcli:
+  image: mydockerrepo.ez.local:5000/myuser/phpcli
+  links:
+   - db1:db
+  volumes_from:
+   - mysiteezpublishvol
+  command: /prepare_distribution_volume.sh
+phpfpm:
+  image: mydockerrepo.ez.local:5000/myuser/phpfpm
+  links:
+   - db1:db
+  volumes_from:
+   - mysiteezpublishvol
+  environment:
+   - ETCD_ENABLED=no
+nginx:
+  image: mydockerrepo.ez.local:5000/myuser/nginx
+  links:
+   - phpfpm:php_fpm
+  volumes_from:
+   - mysiteezpublishvol
+  ports:
+   - "80"
+  environment:
+   - ETCD_ENABLED=no
+   - EZ_ENVIRONMENT=prod
+   - VARNISH_ENABLED=no
+#   - DOCKER0NET
