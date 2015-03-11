@@ -2,10 +2,22 @@
 
 set -e
 
+# usage : ./create_ezpcontainer.sh [--skip-rebuilding-ezp]
+# --skip-rebuilding-ezp : Assumes ezpublish.tar.gz is already created and will not generate one using the fig_ezpinstall.sh script
+
 export FIG_PROJECT_NAME=ezpublishdocker
 source files/fig_ezpcontainer.config
 MAINFIG="fig_${DISTRIBUTION}.yml"
 DATE=`date +%Y%m%d`
+ARGS="$@"
+REBUILD_EZP="true"
+
+function parse_commandline_arguments
+{
+    if [ "aa${ARGS}" == "aa--skip-rebuilding-ezp" ]; then
+        REBUILD_EZP="false"
+    fi
+}
 
 function prepare
 {
@@ -16,30 +28,45 @@ function prepare
     ${FIG_EXECUTION_PATH}fig -f fig_ezpdistribution.yml rm --force -v
     docker rmi ${FIG_PROJECT_NAME}_ezpdistribution:latest || /bin/true
 
-    sudo rm -Rf volumes/ezpublish/* volumes/mysql/*
-    rm dockerfiles/ezpublish/distribution/ezpublish.tar.gz || /bin/true
+    sudo rm -Rf volumes/mysql/*
+
+    if [ $REBUILD_EZP == "true" ]; then
+        sudo rm -Rf volumes/ezpublish/*
+        rm dockerfiles/ezpublish/distribution/ezpublish.tar.gz || /bin/true
+    fi
 }
 
 function install_ezpublish
 {
-    ./fig_ezpinstall.sh
+    if [ $REBUILD_EZP == "true" ]; then
+        ./fig_ezpinstall.sh
+    fi
 }
 
 function run_installscript
 {
-    #docker run --rm --link ezpublishdocker_db1_1:db --volumes-from ezpublishdocker_ezpublishvol_1 --volumes-from ezpublishdocker_composercachevol_1 ezpublishdocker_phpcli /bin/bash -c "php ezpublish/console ezplatform:install demo; php ezpublish/console cache:clear --env=prod
-    ${FIG_EXECUTION_PATH}fig -f $MAINFIG run --rm phpcli /bin/bash -c "sleep 12; php ezpublish/console ezplatform:install demo; php ezpublish/console cache:clear --env=prod"
+    #Start service containers and wait some seconds for mysql to get running
+    ${FIG_EXECUTION_PATH}fig -f $MAINFIG run --rm phpcli /bin/bash -c "sleep 12"
+
+    if [ $REBUILD_EZP == "true" ]; then
+        #docker run --rm --link ezpublishdocker_db1_1:db --volumes-from ezpublishdocker_ezpublishvol_1 --volumes-from ezpublishdocker_composercachevol_1 ezpublishdocker_phpcli /bin/bash -c "php ezpublish/console ezplatform:install demo; php ezpublish/console cache:clear --env=prod
+        ${FIG_EXECUTION_PATH}fig -f $MAINFIG run --rm phpcli /bin/bash -c "php ezpublish/console ezplatform:install demo; php ezpublish/console cache:clear --env=prod"
+    fi
 }
 
 function warm_cache
 {
-    ${FIG_EXECUTION_PATH}fig -f $MAINFIG run --rm phpcli /bin/bash -c "php ezpublish/console cache:warmup --env=prod"
+    if [ $REBUILD_EZP == "true" ]; then
+        ${FIG_EXECUTION_PATH}fig -f $MAINFIG run --rm phpcli /bin/bash -c "php ezpublish/console cache:warmup --env=prod"
+    fi
 }
 
 function create_distribution_tarball
 {
-    sudo tar -czf dockerfiles/ezpublish/distribution/ezpublish.tar.gz --directory volumes/ezpublish .
-    sudo chown `whoami`: dockerfiles/ezpublish/distribution/ezpublish.tar.gz
+    if [ $REBUILD_EZP == "true" ]; then
+        sudo tar -czf dockerfiles/ezpublish/distribution/ezpublish.tar.gz --directory volumes/ezpublish .
+        sudo chown `whoami`: dockerfiles/ezpublish/distribution/ezpublish.tar.gz
+    fi
 }
 
 function create_distribution_container
@@ -75,6 +102,9 @@ function push_mysql_container
     docker push ${DOCKER_REPOSITORY}/vidarl/ezpublish_mysqldata:latest
 }
 
+
+echo parse_commandline_arguments
+parse_commandline_arguments
 
 echo Prepare:
 prepare
