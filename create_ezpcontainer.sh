@@ -45,12 +45,12 @@ function create_distribution_tarball
 function create_distribution_container
 {
     fig -f fig_ezpdistribution.yml up -d
-    docker tag -f ezpublishdocker_ezpdistribution:latest ${DOCKER_REPOSITORY}/vidarl/ezpublish_distribution:master$DATE
-    docker tag -f ezpublishdocker_ezpdistribution:latest ${DOCKER_REPOSITORY}/vidarl/ezpublish_distribution:latest
 }
 
 function push_distribution_container
 {
+    docker tag -f ezpublishdocker_ezpdistribution:latest ${DOCKER_REPOSITORY}/vidarl/ezpublish_distribution:master$DATE
+    docker tag -f ezpublishdocker_ezpdistribution:latest ${DOCKER_REPOSITORY}/vidarl/ezpublish_distribution:latest
     docker push ${DOCKER_REPOSITORY}/vidarl/ezpublish_distribution:master$DATE
     docker push ${DOCKER_REPOSITORY}/vidarl/ezpublish_distribution:latest
 }
@@ -65,12 +65,12 @@ function create_mysql_tarball
 function create_mysql_container
 {
     fig -f fig_ezpmysqldata.yml up -d
-    docker tag -f ezpublishdocker_ezpmysqldata:latest ${DOCKER_REPOSITORY}/vidarl/ezpublish_mysqldata:master$DATE
-    docker tag -f ezpublishdocker_ezpmysqldata:latest ${DOCKER_REPOSITORY}/vidarl/ezpublish_mysqldata:latest
 }
 
 function push_mysql_container
 {
+    docker tag -f ezpublishdocker_ezpmysqldata:latest ${DOCKER_REPOSITORY}/vidarl/ezpublish_mysqldata:master$DATE
+    docker tag -f ezpublishdocker_ezpmysqldata:latest ${DOCKER_REPOSITORY}/vidarl/ezpublish_mysqldata:latest
     docker push ${DOCKER_REPOSITORY}/vidarl/ezpublish_mysqldata:master$DATE
     docker push ${DOCKER_REPOSITORY}/vidarl/ezpublish_mysqldata:latest
 }
