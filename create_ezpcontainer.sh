@@ -27,6 +27,9 @@ function prepare
     ${FIG_EXECUTION_PATH}fig -f fig_ezpdistribution.yml kill
     ${FIG_EXECUTION_PATH}fig -f fig_ezpdistribution.yml rm --force -v
     docker rmi ${FIG_PROJECT_NAME}_ezpdistribution:latest || /bin/true
+    docker rmi ${DOCKER_REPOSITORY}/vidarl/ezpublish_distribution:latest || /bin/true
+    docker rmi ${FIG_PROJECT_NAME}_ezpmysqldata:latest || /bin/true
+    docker rmi ${DOCKER_REPOSITORY}/vidarl/ezpublish_mysqldata:latest || /bin/true
 
     sudo rm -Rf volumes/mysql/*
 
