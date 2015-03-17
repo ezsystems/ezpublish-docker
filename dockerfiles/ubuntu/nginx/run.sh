@@ -28,7 +28,7 @@ sed -i "s@  #fastcgi_pass 127.0.0.1:9000;@  fastcgi_pass php_fpm:${PHP_FPM_PORT_
 sed -i "s@  #fastcgi_param ENVIRONMENT dev;@  fastcgi_param ENVIRONMENT ${EZ_ENVIRONMENT};@" /etc/nginx/sites-available/ezpublish
 
 # Update port number and basedir in site-available/ezpublish
-sed -i "s@%PORT%@${PORT}@" /etc/nginx/sites-available/ezpublish
+sed -i "s@%PORT%@${NGINXPORT}@" /etc/nginx/sites-available/ezpublish
 sed -i "s@%BASEDIR%@${BASEDIR}@" /etc/nginx/sites-available/ezpublish
 
 echo "fastcgi_read_timeout $FASTCGI_READ_TIMEOUT;" > /etc/nginx/conf.d/fastcgi_read_timeout.conf
