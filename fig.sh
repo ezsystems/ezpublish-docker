@@ -1,12 +1,39 @@
 #!/bin/bash
 
 export FIG_PROJECT_NAME=ezpublishdocker
+CONFIGFILE=files/fig.config
+CMDPARAMETERS="$@"
+
+# Check for parameter "-c alternative-config.file.config"
+function set_figconfig
+{
+    local value
+    value=0
+
+    CMDPARAMETERS=""
+
+    for i in "$@"; do
+        if [ $i == "-c" ]; then
+            value=1
+            continue
+        fi
+        if [ $value == 1 ]; then
+            value=0
+            CONFIGFILE=$i
+            echo Config file overriden. Using $CONFIGFILE instead
+            continue
+        fi
+        CMDPARAMETERS="$CMDPARAMETERS $i"
+    done
+}
+
+set_figconfig "$@"
 
 # Load default settings
 source files/fig.config-EXAMPLE
 
 # Load custom settings
-source files/fig.config
+source $CONFIGFILE
 
 if [ $DISTRIBUTION == "debian" ]; then
     BASE_DOCKERFILES="dockerfiles/debian"
@@ -34,7 +61,7 @@ fi
 cp resources/ezpublish.yml_varnishpurge.diff $BASE_DOCKERFILES/ezpublish/varnish_prepare/
 
 # Make a argumentlist where any "-d" is removed
-for i in "$@"; do
+for i in $CMDPARAMETERS; do
     if [ $i != "-d" ]; then
         arglistnodetach="$arglistnodetach $i"
     fi
@@ -58,9 +85,9 @@ if [ $DISTRIBUTION == "ubuntu" ]; then
         cp volumes/etcd/etcd_0.4.6_amd64.deb $BASE_DOCKERFILES/nginx
     fi
 
-    ${FIG_EXECUTION_PATH}fig -f fig_ubuntu.yml "$@"
+    ${FIG_EXECUTION_PATH}fig -f fig_ubuntu.yml $CMDPARAMETERS
 else
-    ${FIG_EXECUTION_PATH}fig -f fig_debian.yml "$@"
+    ${FIG_EXECUTION_PATH}fig -f fig_debian.yml $CMDPARAMETERS
 fi
 
 
