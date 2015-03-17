@@ -27,6 +27,10 @@ function update_parameters.yml
         sed -i "s@database_name:.*@database_name: $database_name@" ezpublish/config/parameters.yml
     fi
 
+    if [ "aa${database_port}" != "aa" ]; then
+        sed -i "s@database_port:.*@database_port: $database_port@" ezpublish/config/parameters.yml
+    fi
+
     if [ "aa${database_user}" != "aa" ]; then
         sed -i "s@database_user:.*@database_user: $database_user@" ezpublish/config/parameters.yml
     fi
