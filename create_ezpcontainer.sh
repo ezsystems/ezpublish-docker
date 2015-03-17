@@ -31,9 +31,9 @@ function prepare
     docker rmi ${FIG_PROJECT_NAME}_ezpmysqldata:latest || /bin/true
     docker rmi ${DOCKER_REPOSITORY}/vidarl/ezpublish_mysqldata:latest || /bin/true
 
-    sudo rm -Rf volumes/mysql/*
 
     if [ $REBUILD_EZP == "true" ]; then
+        sudo rm -Rf volumes/mysql/*
         sudo rm -Rf volumes/ezpublish/*
         rm dockerfiles/ezpublish/distribution/ezpublish.tar.gz || /bin/true
     fi
@@ -49,6 +49,7 @@ function install_ezpublish
 function run_installscript
 {
     #Start service containers and wait some seconds for mysql to get running
+    ${FIG_EXECUTION_PATH}fig -f $MAINFIG up -d # We must call "up" before "run", or else volumes definitions in .yml will not be treated correctly ( will mount all volumes in vfs/ folder ) ( must be a fig bug )
     ${FIG_EXECUTION_PATH}fig -f $MAINFIG run --rm phpcli /bin/bash -c "sleep 12"
 
     if [ $REBUILD_EZP == "true" ]; then
@@ -59,17 +60,13 @@ function run_installscript
 
 function warm_cache
 {
-    if [ $REBUILD_EZP == "true" ]; then
-        ${FIG_EXECUTION_PATH}fig -f $MAINFIG run --rm phpcli /bin/bash -c "php ezpublish/console cache:warmup --env=prod"
-    fi
+    ${FIG_EXECUTION_PATH}fig -f $MAINFIG run --rm phpcli /bin/bash -c "php ezpublish/console cache:warmup --env=prod"
 }
 
 function create_distribution_tarball
 {
-    if [ $REBUILD_EZP == "true" ]; then
-        sudo tar -czf dockerfiles/ezpublish/distribution/ezpublish.tar.gz --directory volumes/ezpublish .
-        sudo chown `whoami`: dockerfiles/ezpublish/distribution/ezpublish.tar.gz
-    fi
+    sudo tar -czf dockerfiles/ezpublish/distribution/ezpublish.tar.gz --directory volumes/ezpublish .
+    sudo chown `whoami`: dockerfiles/ezpublish/distribution/ezpublish.tar.gz
 }
 
 function create_distribution_container
