@@ -48,12 +48,6 @@ else
     echo "# Kickstart file not found. Please check your kickstart settings ( like EZ_KICKSTART_FROM_TEMPLATE ) in config/fig.config if you want a kickstart file " > dockerfiles/ezpublish/install/kickstart_template.ini
 fi
 
-# Load default settings
-source files/fig.config-EXAMPLE
-
-# Load custom settings
-source files/fig.config
-
 # If {FIG_EXECUTION_PATH} is not set and fig is not in path, we'll test if it is located in /opt/bin. Needed for systemd service
 if [ aa$FIG_EXECUTION_PATH == "aa" ]; then
     if [ ! `which ${FIG_EXECUTION_PATH}fig > /dev/null` ]; then
