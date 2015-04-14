@@ -101,6 +101,7 @@ function installViaComposer
         repositoryParameter="--repository-url=$EZ_COMPOSERREPOSITORYURL "
     fi
 
+    echo "Running Composer : composer --no-interaction create-project --prefer-dist ${repositoryParameter}ezsystems/ezpublish-community ezp $EZ_COMPOSERVERSION"
     composer --no-interaction create-project --prefer-dist ${repositoryParameter}ezsystems/ezpublish-community ezp $EZ_COMPOSERVERSION;
 
     # Remove ezpublish/cache/prod, needed since we'll move ezpublish root
