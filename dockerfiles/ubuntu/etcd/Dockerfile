@@ -10,8 +10,10 @@ RUN apt-get update -y && apt-get install -y \
 
 RUN sudo gem install fpm
 
-RUN cd /tmp; curl -L https://raw.githubusercontent.com/solarkennedy/etcd-packages/master/Makefile  > Makefile
-RUN cd /tmp; sed -i "s@^VERSION=0.4.3@VERSION=0.4.6@" /tmp/Makefile
+# Current version of Makefile do not work (21st of April 2015 ). Downloading a fixed version which is known to work instead
+#RUN cd /tmp; curl -L https://raw.githubusercontent.com/solarkennedy/etcd-packages/master/Makefile  > Makefile
+#RUN cd /tmp; sed -i "s@^VERSION=0.4.3@VERSION=0.4.6@" /tmp/Makefile
+RUN cd /tmp; curl -L https://raw.githubusercontent.com/solarkennedy/etcd-packages/ccd02a7617e51f939274f1b870b74491907f95ee/Makefile > Makefile
 RUN cd /tmp; make deb
 
 RUN cd /tmp; sudo dpkg -i etcd_0.4.6_amd64.deb
