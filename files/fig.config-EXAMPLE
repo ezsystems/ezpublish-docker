@@ -70,12 +70,23 @@ EZ_PACKAGEURL=
 EZ_INSTALLTYPE=composer
 
 # Setting used when install_type: "composer"
-# Version of eZ Publish to install via composer. Examples are "v5.3.0" and "dev-master"
-EZ_COMPOSERVERSION=v2014.11.0
-
-# Setting used when install_type: "composer"
-# Set value to "" if you want to downloaded everything from github. Set value to "https://updates.ez.no/ttl" if you would like to install official patches too ( applicable when for you for instance have 'composer_version : "v5.3.0"' )
-EZ_COMPOSERREPOSITORYURL=
+# Arguments to give to composer create-project, directory must be named 'ezp'!
+# Examples:
+#
+## Latest eZ Publish Platform 5.4 Trial (requires valid authentication token: https://doc.ez.no/display/EZP/Using+Composer)
+## EZ_COMPOSERPARAM="--prefer-dist --no-dev --repository-url=https://updates.ez.no/ttl ezsystems/ezpublish-community ezp ~5.4.0"
+#
+## Latest eZ Platform unstable release:
+## EZ_COMPOSERPARAM="--prefer-dist --no-dev ezsystems/ezplatform ezp ~0.5"
+#
+## eZ Platform current development version:
+## EZ_COMPOSERPARAM="--prefer-source ezsystems/ezplatform ezp dev-master"
+#
+## eZ Publish Community of a specific tag:
+## EZ_COMPOSERPARAM="--prefer-dist --no-dev ezsystems/ezpublish-community ezp v2014.11"
+#
+# By default pick latest release of eZ Platform:
+EZ_COMPOSERPARAM="--prefer-dist --no-dev ezsystems/ezplatform ezp"
 
 # Setting used when install_type: "tarball"
 # Path and filename of tarball. Path must be relative to project root ( the directory where Vagrantfile is located )
@@ -102,6 +113,6 @@ DOCKER0NET="172.17.0.0/16"
 export ETCD_ENABLED START_ETCD ETCD_DISCOVERY ETCD_NAME
 export MYSQL_PASS
 export VARNISH_ENABLED
-export EZ_KICKSTART EZ_KICKSTART_FROM_TEMPLATE EZ_PACKAGEURL EZ_INSTALLTYPE EZ_COMPOSERVERSION EZ_COMPOSERREPOSITORYURL EZ_TARBALL_FILENAME EZ_ENVIRONMENT EZ_PATCH_SW
+export EZ_KICKSTART EZ_KICKSTART_FROM_TEMPLATE EZ_PACKAGEURL EZ_INSTALLTYPE EZ_COMPOSERPARAM EZ_TARBALL_FILENAME EZ_ENVIRONMENT EZ_PATCH_SW
 export FIG_EXECUTION_PATH
 export DOCKER0NET
