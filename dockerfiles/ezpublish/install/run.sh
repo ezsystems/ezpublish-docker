@@ -7,8 +7,7 @@
 #   Therefore, the value of this setting will be rewritten internally in the script
 # - EZ_PACKAGEURL ( url, pointing to url where packages are located )
 # - EZ_INSTALLTYPE ( "composer" )
-# - EZ_COMPOSERVERSION ( What version of eZ Publish to install using composer )
-# - EZ_COMPOSERREPOSITORYURL ( Url to composer repository which should be used )
+# - $EZ_COMPOSERPARAM ( What params incl version of eZ Publish to install using composer )
 # - EZ_PATCH_SW ( "true" or "false" ) : Whatever to patch setup wizard or not, so that the welcome page also can be kickstarted
 #
 # Parameters can also be given as options, in the same order:
@@ -32,13 +31,10 @@ function parseCommandlineOptions
         EZ_INSTALLTYPE=$4
     fi
     if [ "aa$5" != "aa" ]; then
-        EZ_COMPOSERVERSION=$5
+        EZ_COMPOSERPARAM=$5
     fi
     if [ "aa$6" != "aa" ]; then
-        EZ_COMPOSERREPOSITORYURL=$6
-    fi
-    if [ "aa$7" != "aa" ]; then
-        EZ_PATCH_SW=$7
+        EZ_PATCH_SW=$6
     fi
 
 
@@ -82,7 +78,6 @@ function installViaComposer
     validateDocRootIsEmpty
     cd /tmp
     local tmpDir
-    local repositoryParameter
 
     mkdir -p $HOME/.composer
     ln -s -f /volumes/composercache $HOME/.composer/cache
@@ -95,14 +90,8 @@ function installViaComposer
     mkdir -p $HOME/.composer
     cp /auth.json $HOME/.composer
 
-    if [ "aa$EZ_COMPOSERREPOSITORYURL" == "aa" ]; then
-        repositoryParameter=""
-    else
-        repositoryParameter="--repository-url=$EZ_COMPOSERREPOSITORYURL "
-    fi
-
-    echo "Running Composer : composer --no-interaction create-project --prefer-dist ${repositoryParameter}ezsystems/ezpublish-community ezp $EZ_COMPOSERVERSION"
-    composer --no-interaction create-project --prefer-dist ${repositoryParameter}ezsystems/ezpublish-community ezp $EZ_COMPOSERVERSION;
+    echo "Running Composer : composer --no-interaction create-project $EZ_COMPOSERPARAM"
+    composer --no-interaction create-project $EZ_COMPOSERPARAM;
 
     # Remove ezpublish/cache/prod, needed since we'll move ezpublish root
     rm -Rf ezp/ezpublish/cache/prod
@@ -123,7 +112,6 @@ function installTarball
     validateDocRootIsEmpty
     cd /tmp
     local tmpDir
-    local repositoryParameter
 
     tmpDir=`mktemp -d`
     #tmpDir="tmp.747Uy8crCV"
