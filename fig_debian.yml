@@ -7,24 +7,15 @@ ezpublishvol:
   volumes:
    - volumes/ezpublish:/var/www
 db1:
-  build: dockerfiles/debian/mysql
+  image: mariadb:latest
   volumes_from:
    - dbvol
-  volumes:
-   - dockerfiles/debian/mysql/create_ezp_db.sql:/create_ezp_db.sql
   environment:
-   - MYSQL_PASS
-   - STARTUP_SQL=/create_ezp_db.sql
-varnishprepare:
-  build: dockerfiles/debian/ezpublish/varnish_prepare
-  links:
-   - varnish:varnish
-   - db1:db
-  volumes_from:
-   - ezpublishvol
-  environment:
-   - VARNISH_ENABLED
-   - EZ_ENVIRONMENT
+   - MYSQL_ROOT_PASSWORD=mysecretrootpassword
+   - MYSQL_USER=admin
+   - MYSQL_PASSWORD
+   - MYSQL_DATABASE=ezp
+
 phpfpm:
   build: dockerfiles/debian/php-fpm
   links:
