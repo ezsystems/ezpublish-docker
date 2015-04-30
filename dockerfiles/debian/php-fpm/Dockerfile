@@ -7,8 +7,7 @@ ENV MEMORY_LIMIT 256M
 ENV MAX_EXECUTION_TIME 180
 ENV PORT 9000
 
-RUN apt-get update && \
-    apt-get install -y \
+RUN apt-get update -y && apt-get install -y --force-yes \
     php5-fpm \
     php5-mysql \
     php5-json \
