@@ -8,7 +8,7 @@
 
 # Specify what distribution you want you containers to be based on
 # Valid values are "ubuntu" and "debian"
-DISTRIBUTION=ubuntu
+DISTRIBUTION=debian
 
 #### ETCD settings ####
 

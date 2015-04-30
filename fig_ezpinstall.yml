@@ -1,9 +1,9 @@
 ezpublishvol:
-  image: ubuntu:trusty
+  image: debian:jessie
   volumes:
    - volumes/ezpublish:/var/www
 composercachevol:
-  image: ubuntu:trusty
+  image: debian:jessie
   volumes:
    - volumes/composercache:/volumes/composercache
 ezpinstall:

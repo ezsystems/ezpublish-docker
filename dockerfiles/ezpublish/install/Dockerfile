@@ -1,5 +1,4 @@
-FROM ubuntu:trusty
-
+FROM debian:jessie
 
 RUN apt-get update -y && apt-get install -y --force-yes \
     php5-cli \
