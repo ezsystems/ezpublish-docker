@@ -2,7 +2,7 @@
 
 Project is work in progress!
 
-Aims to provide setup for _eZ Platform_(also implies _eZ Studio_) using Docker containers and Docker Compose(fig), either natively on linux if you have docker and fig installed, or via VM using Vagrant and Virtualbox/AWS.
+Aims to provide setup for _eZ Platform_(also implies _eZ Studio_) using Docker containers and Docker Compose, either natively on linux if you have docker and docker-compose installed, or via VM using Vagrant and Virtualbox/AWS.
 _Note: The use of Vagrant will probably be faded out in favour of Docker Machine in the future._
 
 ## Project goal
@@ -26,7 +26,7 @@ shared files system for scalability testing, and much more..
 
 ## Installation
 
-The containers can be created and started using either vagrant or fig. Vagrant will create a virtual machine where the containers are running while fig will create the containers on host ( requires linux....)
+The containers can be created and started using either vagrant or docker-compose. Vagrant will create a virtual machine where the containers are running while docker-compose will create the containers on host ( requires linux....)
 
 ### Default system
 
@@ -37,7 +37,7 @@ By default, the following system will be installed:
 
 ### Optional installation steps
 
-- Copy files/fig.config-EXAMPLE to files/fig.config ( and set the environment variables in files/fig.config according to your needs if you want to change the default setup ).
+- Copy files/docker-compose.config-EXAMPLE to files/docker-compose.config ( and set the environment variables in files/docker-compose.config according to your needs if you want to change the default setup ).
 - Copy files/auth.yml-EXAMPLE to files/auth.yml.
   This file has two authentication sections:
   - The setting for updates.ez.no is applicable if you want to install eZ Publish Enterprise and not the community version
@@ -48,7 +48,7 @@ By default, the following system will be installed:
  - Place the installation in volumes/ezpublish
  - Make sure EZ_INSTALLTYPE is set to "basic"
  - You need to manually import the database from the php-cli container ( see chapter "Running php-cli and mysql commands" )
-   This needs to be done after all images and containers has been created ( after you have executed "vagrant up" or "./fig.sh up -d" )
+   This needs to be done after all images and containers has been created ( after you have executed "vagrant up" or "./docker-compose.sh up -d" )
    For convenience, you should also place the database dump in volumes/ezpublish so you may easily access it from the php-cli container
 
 Note : If you opt not to copy the configurations files mentioned above ( the *.-EXAMPLE files ), the system will do so for you and use default settings.
@@ -59,8 +59,8 @@ First of all, you need a eZ Publish installation. If you already have one, then 
 If you do not already have a eZ Publish installation, the ezpinstall container provided is able to install eZ Publish from tarball or composer.
 If you copy a existing installation to volumes/ezpublish, the ezpinstall will only set file permissions correctly, so that they are writable for the webserver
 
- - In files/fig.config set the EZ_* settings according to your needs
- - Run ```fig_ezpinstall.sh``` 
+ - In files/docker-compose.config set the EZ_* settings according to your needs
+ - Run ```docker-compose_ezpinstall.sh```
  
 
 
@@ -94,7 +94,7 @@ As you can see, the wrapper will pass on any provided parameters to the vagrant 
 - If using AWS : 
  - In files/vagrant.yml, define "use_aws=true"
  - Create a dummy box: ```vagrant box add dummy https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box```
- - You likely want web server to listen on port 80, not port 8080. If so, you need to change "8080:80" into "80:80" in the nginx section in fig.yml ( unfortunately, this cannot be a setting in files/fig.config ) 
+ - You likely want web server to listen on port 80, not port 8080. If so, you need to change "8080:80" into "80:80" in the nginx section in docker-compose.yml ( unfortunately, this cannot be a setting in files/docker-compose.config )
 - Run `vagrant up`
 
 If you later want to do changes to your docker/vagrant files, you need to stop and remove the corresponding container ```docker stop [containerid]; docker rm [containerid]```, remove the image ```docker rmi [imageid]``` and then run ```vagrant provision``` instead of ```vagrant up```
@@ -114,20 +114,20 @@ Please note that running ```vagrant rsync```will also delete any volumes in VM a
 
 ### Specific procedures when running containers on local host, not in VM using Vagrant
 - Ensure you have the following tools installed on your computer:
- - docker version 1.5 or later ( https://docs.docker.com/installation/ubuntulinux/ )
- - Docker-Compose version 1.2.0 or later ( http://docs.docker.com/compose/install/ )
+ - docker version 1.6 or later ( https://docs.docker.com/installation/ubuntulinux/ )
+ - Docker-Compose version 1.3.0 or later ( http://docs.docker.com/compose/install/ )
 - Run `./docker-compose.sh up -d`
 
 If you later just want to recreate specific images or containers, you then first remove those using `docker rm [container]` and `docker rmi [image]`, and then run
-`fig.sh up -d --no-recreate`
+`docker-compose.sh up -d --no-recreate`
 
 
-### fig.sh
+### docker-compose.sh
 
-fig.sh is a wrapper for fig which also do some internal provisioning. Any command line arguments (except "-c configfile" ) used when starting the wrapper is passed on to fig.
-fig.sh also accepts one special argument for specifying a alternative configuration file ( files/fig.config is the default one if "-c ..." is not provided ).
+docker-compose.sh is a wrapper for docker-compose which also do some internal provisioning. Any command line arguments (except "-c configfile" ) used when starting the wrapper is passed on to docker-compose.
+docker-compose.sh also accepts one special argument for specifying a alternative configuration file ( files/docker-compose.config is the default one if "-c ..." is not provided ).
 Example : 
-```fig.sh -c files/my_custom_fig.config up -d --no-recreate```
+```docker-compose.sh -c files/my_custom_docker-compose.config up -d --no-recreate```
 
 ### Access your eZ Publish installation
 
@@ -136,21 +136,21 @@ When the containers are created, you should be able to browse to eZ Publish setu
 ### Setting up eZ Publish using install script
 
 It is possible to setup a fresh installation using the install script instead of using the setup wizard.
- - Run ```vagrant up``` ( or ```./fig_ezpinstall.sh``` and ```fig.sh up -d --no-recreate``` ) as usual.
+ - Run ```vagrant up``` ( or ```./docker-compose.sh``` and ```docker-compose.sh up -d --no-recreate``` ) as usual.
  - If using Vagrant, run : ```vagrant ssh```
  - Run command : ```docker run --rm --link ezpublishdocker_db1_1:db --volumes-from ezpublishdocker_ezpublishvol_1 --volumes-from ezpublishdocker_composercachevol_1 ezpublishdocker_phpcli /bin/bash -c "php ezpublish/console ezplatform:install demo; php ezpublish/console cache:clear --env=prod"```
  
-FYI : ```docker run``` commands above assumes you have ```EZ_ENVIRONMENT=prod``` in files/fig.config. If you use a different setting, adjust the ```--env=....``` parameter accordingly.
+FYI : ```docker run``` commands above assumes you have ```EZ_ENVIRONMENT=prod``` in files/docker-compose.config. If you use a different setting, adjust the ```--env=....``` parameter accordingly.
 You may also substitute "demo" with "demo_clean" if you want to install ezdemo without demo data, or "clean" if only want the very basics.
  
 
 ### Varnish
 
 These are the steps needed in order to get varnish running
- - Set ```VARNISH_ENABLED=yes"```in fig.config.
- - Run ```fig.sh up -d``` or ```fig.sh up -d --no-recreate``` as usual
+ - Set ```VARNISH_ENABLED=yes"```in docker-compose.config.
+ - Run ```docker-compose.sh up -d``` or ```docker-compose.sh up -d --no-recreate``` as usual
  - Run the eZ Publish Setup Wizard
- - Start the varnishprepare container in order to configure eZ Publish to use a http cache in ezpublish/config/ezpublish.yml : ```fig -f fig_[ubuntu|debian].yml start varnishprepare```
+ - Start the varnishprepare container in order to configure eZ Publish to use a http cache in ezpublish/config/ezpublish.yml : ```docker-compose -f docker-compose[_ubuntu].yml start varnishprepare```
    This varnishprepare container has some requirements:
    - Please note that this container must be run *after* setup wizard has been created. If you run it before SW, the ezpublish.yml is yet not generated and the varnishprepare container will abort 
    - In order to inject the settings correctly in ezpublish.yml, your ezpublish.yml should not differ too much from the standard ezpublish.yml generated by the setup wizard
@@ -189,7 +189,7 @@ From there you can run symfony commands like normal:
 You can also access mysql from this container as it has the mysql client installed:
 - ```mysql -uadmin --password=[mysqlpasswd] --protocol=tcp --host=db```
 
-Mysql password is defined in files/fig.config
+Mysql password is defined in files/docker-compose.config
 
 ( For other environment variables see ```env```, basically these typically comes from parent images and links )
 

@@ -49,7 +49,7 @@ Vagrant.configure("2") do |config|
     # VirtualBox specific configuration
 
     config.vm.box = "coreos-%s" % vagrantConfig['virtualmachine']['coreos_channel']
-    config.vm.box_version = ">= 557.0.0"
+    config.vm.box_version = ">= 681.0.0"
     config.vm.box_url = "http://%s.release.core-os.net/amd64-usr/current/coreos_production_vagrant.json" % vagrantConfig['virtualmachine']['coreos_channel']
 
     if File.exist?(CLOUD_CONFIG_PATH)
@@ -67,8 +67,8 @@ Vagrant.configure("2") do |config|
     end
   end
 
-  if !File.exist?( "files/fig.config" )
-      FileUtils.cp( "files/fig.config-EXAMPLE", "files/fig.config" )
+  if !File.exist?( "files/docker-compose.config" )
+      FileUtils.cp( "files/docker-compose.config-EXAMPLE", "files/docker-compose.config" )
   end
 
   # Set the Timezone to something useful
@@ -97,18 +97,18 @@ Vagrant.configure("2") do |config|
 
   # Install docker-compose on vagrant machine
   config.vm.provision :shell, :inline => "
-    if [ ! -f /opt/bin/fig ]; then \
+    if [ ! -f /opt/bin/docker-compose ]; then \
       mkdir -p /opt/bin
-      cp /vagrant/resources/fig /opt/bin
-      chmod +x /opt/bin/fig
+      cp /vagrant/resources/docker-compose /opt/bin
+      chmod +x /opt/bin/docker-compose
     fi
   "
 
   if vagrantConfig['debug']['disable_docker_provision'] == false
     config.vm.provision :shell, :inline => "
       cd /vagrant; \
-      ./fig_ezpinstall.sh; \
-      ./fig.sh up -d --no-recreate
+      ./docker-compose_ezpinstall.sh; \
+      ./docker-compose.sh up -d --no-recreate
       if [[ ( -d volumes/ezpublish/ezpublish ) && ( ! -d volumes/ezpublish/ezpublish_legacy ) ]];  then \
           echo 'Install eZ Platform demo data'
           docker exec -i ezpublishdocker_phpfpm1_1 php ezpublish/console ezplatform:install --env prod demo
@@ -120,8 +120,8 @@ Vagrant.configure("2") do |config|
 
   # Make sure containers starts automatically on boot
   config.vm.provision :shell, :inline => "
-    sudo cp /vagrant/files/fig.service /etc/systemd/system/
-    sudo systemctl enable /etc/systemd/system/fig.service
+    sudo cp /vagrant/files/docker-compose.service /etc/systemd/system/
+    sudo systemctl enable /etc/systemd/system/docker-compose.service
   "
 
   # Add welcome/help text to VM ssh login
