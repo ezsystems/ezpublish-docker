@@ -17,19 +17,19 @@ db1:
    - MYSQL_DATABASE=ezp
 
 phpfpm:
-  build: dockerfiles/debian/php-fpm
+  build: dockerfiles/php-fpm
   links:
    - db1:db
   volumes_from:
    - ezpublishvol
 phpcli:
-  build: dockerfiles/debian/php-cli
+  build: dockerfiles/php-cli
   links:
    - db1:db
   volumes_from:
    - ezpublishvol
 nginx:
-  build: dockerfiles/debian/nginx
+  build: dockerfiles/nginx
   links:
    - phpfpm:php_fpm
   volumes_from:

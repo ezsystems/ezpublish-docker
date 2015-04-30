@@ -60,15 +60,6 @@ However this is currently not the case and we are looking for ways to best accom
 
 The containers can be created and started using either vagrant or fig. Vagrant will create a virtual machine where the containers are running while fig will create the containers on host ( requires linux....)
 
-### About etcd 
-If you want to be able to start and stop containers in arbitrary order ( like db, phpfpm and nginx containers ), you'll need have etcd ( https://coreos.com/docs/distributed-configuration/getting-started-with-etcd/ ) running.
-Etcd is a open-source distributed key value store that is used to provides shared configuration among the containers.
-If you do *not* run etcd and you start/stop containers without using fig.sh, you have to make sure that containers are started in this order : ezpublishdocker_db1_1, ezpublishdocker_phpfpm_1, ezpublishdocker_nginx_1
-This means that if you for some reason has to restart ezpublishdocker_db1_1, you also have to restart the other two containers, and in correct order.
-
-See below for instructions for how to run etcd
-
-
 ### Default system
 
 By default, the following system will be installed:
@@ -131,8 +122,6 @@ As you can see, the wrapper will pass on any provided parameters to the vagrant 
  - VirtualBox 4.3.12+ (http://www.virtualbox.org)
  - If using AWS: Install Vagrant AWS plugin. To install run vagrant ```vagrant plugin install vagrant-aws```
    If using the vagrant container above, this step is not needed
-- Optionally: Enable etcd ( See chapter "About etcd " about why you would run etcd )
- - In files/fig.config, make sure "START_ETCD=yes"
  - Copy files/user-data-EXAMPLE (optionally files/user-data-EXAMPLE-AWS ) to files/user-data and provide a discovery token as instructed in the file
 - If using AWS : 
  - In files/vagrant.yml, define "use_aws=true"
@@ -155,30 +144,11 @@ where "1.2.3.4" is the IP if the virtual machine
 
 Please note that running ```vagrant rsync```will also delete any volumes in VM and instead copy over those you have locally
 
-### Setting up etcd
-CoreOS has support for running etcd out of the box, it just needs to be configured:
- - Visit https://discovery.etcd.io/new to generate a discovery token. This token will be used internally by etcd
- - Copy files/user-data-EXAMPLE (optionally files/user-data-EXAMPLE-AWS ) to files/user-data and provide a discovery token
- - In files/fig.config, make sure "ETCD_ENABLED=yes"
-
-Note: When running etcd on the host, you'll need to remove or change port numbers for etcd in fig.yml too (example : "4002:4001", "7002:7001" ), to prevent the etcd container from binding to the default etcd ports. This is only needed with docker 1.3 and later as earlier version would not complain if the given ports were already taken
-Note: If you recreates the VM ( for instance by doing ```vagrant destroy```, you'll need to regenerate a new token before running ```vagrant up```. Failing to do so will prevent etcd from starting !
-
 ### Specific procedures when running containers on local host, not in VM using Vagrant
 - Ensure you have the following tools installed on your computer:
- - docker version 1.2 or later ( https://docs.docker.com/installation/ubuntulinux/ )
-   PS : ubuntu ships with 0.9.1 and this version won't do due to lack of https://github.com/docker/docker/pull/5129/commits 
- - Fig version 1.0.0 or later ( http://www.fig.sh/install.html )
- - nsenter ( optionally, if you want to start a shell inside a running container : https://github.com/jpetazzo/nsenter )
-- If you want to run etcd, you have two options, running etcd on the host directly, or in a container
- - If you want to run etcd on the hosts and your distribution do not have etcd packages, this url might be of help:
-  - http://blog.hackzilla.org/posts/2014/09/18/etcd-for-ubuntu
- - The easiest method is to run etcd in a container:
-  - In files/fig.config, make sure "START_ETCD=yes"
-  - In files/fig.config, make sure "ETCD_DISCOVERY=autogenerate" or "ETCD_DISCOVERY=https://discovery.etcd.io/[discovery_hash]"
-  - In files/fig.config, make sure "ETCD_ENABLED=yes"
-    If you want to manually create a discovery hash, access https://discovery.etcd.io/new in a browser
-- Run `./fig.sh up -d`
+ - docker version 1.5 or later ( https://docs.docker.com/installation/ubuntulinux/ )
+ - Docker-Compose version 1.2.0 or later ( http://docs.docker.com/compose/install/ )
+- Run `./docker-compose.sh up -d`
 
 If you later just want to recreate specific images or containers, you then first remove those using `docker rm [container]` and `docker rmi [image]`, and then run
 `fig.sh up -d --no-recreate`

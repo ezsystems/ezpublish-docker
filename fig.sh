@@ -35,25 +35,14 @@ source files/fig.config-EXAMPLE
 # Load custom settings
 source $CONFIGFILE
 
-if [ $DISTRIBUTION == "debian" ]; then
-    BASE_DOCKERFILES="dockerfiles/debian"
-else
-    BASE_DOCKERFILES="dockerfiles/ubuntu"
-fi
+BASE_DOCKERFILES="dockerfiles"
 
-if [ $DISTRIBUTION == "ubuntu" ]; then
-    cp files/etcd_functions $BASE_DOCKERFILES/etcd
-    cp files/etcd_functions $BASE_DOCKERFILES/mysql
-    cp files/etcd_functions $BASE_DOCKERFILES/php-fpm
-    cp files/etcd_functions $BASE_DOCKERFILES/nginx
-    cp files/etcd_functions $BASE_DOCKERFILES/varnish
-fi
 
-# If {FIG_EXECUTION_PATH} is not set and fig is not in path, we'll test if it is located in /opt/bin. Needed for systemd service
-if [ aa$FIG_EXECUTION_PATH == "aa" ]; then
-    if [ ! `which ${FIG_EXECUTION_PATH}fig > /dev/null` ]; then
-        if [ -x "/opt/bin/fig" ]; then
-            FIG_EXECUTION_PATH="/opt/bin/"
+# If {COMPOSE_EXECUTION_PATH} is not set and docker-compose is not in path, we'll test if it is located in /opt/bin. Needed for systemd service
+if [ aa$COMPOSE_EXECUTION_PATH == "aa" ]; then
+    if [ ! `which ${COMPOSE_EXECUTION_PATH}docker-compose > /dev/null` ]; then
+        if [ -x "/opt/bin/docker-compose" ]; then
+            COMPOSE_EXECUTION_PATH="/opt/bin/"
         fi
     fi
 fi
@@ -67,27 +56,5 @@ for i in $CMDPARAMETERS; do
     fi
 done
 
-# This is a workaround for https://github.com/docker/fig/issues/540
-if [ $DISTRIBUTION == "ubuntu" ]; then
-    # We need to build etcd next so that the .deb package can be placed inside other images
-    if [ ! -f volumes/etcd/etcd_0.4.6_amd64.deb ]; then
-        ${FIG_EXECUTION_PATH}fig -f fig_etcd.yml $arglistnodetach
-    fi
 
-    # Copy the etcd .deb to the dockerfile directory for images that need it
-    if [ ! -f $BASE_DOCKERFILES/mysql/etcd_0.4.6_amd64.deb ]; then
-        cp volumes/etcd/etcd_0.4.6_amd64.deb $BASE_DOCKERFILES/mysql
-    fi
-    if [ ! -f $BASE_DOCKERFILES/php-fpm/etcd_0.4.6_amd64.deb ]; then
-        cp volumes/etcd/etcd_0.4.6_amd64.deb $BASE_DOCKERFILES/php-fpm
-    fi
-    if [ ! -f $BASE_DOCKERFILES/nginx/etcd_0.4.6_amd64.deb ]; then
-        cp volumes/etcd/etcd_0.4.6_amd64.deb $BASE_DOCKERFILES/nginx
-    fi
-
-    ${FIG_EXECUTION_PATH}fig -f fig_ubuntu.yml $CMDPARAMETERS
-else
-    ${FIG_EXECUTION_PATH}fig -f fig_debian.yml $CMDPARAMETERS
-fi
-
-
+${COMPOSE_EXECUTION_PATH}docker-compose $CMDPARAMETERS
