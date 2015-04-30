@@ -1,4 +1,4 @@
-FROM debian:wheezy
+FROM debian:jessie
 
 # This image is based on the tutum/mysql image at https://registry.hub.docker.com/u/tutum/mysql/dockerfile/
 # The only difference is that this image is based on debian, while tutum/mysql is based on ubuntu

@@ -1,9 +1,9 @@
 dbvol:
-  image: debian:wheezy
+  image: debian:jessie
   volumes:
    - volumes/mysql:/var/lib/mysql
 ezpublishvol:
-  image: debian:wheezy
+  image: debian:jessie
   volumes:
    - volumes/ezpublish:/var/www
 db1:
