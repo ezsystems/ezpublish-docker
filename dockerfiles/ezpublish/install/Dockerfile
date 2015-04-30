@@ -2,7 +2,7 @@ FROM ubuntu:trusty
 
 
 RUN apt-get update -y && apt-get install -y --force-yes \
-    php5 \
+    php5-cli \
     php5-mysql \
     php5-json \
     php5-xsl \

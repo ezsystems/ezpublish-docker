@@ -1,8 +1,7 @@
 FROM debian:wheezy
 
-RUN apt-get update && \
-    apt-get install -y --force-yes \
-    php5 \
+RUN apt-get update -y && apt-get install -y --force-yes \
+    php5-cli \
     php5-mysql \
     php5-json \
     php5-xsl \
