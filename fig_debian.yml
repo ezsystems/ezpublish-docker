@@ -40,29 +40,32 @@ nginx:
    - EZ_ENVIRONMENT
    - VARNISH_ENABLED
    - DOCKER0NET
-sahi:
-  build: dockerfiles/debian/sahi
-  links:
-   - nginx:web
-  ports:
-   - "9999:9999"
-   - "5900:5900"
-behatphpcli:
-  build: dockerfiles/debian/php-cli
-  links:
-   - db1:db
-   - nginx:web
-   - sahi:sahi
-  volumes_from:
-   - ezpublishvol
-varnish:
-  build: dockerfiles/debian/varnish
-  links:
-   - phpfpm:php_fpm
-   - nginx:nginx
-  volumes_from:
-   - ezpublishvol
-  ports:
-   - "8081:80"
-  environment:
-   - VARNISH_ENABLED
+
+#sahi:
+#  build: dockerfiles/debian/sahi
+#  links:
+#   - nginx:web
+#  ports:
+#   - "9999:9999"
+#   - "5900:5900"
+
+#behatphpcli:
+#  build: dockerfiles/debian/php-cli
+#  links:
+#   - db1:db
+#   - nginx:web
+#   - sahi:sahi
+#  volumes_from:
+#   - ezpublishvol
+
+#varnish:
+#  build: dockerfiles/debian/varnish
+#  links:
+#   - phpfpm:php_fpm
+#   - nginx:nginx
+#  volumes_from:
+#   - ezpublishvol
+#  ports:
+#   - "8081:80"
+#  environment:
+#   - VARNISH_ENABLED
