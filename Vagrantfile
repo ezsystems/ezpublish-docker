@@ -95,11 +95,7 @@ Vagrant.configure("2") do |config|
       disabled: true
   end
 
-  if File.exist?( "files/auth.json" )
-    FileUtils.cp( "files/auth.json", "dockerfiles/ezpublish/install" )
-  end
-
-  # Install fig on vagrant machine
+  # Install docker-compose on vagrant machine
   config.vm.provision :shell, :inline => "
     if [ ! -f /opt/bin/fig ]; then \
       mkdir -p /opt/bin

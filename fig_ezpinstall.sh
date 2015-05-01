@@ -33,13 +33,9 @@ source files/fig.config-EXAMPLE
 # Load custom settings
 source $CONFIGFILE
 
-if [ -f files/auth.json ]; then
-    cp files/auth.json dockerfiles/ezpublish/install
-else
-    touch dockerfiles/ezpublish/install/auth.json
+if [ ! -f files/auth.json ]; then
+    touch files/auth.json
 fi
-
-cp resources/setupwizard_ezstep_welcome.patch dockerfiles/ezpublish/install
 
 # Copy kickstart template to build dir
 if [ "aa$EZ_KICKSTART_FROM_TEMPLATE" != "aa" ]; then
@@ -58,3 +54,8 @@ if [ aa$FIG_EXECUTION_PATH == "aa" ]; then
 fi
 
 ${FIG_EXECUTION_PATH}fig -f fig_ezpinstall.yml up --no-recreate
+
+echo "Running Composer : composer --no-interaction create-project ${EZ_COMPOSERPARAM?}"
+docker run -i --volumes-from=ezpublishdocker_composercachevol_1 \
+               --volumes-from=ezpublishdocker_ezpublishvol_1 \
+               ezpublishdocker_ezpphp:latest composer --no-interaction create-project ${EZ_COMPOSERPARAM?};

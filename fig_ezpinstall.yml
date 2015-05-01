@@ -2,24 +2,20 @@ ezpublishvol:
   image: debian:jessie
   volumes:
    - volumes/ezpublish:/var/www
+  # Remove .keep file so composer is able to install in the directory afterwards
+  command: rm /var/www/.keep
+
 composercachevol:
   image: debian:jessie
   volumes:
-   - volumes/composercache:/volumes/composercache
-ezpinstall:
+   - volumes/composercache:/var/.composer/cache
+
+ezpphp:
   build: dockerfiles/ezpublish/install
   volumes_from:
    - ezpublishvol
    - composercachevol
   volumes:
-   - ${EZ_TARBALL_FILENAME}:/tmp/ezpublish.tar.gz
-  environment:
-   - EZ_KICKSTART
-   - EZ_KICKSTART_FROM_TEMPLATE
-   - EZ_PACKAGEURL
-   - EZ_INSTALLTYPE
-   - EZ_COMPOSERPARAM
-   - EZ_ENVIRONMENT
-   - EZ_PATCH_SW
-   - EZ_GENERATE_PARAMETERS
-   - MYSQL_PASS
+   - files/auth.json:/var/.composer/auth.json
+   # Override command, we don't want to start php-fpm just yet, just want to run composer commands this
+  command: php -v

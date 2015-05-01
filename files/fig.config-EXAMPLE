@@ -24,52 +24,28 @@ EZ_KICKSTART=true
 # Template file should be located in the files/ directory
 EZ_KICKSTART_FROM_TEMPLATE=
 
-#  Pre downloads packages from provided url if set for setup wizard speed up
-# EZ_PACKAGEURL=http://packages.ez.no/ezpublish/5.4/5.4.0/
-EZ_PACKAGEURL=
-
-# Specify how to prepare ezpublish
-# - composer : Makes a fresh install using composer. Assumes volume/ezpublish is empty...Will not do any changes do database, except make sure ezp database exists
-#              Note that when using this setting you need to have more than 1Gb of RAM in virtual machine ( 2Gb recommended )
-# - tarball : Install eZ Publish from tarball. Make sure you also specify tarball_filename setting
-# - basic : Assumes ezp is already installed in doc root and will
-#    - process kickstart and packageurl settings.
-#    - make sure permissions are set correctly ( writable for web user )
-#    - install assets
-#    - make sure ezp database exists
-# - donothing : Will not do any changes at all in docroot, or with database
-EZ_INSTALLTYPE=composer
-
-# Setting used when install_type: "composer"
-# Arguments to give to composer create-project, directory must be named 'ezp'!
+# Setting used by docker-compose_ezpinstall.sh
+# Arguments to give to composer create-project, directory must be named '/var/www'!
 # Examples:
 #
 ## Latest eZ Publish Platform 5.4 Trial (requires valid authentication token: https://doc.ez.no/display/EZP/Using+Composer)
-## EZ_COMPOSERPARAM="--prefer-dist --no-dev --repository-url=https://updates.ez.no/ttl ezsystems/ezpublish-community ezp ~5.4.0"
+## EZ_COMPOSERPARAM="--prefer-dist --no-dev --repository-url=https://updates.ez.no/ttl ezsystems/ezpublish-community /var/www ~5.4.0"
 #
 ## Latest eZ Platform unstable release:
-## EZ_COMPOSERPARAM="--prefer-dist --no-dev ezsystems/ezplatform ezp ~0.5"
+## EZ_COMPOSERPARAM="--prefer-dist --no-dev ezsystems/ezplatform /var/www ~0.5"
 #
 ## eZ Platform current development version:
-## EZ_COMPOSERPARAM="--prefer-source ezsystems/ezplatform ezp dev-master"
+## EZ_COMPOSERPARAM="--prefer-source ezsystems/ezplatform /var/www dev-master"
 #
 ## eZ Publish Community of a specific tag:
-## EZ_COMPOSERPARAM="--prefer-dist --no-dev ezsystems/ezpublish-community ezp v2014.11"
+## EZ_COMPOSERPARAM="--prefer-dist --no-dev ezsystems/ezpublish-community /var/www v2014.11"
 #
 # By default pick latest release of eZ Platform:
-EZ_COMPOSERPARAM="--prefer-dist --no-dev ezsystems/ezplatform ezp"
-
-# Setting used when install_type: "tarball"
-# Path and filename of tarball. Path must be relative to project root ( the directory where Vagrantfile is located )
-# Path cannot escape the project root ( ie do not do "../ezpublish5-5.3.0-ee-ttl-full.tar.gz"
-EZ_TARBALL_FILENAME=ezpublish5-5.3.0-ee-ttl-full.tar.gz
+EZ_COMPOSERPARAM="--prefer-dist --no-dev ezsystems/ezplatform /var/www"
 
 # Set the environment for ezpublish. Valid options are "prod", "dev", "behat"
 # WARNING: Only non dev env works (assets) atm as the standard Nginx rewrite rules does not take care to addapt for env!
 EZ_ENVIRONMENT=prod
-
-# Whatever to patch setup wizard so that the welcome page also can be kickstarted
-EZ_PATCH_SW=false
 
 #### FIG settings ####
 # Path to location of fig. If fig is in your PATH, you may leave it empty
@@ -83,6 +59,6 @@ DOCKER0NET="172.17.0.0/16"
 
 export MYSQL_PASSWORD
 export VARNISH_ENABLED
-export EZ_KICKSTART EZ_KICKSTART_FROM_TEMPLATE EZ_PACKAGEURL EZ_INSTALLTYPE EZ_COMPOSERPARAM EZ_TARBALL_FILENAME EZ_ENVIRONMENT EZ_PATCH_SW
+export EZ_KICKSTART EZ_KICKSTART_FROM_TEMPLATE EZ_ENVIRONMENT EZ_COMPOSERPARAM
 export FIG_EXECUTION_PATH
 export DOCKER0NET

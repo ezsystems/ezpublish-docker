@@ -7,7 +7,5 @@ files/fig.config
 volumes/mysql
 volumes/ezpublish
 volumes/composercache
-dockerfiles/ezpublish/install/auth.json
 dockerfiles/ezpublish/install/kickstart_template.ini
-dockerfiles/ezpublish/install/setupwizard_ezstep_welcome.patch
 dockerfiles/ezpublish/varnish_prepare/ezpublish.yml_varnishpurge.diff
