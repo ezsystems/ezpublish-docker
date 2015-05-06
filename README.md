@@ -280,18 +280,18 @@ Once you have the system up, doing a ```docker ps -a``` will reveal that the fol
  - ezpublishdocker_prepare_1
   - This is the container responsible for configuring eZ Publish ( according to EZ_INSTALLTYPE and other settings ). Once eZ Publish is configured, the container will stop 
  - ezpublishdocker_phpcli_1
-  - This container is not used for anything, but fig do not currently support create a image from dockerfiles without also creating a container.
+  - This container is not used for anything, but fig do not currently support create an image from dockerfiles without also creating a container.
  - ezpublishdocker_etcd_1
  - ezpublishdocker_phpclibase_1
-  - This container is not used for anything, but fig do not currently support create a image from dockerfiles without also creating a container.
+  - This container is not used for anything, but fig do not currently support create an image from dockerfiles without also creating a container.
  - ezpublishdocker_composercachevol_1
   - This container is a data volume container for the composer cache
  - ezpublishdocker_ubuntu_1
-  - This container is not used for anything, but fig do not currently support create a image from dockerfiles without also creating a container.
+  - This container is not used for anything, but fig do not currently support create an image from dockerfiles without also creating a container.
 
 ##### Running vagrant from windows
 
-It is possible to run this from Windows. However, it is not possible to use synced_folder with type virtualbox ( seems to be some incompatibility between virtualbox and docker's provision plugin in Vagrant or between CoreOS and Vagrant ? )
+It is possible to run this from Windows. However, it is not possible to use synced_folder with type virtualbox (seems to be some incompatibility between virtualbox and docker's provision plugin in Vagrant or between CoreOS and Vagrant ? )
 So, you need to use rsync on Windows too. In order to do this, you need rsync and ssh.
 Easiest way to accomplish this is to install MinGW ( minimalist GNU for Windows ), http://sourceforge.net/projects/mingw/files/MSYS/Extension/rsync/rsync-3.0.8-1/
 Download wingw-get-setup.exe and install openssh and rsync. You should then add "C:\MinGW\msys\1.0\bin" to your path and you should be all set to run "vagrant up"
