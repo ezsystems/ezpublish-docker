@@ -1,23 +1,15 @@
-FROM debian:jessie
+FROM nginx
 
-ENV DEBIAN_FRONTEND noninteractive
-
-ENV PORT 80
-ENV BASEDIR /var/www
+# Set defaults for variables used by run.sh
 # If you change FASTCGI_READ_TIMEOUT, also change max_execution_time accordingly in php-fpm!
-ENV FASTCGI_READ_TIMEOUT 190
+ENV PORT=80 \
+    BASEDIR=/var/www \
+    FASTCGI_READ_TIMEOUT=190
 
 
-RUN apt-get update && \
-    apt-get install -y \
-    nginx
+# Remove default config and make sure nginx starts as process for docker
+RUN rm /etc/nginx/conf.d/default.conf  && echo "daemon off;" >> /etc/nginx/nginx.conf
 
-RUN rm /etc/nginx/sites-enabled/default
-
-RUN echo "daemon off;" >> /etc/nginx/nginx.conf
-
+# Most config will be done on startup by run.sh when we have access to config
 ADD run.sh /run.sh
-
 CMD ["/run.sh"]
-
-EXPOSE 80

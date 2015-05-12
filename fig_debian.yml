@@ -16,7 +16,7 @@ db1:
    - MYSQL_PASSWORD
    - MYSQL_DATABASE=ezp
 
-phpfpm:
+phpfpm1:
   # docker compose does not allow to specify container name, this is what it generates, might be fixed in 1.3
   image: ezpublishdocker_ezpphp:latest
   links:
@@ -29,10 +29,10 @@ phpfpm:
    - EZ_ENVIRONMENT
    - MYSQL_PASSWORD
 
-nginx:
+web1:
   build: dockerfiles/nginx
   links:
-   - phpfpm:php_fpm
+   - phpfpm1:php_fpm
   volumes_from:
    - ezpublishvol
   ports:
