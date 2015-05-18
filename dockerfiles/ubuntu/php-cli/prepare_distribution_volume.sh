@@ -17,8 +17,13 @@ function set_permissions
     fi
 }
 
+# This function is not needed on amazon ecs as we can there use links instead of updating parameters.yml
 function update_parameters.yml
 {
+    if [ "aa$SKIP_UPDATE_PARAMETERS" == "aayes" ]; then
+        exit
+    fi
+
     if [ "aa${database_host}" != "aa" ]; then
         sed -i "s@database_host:.*@database_host: $database_host@" ezpublish/config/parameters.yml
     fi
