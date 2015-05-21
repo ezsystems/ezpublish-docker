@@ -7,54 +7,22 @@ _Note: The use of Vagrant will probably be faded out in favour of Docker Machine
 
 ## Project goal
 
-To make sure same environment can be used across every all steps from developer, QA, support to production further aims to cover the following internal and later external user stories:
-
-1. Single server for internal Product Development use _(more or less in order)_:
- - As a PM I want a Virtual machine for eZ Platform
- - As a PM I want Sprint demos of latest eZ Platform dev version on AWS
- - As QA Engineer I want to run BDD Acceptance tests on containers, _in future across all supported platforms_
- - As maintainer I want to use stock Docker containers, _& potentially move QA specific containers to separate repo_
- - As PM I want demo system to use Solr/ES which is future recommendation for search over SQL
- - As eZ QA Tester I want a reference certification environment for testing eZ Platform, needs:
-     - Apache
-     - CentOS (Reference platform)
-     - Cluster (see #2 below)
- - As eZ Developer/Support I want containers to be easier to use for debugging eZ Platform
+Two things:
+- Provide an (eventually) official image for use with eZ Platform, able to configure itself on startup. On top of that:
+-- By extended container or otherwise: support for eZ Publish 5.3+ *(patches needed to streamline this will be accepted)*
+-- By extended container or otherwise: support debugging/development mode use cases
+- Provide a wide range of docker-compose setups for the different ways to setup eZ Platform, using thirdparty official latest docker images
 
 
-2. Additional internal user stories that will affect/reuse work done here _(not in order)_:
- - As Sales/Partner I want access to demo setup for eZ Platform releases
- - As PS/Partner I want access to:
-     - Install custom bundles
-     - Switch to dev mode
-     - Create own bundles and code for demo use (src)
-     - Configure eZ Platform
- - As eZ Sysadmin I want a eZ Platform container setup able to scale performance wise .. ("Cluster")
-     - Implies investigation of solutions like Docker Swarm, Apache Mesos, Google Kubernetes, combinations, ..
+The docker-compose setups aims to cover specific setups.
+And the aim is that the yml files can easily be customized to change version to test for QA/Support/Reproduction needs.
+-- (default) Single server using mysql: nginx, mariadb
+-- Cluster using mysql *(sharing volume, so on one machine)*: nginx, mysql, memcached, varnish
+-- Single server postgres: apache (fastcgi), postgres
 
+With this everything should be in place for easily evaluating adding postgres cluster support, adding redis support,
+shared files system for scalability testing, and much more..
 
-3. At some point we will also aim for covering external user story:
- - As a Developer/Sysadmin I want official containers to run eZ Platform on a environment _tailored_ by eZ
-
-
-The end result will most likely be a set of docker setups (fig/composer) using different sets of containers:
- - Official use:
-     - Default: Reference platform (single server preset)
-     - Reference platform (cluster preset)
- - Mainly for automated testing, but can also be used to investigate issues:
-     - Approved platform (single server preset)
-     - Approved platform (cluster preset)
-     - Compatible platforms (single server preset_s_) _using official docker images_
-
-
-### Spec
-
-All Docker service containers, aka micro services, like Nginx, Apache, Mysql, Varnish, Solr and so on should ideally have no direct knowledge of eZ Platform.
-Injection of configuration should be done at startup by either passing env variables and/or mounting generic configuration files.
-The motivation for this is to be able to contribute our generic extensibility needs upstream to official docker containers.
-
-
-However this is currently not the case and we are looking for ways to best accomplish this while still being able to restart host and containers.
 
 ## Installation
 
@@ -64,7 +32,7 @@ The containers can be created and started using either vagrant or fig. Vagrant w
 
 By default, the following system will be installed:
  - Vagrant will create a virtual machine using VirtualBox. This VM will run CoreOS
- - eZ Publish Community version v2014.11.0 will be installed
+ - Latest eZ Platform will be installed (any distribution available over *composer create-project* should work)
  - eZ Publish will be available on port 8080 on the VM
 
 ### Optional installation steps
@@ -226,38 +194,6 @@ Mysql password is defined in files/fig.config
 ( For other environment variables see ```env```, basically these typically comes from parent images and links )
 
 To get out, type ```exit``` two times ;)
-
-
-##### The containers
-
-Once you have the system up, doing a ```docker ps -a``` will reveal that the following containers:
- - ezpublishdocker_nginx_1
-  - This container runs the nginx process
-  - This container will on startup look for nginx configuration files in volumes/ezpublish/doc/nginx/etc/nginx/. If this directory do not exists when the container start, it will fallback to use configuration files stored inside the container.
-  - It is important to understand that the folder volumes/ezpublish/doc/nginx/etc/nginx/ will typically not exists if volumes/ezpublish is empty when you start fig.sh as the nginx container will start before the ezpublishdocker_prepare_1 container is completed.
- - ezpublishdocker_phpfpm_1
-  - This is the container that runs the phpfpm process
- - ezpublishdocker_db1_1
-  - This is the container running the database
- - ezpublishdocker_dbvol_1
-  - This container is stopped ( meaning no processes are running in it). This is correct. The container is only a data volume containers for the mysql raw db files
-  - The content of the data volume container is mapped to /vagrant/volumes/mysql/ on VM ( volumes/mysql/ if running containers on localhost ). 
-  - If you want to reset the mysql databases, you'll need to stop and remove this container, remove all files in volumes/mysql and make sure that is synced to VM ( /vagrant/volumes/mysql ), then recreate ezpublishdocker_dbvol_1 container
- - ezpublishdocker_ezpublishvol_1
-  - This container is stopped ( meaning no processes are running in it ). This is correct. The container is only a data volume containers for the ezpublish files
-  - The content of the data volume container is mapped to /vagrant/volumes/ezpublish/ on VM. 
-  - For replacing the ezpublish files, you simply needs to change the files in volumes/ezpublish and ( if using  vagrant : ) sync this over to the VM 
- - ezpublishdocker_prepare_1
-  - This is the container responsible for configuring eZ Publish ( according to EZ_INSTALLTYPE and other settings ). Once eZ Publish is configured, the container will stop 
- - ezpublishdocker_phpcli_1
-  - This container is not used for anything, but fig do not currently support create an image from dockerfiles without also creating a container.
- - ezpublishdocker_etcd_1
- - ezpublishdocker_phpclibase_1
-  - This container is not used for anything, but fig do not currently support create an image from dockerfiles without also creating a container.
- - ezpublishdocker_composercachevol_1
-  - This container is a data volume container for the composer cache
- - ezpublishdocker_ubuntu_1
-  - This container is not used for anything, but fig do not currently support create an image from dockerfiles without also creating a container.
 
 ##### Running vagrant from windows
 
