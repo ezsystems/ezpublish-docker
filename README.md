@@ -70,7 +70,7 @@ If you want to use an elastic IP you need version 0.5.1 of the vagrant-aws plugi
 You may also use this container if you simply do not want to install vagrant on your system.
 
 In order to create the container image, run :
-```docker build --rm=true --force-rm=true -t ezpublishdocker_vagrantaws:latest dockerfiles/vagrant-aws/```
+```docker build --rm=true --force-rm=true -t ezpublishdocker_vagrantaws:latest dockerfiles/internal/vagrant-aws/```
 
 In order to use this image, use the vagrant wrapper instead of using the vagrant installed directly on your system:
 ./vagrant-aws.sh [vagrant options]

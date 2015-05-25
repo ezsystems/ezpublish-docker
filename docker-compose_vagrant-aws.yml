@@ -2,4 +2,4 @@
 ubuntu:
   build: dockerfiles/ubuntu
 vagrantaws:
-  build: dockerfiles/vagrant-aws
+  build: dockerfiles/internal/vagrant-aws

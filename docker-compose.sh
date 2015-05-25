@@ -47,7 +47,7 @@ if [ aa$COMPOSE_EXECUTION_PATH == "aa" ]; then
     fi
 fi
 
-cp resources/ezpublish.yml_varnishpurge.diff $BASE_DOCKERFILES/ezpublish/varnish_prepare/
+cp resources/ezpublish.yml_varnishpurge.diff $BASE_DOCKERFILES/internal/varnish_prepare/
 
 # Make a argumentlist where any "-d" is removed
 for i in $CMDPARAMETERS; do

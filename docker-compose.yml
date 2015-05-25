@@ -37,7 +37,7 @@ phpfpm1:
    - MYSQL_PASSWORD
 
 web1:
-  build: dockerfiles/nginx
+  build: dockerfiles/internal/nginx
   links:
    - phpfpm1:php_fpm
   volumes_from:
@@ -50,7 +50,7 @@ web1:
    - DOCKER0NET
 
 #sahi:
-#  build: dockerfiles/debian/sahi
+#  build: dockerfiles/internal/sahi
 #  links:
 #   - nginx:web
 #  ports:
@@ -58,16 +58,16 @@ web1:
 #   - "5900:5900"
 
 #behatphpcli:
-#  build: dockerfiles/debian/php-cli
+#  image: ezpublishdocker_ezpphp:latest
 #  links:
 #   - db1:db
-#   - nginx:web
+#   - web1:web
 #   - sahi:sahi
 #  volumes_from:
 #   - ezpublishvol
 
 #varnish:
-#  build: dockerfiles/debian/varnish
+#  build: dockerfiles/internal/varnish
 #  links:
 #   - phpfpm:php_fpm
 #   - nginx:nginx
