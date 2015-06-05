@@ -109,6 +109,12 @@ Vagrant.configure("2") do |config|
       cd /vagrant; \
       ./fig_ezpinstall.sh; \
       ./fig.sh up -d --no-recreate
+      if [[ ( -d volumes/ezpublish/ezpublish ) && ( ! -d volumes/ezpublish/ezpublish_legacy ) ]];  then \
+          echo 'Install eZ Platform demo data'
+          docker exec -i ezpublishdocker_phpfpm1_1 php ezpublish/console ezplatform:install --env prod demo
+          echo 'Warm up cache using curl'
+          curl --progress-bar --head localhost:8080
+      fi
     "
   end
 
