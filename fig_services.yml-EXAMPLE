@@ -6,11 +6,11 @@ dbvol:
   volumes:
    - /var/lib/mysql
 mysiteezpublishvol:
-  image: mydockerrepo.ez.local:5000/myuser/ezpublish_distribution
+  image: mydockerrepo.ez.local:5000/myuser/ezpublish_distribution:latest
 mysitemysqldata:
-  image: mydockerrepo.ez.local:5000/myuser/ezpublish_mysqldata
+  image: mydockerrepo.ez.local:5000/myuser/ezpublish_mysqldata:latest
 db1:
-  image: mydockerrepo.ez.local:5000/myuser/db1
+  image: mydockerrepo.ez.local:5000/myuser/db1:latest
   volumes_from:
    - dbvol
    - mysitemysqldata
@@ -19,14 +19,14 @@ db1:
    - ETCD_ENABLED=no
    - STARTUP_SQL=/dbdump/ezp.sql
 phpcli:
-  image: mydockerrepo.ez.local:5000/myuser/phpcli
+  image: mydockerrepo.ez.local:5000/myuser/phpcli:latest
   links:
    - db1:db
   volumes_from:
    - mysiteezpublishvol
   command: /prepare_distribution_volume.sh
 phpfpm:
-  image: mydockerrepo.ez.local:5000/myuser/phpfpm
+  image: mydockerrepo.ez.local:5000/myuser/phpfpm:latest
   links:
    - db1:db
   volumes_from:
@@ -34,7 +34,7 @@ phpfpm:
   environment:
    - ETCD_ENABLED=no
 nginx:
-  image: mydockerrepo.ez.local:5000/myuser/nginx
+  image: mydockerrepo.ez.local:5000/myuser/nginx:latest
   links:
    - phpfpm:php_fpm
   volumes_from:
