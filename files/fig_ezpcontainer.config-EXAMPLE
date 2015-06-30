@@ -5,10 +5,13 @@ source files/fig.config
 
 DOCKER_REPOSITORY=myrepository.local:5000
 DOCKER_USER=myuser
+DOCKER_BUILDVER=0.1
 
 EZ_INSTALLTYPE=composer
 
 
 
 export DOCKER_REPOSITORY
+export DOCKER_BUILDVER
+export DOCKER_USER
 export EZ_INSTALLTYPE

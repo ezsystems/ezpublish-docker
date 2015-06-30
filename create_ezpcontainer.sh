@@ -31,16 +31,16 @@ function prepare
     ${FIG_EXECUTION_PATH}fig -f fig_ezpmysqldata.yml rm --force -v
 
     docker rmi ${FIG_PROJECT_NAME}_ezpdistribution:latest || /bin/true
-    docker rmi ${DOCKER_REPOSITORY}/vidarl/ezpublish_distribution:latest || /bin/true
+    docker rmi ${DOCKER_REPOSITORY}/${DOCKER_USER}/ezpublish_distribution:${DOCKER_BUILDVER} || /bin/true
     docker rmi ${FIG_PROJECT_NAME}_ezpmysqldata:latest || /bin/true
-    docker rmi ${DOCKER_REPOSITORY}/vidarl/ezpublish_mysqldata:latest || /bin/true
+    docker rmi ${DOCKER_REPOSITORY}/${DOCKER_USER}/ezpublish_mysqldata:${DOCKER_BUILDVER} || /bin/true
 
 
     if [ $REBUILD_EZP == "true" ]; then
         sudo rm -Rf volumes/mysql/*
         sudo rm -Rf volumes/ezpublish/*
-        rm dockerfiles/ezpublish/distribution/ezpublish.tar.gz || /bin/true
     fi
+    rm dockerfiles/ezpublish/distribution/ezpublish.tar.gz || /bin/true
 }
 
 function install_ezpublish
@@ -81,9 +81,9 @@ function create_distribution_container
 function push_distribution_container
 {
     #docker tag -f ezpublishdocker_ezpdistribution:latest ${DOCKER_REPOSITORY}/vidarl/ezpublish_distribution:master$DATE
-    docker tag -f ezpublishdocker_ezpdistribution:latest ${DOCKER_REPOSITORY}/vidarl/ezpublish_distribution:latest
+    docker tag -f ezpublishdocker_ezpdistribution:latest ${DOCKER_REPOSITORY}/${DOCKER_USER}/ezpublish_distribution:${DOCKER_BUILDVER}
     #docker push ${DOCKER_REPOSITORY}/vidarl/ezpublish_distribution:master$DATE
-    docker push ${DOCKER_REPOSITORY}/vidarl/ezpublish_distribution:latest
+    docker push ${DOCKER_REPOSITORY}/${DOCKER_USER}/ezpublish_distribution:${DOCKER_BUILDVER}
 }
 
 function create_mysql_tarball
@@ -101,9 +101,9 @@ function create_mysql_container
 function push_mysql_container
 {
     #docker tag -f ezpublishdocker_ezpmysqldata:latest ${DOCKER_REPOSITORY}/vidarl/ezpublish_mysqldata:master$DATE
-    docker tag -f ezpublishdocker_ezpmysqldata:latest ${DOCKER_REPOSITORY}/vidarl/ezpublish_mysqldata:latest
+    docker tag -f ezpublishdocker_ezpmysqldata:latest ${DOCKER_REPOSITORY}/${DOCKER_USER}/ezpublish_mysqldata:${DOCKER_BUILDVER}
     #docker push ${DOCKER_REPOSITORY}/vidarl/ezpublish_mysqldata:master$DATE
-    docker push ${DOCKER_REPOSITORY}/vidarl/ezpublish_mysqldata:latest
+    docker push ${DOCKER_REPOSITORY}/${DOCKER_USER}/ezpublish_mysqldata:${DOCKER_BUILDVER}
 }
 
 
