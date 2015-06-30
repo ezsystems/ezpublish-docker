@@ -2,14 +2,13 @@ FROM debian:wheezy
 
 RUN apt-get update -y && apt-get install -y --force-yes \
     php5-cli \
-    php5-mysql \
+    php5-mysqlnd \
     php5-json \
     php5-xsl \
     php5-intl \
     php5-mcrypt \
     php5-gd \
     php5-curl \
-    mysql-client \
     curl \
     wget \
     vim \

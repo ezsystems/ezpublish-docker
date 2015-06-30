@@ -9,15 +9,14 @@ ENV PORT 9000
 
 RUN apt-get update -y && apt-get install -y --force-yes \
     php5-fpm \
-    php5-mysql \
+    php5-mysqlnd \
     php5-json \
     php5-xsl \
     php5-intl \
     php5-mcrypt \
     php5-gd \
     php5-curl \
-    curl \
-    mysql-client
+    curl
 
 # Set timezone
 RUN echo $TIMEZONE > /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata
