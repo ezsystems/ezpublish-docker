@@ -12,7 +12,7 @@ ENV LANG en_US.UTF-8
 
 RUN apt-get update -y && apt-get install -y \
     php5-fpm \
-    php5-mysql \
+    php5-mysqlnd \
     php5-json \
     php5-xsl \
     php5-intl \
@@ -20,8 +20,7 @@ RUN apt-get update -y && apt-get install -y \
     php5-gd \
     php5-curl \
     curl \
-    supervisor \
-    mysql-client
+    supervisor
 
 ADD etcd_0.4.6_amd64.deb /etcd_0.4.6_amd64.deb
 RUN dpkg -i /etcd_0.4.6_amd64.deb
