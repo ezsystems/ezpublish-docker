@@ -19,6 +19,7 @@ RUN apt-get update -y && apt-get install -y \
     php5-mcrypt \
     php5-gd \
     php5-curl \
+    imagemagick \
     curl \
     supervisor \
     mysql-client

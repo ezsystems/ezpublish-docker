@@ -9,6 +9,7 @@ RUN apt-get update -y && apt-get install -y --force-yes \
     php5-mcrypt \
     php5-gd \
     php5-curl \
+    imagemagick \
     mysql-client \
     curl \
     wget \
