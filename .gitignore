@@ -7,5 +7,5 @@ files/docker-compose.config
 volumes/mysql
 volumes/ezpublish
 volumes/composercache
-dockerfiles/ezpublish/install/kickstart_template.ini
+dockerfiles/ezpublish/kickstart_template.ini
 dockerfiles/internal/varnish_prepare/ezpublish.yml_varnishpurge.diff

@@ -35,8 +35,6 @@ source files/docker-compose.config-EXAMPLE
 # Load custom settings
 source $CONFIGFILE
 
-BASE_DOCKERFILES="dockerfiles"
-
 
 # If {COMPOSE_EXECUTION_PATH} is not set and docker-compose is not in path, we'll test if it is located in /opt/bin. Needed for systemd service
 if [ aa$COMPOSE_EXECUTION_PATH == "aa" ]; then
@@ -47,7 +45,7 @@ if [ aa$COMPOSE_EXECUTION_PATH == "aa" ]; then
     fi
 fi
 
-cp resources/ezpublish.yml_varnishpurge.diff $BASE_DOCKERFILES/internal/varnish_prepare/
+cp -f resources/ezpublish.yml_varnishpurge.diff dockerfiles/internal/varnish_prepare/
 
 # Make a argumentlist where any "-d" is removed
 for i in $CMDPARAMETERS; do
