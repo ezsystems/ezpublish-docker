@@ -66,6 +66,7 @@ ADD run.sh /run.sh
 ADD generate_kickstart_file.sh /generate_kickstart_file.sh
 ADD kickstart_template.ini /kickstart_template.ini
 ADD generate_parameters_file.sh /generate_parameters_file.sh
+ADD config/opcache.ini /etc/php5/mods-available/opcache.ini
 
 RUN chmod 755 /*.sh
 
