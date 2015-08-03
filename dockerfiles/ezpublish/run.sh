@@ -9,18 +9,16 @@
 # Parameters can also be given as options, in the same order:
 # ./run.sh [ EZ_KICKSTART ] [ EZ_KICKSTART_FROM_TEMPLATE ]
 
-MAXTRY=10
-
 function parseCommandlineOptions
 {
-    if [ "aa$1" != "aa" ]; then
+    if [ "$1" != "" ]; then
         EZ_KICKSTART=$1
     fi
-    if [ "aa$2" != "aa" ]; then
+    if [ "$2" != "" ]; then
         EZ_KICKSTART_FROM_TEMPLATE="/kickstart_template.ini"
     fi
 
-    if [ "aa$APACHE_RUN_USER" == "aa" ]; then
+    if [ "$APACHE_RUN_USER" == "" ]; then
         APACHE_RUN_USER=www-data
     fi
 }
@@ -45,10 +43,10 @@ if [ -d ezpublish_legacy ]; then
 fi
 
 echo "Clear cache after parameters where updated"
-php ezpublish/console cache:clear --env prod
+php ezpublish/console cache:clear --env $EZ_ENVIRONMENT
 
-echo "Re-generate symlink assets in case rsync was used so asstets added during setup wizards are reachable"
-if [ aa$EZ_ENVIRONMENT != "prod" ]; then
+if [ "$EZ_ENVIRONMENT" != "dev" ]; then
+    echo "Re-generate symlink assets in case rsync was used so asstets added during setup wizards are reachable"
     php ezpublish/console assetic:dump --env $EZ_ENVIRONMENT
 fi
 

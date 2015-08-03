@@ -14,13 +14,18 @@ sed -i "s@  #fastcgi_pass 127.0.0.1:9000;@  fastcgi_pass php_fpm:${PHP_FPM_PORT_
 # Setting environment for ezpublish ( dev/prod/behat etc )
 sed -i "s@  #fastcgi_param ENVIRONMENT dev;@  fastcgi_param ENVIRONMENT ${EZ_ENVIRONMENT};@" /etc/nginx/conf.d/ez.conf
 
+# Disable asset rewrite rules if dev env
+if [ "$EZ_ENVIRONMENT" == "dev" ]; then
+    sed -i "s@  include ez_params.d/ez_prod_rewrite_params;@  # include ez_params.d/ez_prod_rewrite_params;@" /etc/nginx/conf.d/ez.conf
+fi
+
 # Update port number and basedir in /etc/nginx/conf.d/ez.conf
 sed -i "s@%PORT%@${PORT}@" /etc/nginx/conf.d/ez.conf
 sed -i "s@%BASEDIR%@${BASEDIR}@" /etc/nginx/conf.d/ez.conf
 
 echo "fastcgi_read_timeout $FASTCGI_READ_TIMEOUT;" > /etc/nginx/conf.d/fastcgi_read_timeout.conf
 
-if [ aa$VARNISH_ENABLED == "aayes" ]; then
+if [ "$VARNISH_ENABLED" == "yes" ]; then
     sed -i "s@  #fastcgi_param USE_HTTP_CACHE 1;@  fastcgi_param USE_HTTP_CACHE 0;@" /etc/nginx/conf.d/ez.conf
     sed -i "s@  #fastcgi_param TRUSTED_PROXIES \"%PROXY%\";@  fastcgi_param TRUSTED_PROXIES \"${DOCKER0NET}\";@" /etc/nginx/conf.d/ez.conf
 fi

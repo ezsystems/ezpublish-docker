@@ -10,8 +10,8 @@ FROM debian:jessie
 # If you change MAX_EXECUTION TIME, also change fastcgi_read_timeout accordingly in nginx!
 ENV DEBIAN_FRONTEND=noninteractive \
     TIMEZONE=Europe/Warsaw \
-    MEMORY_LIMIT=256M \
-    MAX_EXECUTION_TIME=90 \
+    MEMORY_LIMIT=512M \
+    MAX_EXECUTION_TIME=180 \
     PORT=9000 \
     COMPOSER_HOME=/var/.composer
 
@@ -27,6 +27,7 @@ RUN apt-get update -q -y && apt-get install -q -y --force-yes --no-install-recom
     php5-gd \
     php5-curl \
     php5-twig \
+    php5-xdebug \
     imagemagick \
     curl \
     wget \
@@ -53,6 +54,12 @@ RUN sed -i "s@^;realpath_cache_size =.*@realpath_cache_size = 128k@" /etc/php5/f
 # Set Max execution time
 RUN sed -i "s@^max_execution_time = .*@max_execution_time = $MAX_EXECUTION_TIME@" /etc/php5/fpm/php.ini
 
+# Enable all error reporting
+RUN sed -i "s@^error_reporting = .*@error_reporting = E_ALL@" /etc/php5/*/php.ini
+
+# Set FPM Debug level
+RUN sed -i "s@^;log_level = notice@log_level = debug@" /etc/php5/fpm/php-fpm.conf
+
 # Disable daemonizeing php-fpm
 RUN sed -i "s@^;daemonize = yes*@daemonize = no@" /etc/php5/fpm/php-fpm.conf
 
@@ -67,6 +74,7 @@ ADD generate_kickstart_file.sh /generate_kickstart_file.sh
 ADD kickstart_template.ini /kickstart_template.ini
 ADD generate_parameters_file.sh /generate_parameters_file.sh
 ADD config/opcache.ini /etc/php5/mods-available/opcache.ini
+ADD config/xdebug.ini /etc/php5/mods-available/xdebug.ini
 
 RUN chmod 755 /*.sh
 
@@ -74,4 +82,4 @@ WORKDIR /var/www
 
 CMD /run.sh
 
-EXPOSE 9000
+EXPOSE 9000 9001

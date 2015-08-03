@@ -45,7 +45,7 @@ else
 fi
 
 # If {COMPOSE_EXECUTION_PATH} is not set and docker-compose is not in path, we'll test if it is located in /opt/bin. Needed for systemd service
-if [ aa$COMPOSE_EXECUTION_PATH == "aa" ]; then
+if [ "$COMPOSE_EXECUTION_PATH" == "" ]; then
     if [ ! `which ${COMPOSE_EXECUTION_PATH}docker-compose > /dev/null` ]; then
         if [ -x "/opt/bin/docker-compose" ]; then
             COMPOSE_EXECUTION_PATH="/opt/bin/"
@@ -53,7 +53,11 @@ if [ aa$COMPOSE_EXECUTION_PATH == "aa" ]; then
     fi
 fi
 
-${COMPOSE_EXECUTION_PATH}docker-compose -f docker-compose_ezpinstall.yml up --no-recreate
+if [ "$EZ_ENVIRONMENT" != "dev" ]; then
+    ${COMPOSE_EXECUTION_PATH}docker-compose -f docker-compose_ezpinstall.yml up --no-recreate
+else
+    ${COMPOSE_EXECUTION_PATH}docker-compose -f docker-compose_ezpinstall_dev.yml up --no-recreate
+fi
 
 echo "Running Composer : composer --no-interaction create-project ${EZ_COMPOSERPARAM?}"
 docker run -i --volumes-from=ezpublishdocker_composercachevol_1 \
