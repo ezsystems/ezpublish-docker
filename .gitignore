@@ -6,6 +6,8 @@ files/auth.json
 files/user-data
 files/fig.config
 files/fig_ezpcontainer.config
+files/fig-ezplatform.config
+files/fig-ezstudio.config
 volumes/mysql
 volumes/ezpublish
 volumes/composercache
