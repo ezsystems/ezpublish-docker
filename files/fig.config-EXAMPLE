@@ -109,9 +109,12 @@ export FIG_EXECUTION_PATH=""
 # Docker defaults to the network address given here, so you should normally not need to change it
 DOCKER0NET="172.17.0.0/16"
 
+# Needed for debian container that uses official image
+MYSQL_PASSWORD=$MYSQL_PASS
+
 
 export ETCD_ENABLED START_ETCD ETCD_DISCOVERY ETCD_NAME
-export MYSQL_PASS
+export MYSQL_PASS MYSQL_PASSWORD
 export VARNISH_ENABLED
 export EZ_KICKSTART EZ_KICKSTART_FROM_TEMPLATE EZ_PACKAGEURL EZ_INSTALLTYPE EZ_COMPOSERPARAM EZ_TARBALL_FILENAME EZ_ENVIRONMENT EZ_PATCH_SW
 export FIG_EXECUTION_PATH
