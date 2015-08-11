@@ -28,19 +28,19 @@ EZ_KICKSTART_FROM_TEMPLATE=
 # Examples:
 #
 ## Latest eZ Publish Platform 5.4 Trial (requires valid authentication token: https://doc.ez.no/display/EZP/Using+Composer)
-## EZ_COMPOSERPARAM="--prefer-dist --no-progress --no-interaction --no-dev --repository-url=https://updates.ez.no/ttl ezsystems/ezpublish-community /var/www ~5.4.0"
+## EZ_COMPOSERPARAM="--prefer-dist --no-dev --repository-url=https://updates.ez.no/ttl ezsystems/ezpublish-community /var/www ~5.4.0"
 #
 ## Latest eZ Platform unstable release:
-## EZ_COMPOSERPARAM="--prefer-dist --no-progress --no-interaction --no-dev ezsystems/ezplatform /var/www ~0.5"
+## EZ_COMPOSERPARAM="--prefer-dist --no-dev ezsystems/ezplatform /var/www ~0.9"
 #
 ## eZ Platform current development version:
-## EZ_COMPOSERPARAM="--prefer-source --no-progress --no-interaction ezsystems/ezplatform /var/www dev-master"
+## EZ_COMPOSERPARAM="--prefer-source ezsystems/ezplatform /var/www dev-master"
 #
 ## eZ Publish Community of a specific tag:
-## EZ_COMPOSERPARAM="--prefer-dist --no-progress --no-interaction --no-dev ezsystems/ezpublish-community /var/www v2014.11"
+## EZ_COMPOSERPARAM="--prefer-dist --no-dev ezsystems/ezpublish-community /var/www v2014.11"
 #
 # By default pick latest release of eZ Platform:
-EZ_COMPOSERPARAM="--no-progress --no-interaction --no-dev ezsystems/ezplatform /var/www"
+EZ_COMPOSERPARAM="--prefer-dist --no-dev ezsystems/ezplatform /var/www"
 
 # Set the environment for ezpublish. Valid options are "prod", "dev", "behat"
 # WARNING: Only non dev env works (assets) atm as the standard Nginx rewrite rules does not take care to addapt for env!

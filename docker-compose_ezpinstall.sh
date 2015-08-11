@@ -2,6 +2,7 @@
 
 export COMPOSE_PROJECT_NAME=ezpublishdocker
 CONFIGFILE=files/docker-compose.config
+YMLFILE="docker-compose_ezpinstall.yml"
 CMDPARAMETERS="$@"
 
 # Check for parameter "-c alternative-config.file.config"
@@ -53,13 +54,11 @@ if [ "$COMPOSE_EXECUTION_PATH" == "" ]; then
     fi
 fi
 
-if [ "$EZ_ENVIRONMENT" != "dev" ]; then
-    ${COMPOSE_EXECUTION_PATH}docker-compose -f docker-compose_ezpinstall.yml up --no-recreate
-else
-    ${COMPOSE_EXECUTION_PATH}docker-compose -f docker-compose_ezpinstall_dev.yml up --no-recreate
+if [ "$EZ_ENVIRONMENT" = "dev" ]; then
+    YMLFILE="docker-compose_ezpinstall_dev.yml"
 fi
 
+${COMPOSE_EXECUTION_PATH}docker-compose -f $YMLFILE up --no-recreate
+
 echo "Running Composer : composer --no-interaction create-project ${EZ_COMPOSERPARAM?}"
-docker run -i --volumes-from=ezpublishdocker_composercachevol_1 \
-               --volumes-from=ezpublishdocker_ezpublishvol_1 \
-               ezpublishdocker_ezpphp:latest composer --no-interaction create-project ${EZ_COMPOSERPARAM?};
+${COMPOSE_EXECUTION_PATH}docker-compose -f $YMLFILE run ezpphp composer --no-interaction create-project --no-progress ${EZ_COMPOSERPARAM?};
