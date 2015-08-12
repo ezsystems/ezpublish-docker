@@ -61,4 +61,4 @@ fi
 ${COMPOSE_EXECUTION_PATH}docker-compose -f $YMLFILE up --no-recreate
 
 echo "Running Composer : composer --no-interaction create-project ${EZ_COMPOSERPARAM?}"
-${COMPOSE_EXECUTION_PATH}docker-compose -f $YMLFILE run ezpphp composer --no-interaction create-project --no-progress ${EZ_COMPOSERPARAM?};
+${COMPOSE_EXECUTION_PATH}docker-compose -f $YMLFILE run --rm ezpphp composer --no-interaction create-project --no-progress ${EZ_COMPOSERPARAM?};
