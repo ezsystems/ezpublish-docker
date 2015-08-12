@@ -226,7 +226,7 @@ Remove the containers:
     ```docker-compose -f docker-compose.yml rm -v; docker-compose -f docker-compose_ezpinstall.yml rm -v```
 
 Remove the images:
-    ```docker rmi ezpublishdocker_web1 ezpublishdocker_ezpphp```
+    ```docker rmi ezpublishdocker_web1 ezpublishdocker_ezphp```
 
 Remove the eZ Platform files:
     ```sudo rm -rf volumes/ezpublish/* volumes/mysql/*; sudo rm volumes/ezpublish/.travis.yml volumes/ezpublish/.gitignore```
