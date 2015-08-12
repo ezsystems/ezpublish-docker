@@ -201,3 +201,32 @@ It is possible to run this from Windows. However, it is not possible to use sync
 So, you need to use rsync on Windows too. In order to do this, you need rsync and ssh.
 Easiest way to accomplish this is to install MinGW ( minimalist GNU for Windows ), http://sourceforge.net/projects/mingw/files/MSYS/Extension/rsync/rsync-3.0.8-1/
 Download wingw-get-setup.exe and install openssh and rsync. You should then add "C:\MinGW\msys\1.0\bin" to your path and you should be all set to run "vagrant up"
+
+
+### Tutorials
+
+#### Installing on local host without vagrant ( requires docker and docker-compose installed locally )
+
+Make a config file ( recommended, but not strictly speaking )
+    ```cp files/docker-compose.config-EXAMPLE files/docker-compose.config```
+
+Setup eZ Publish:
+    ```./docker-compose_ezpinstall.sh```
+
+Create the containers needed for running eZ Publish
+    ```./docker-compose.sh up -d --no-recreate```
+
+Run the install script
+    ```docker-compose -f docker-compose.yml run --rm phpfpm1 /bin/bash -c "php ezpublish/console ezplatform:install demo; php ezpublish/console cache:clear --env=prod"```
+
+Stop the containers:
+    ```docker-compose -f docker-compose.yml stop```
+
+Remove the containers:
+    ```docker-compose -f docker-compose.yml rm -v; docker-compose -f docker-compose_ezpinstall.yml rm -v```
+
+Remove the images:
+    ```docker rmi ezpublishdocker_web1 ezpublishdocker_ezpphp```
+
+Remove the eZ Platform files:
+    ```sudo rm -rf volumes/ezpublish/* volumes/mysql/*; sudo rm volumes/ezpublish/.travis.yml volumes/ezpublish/.gitignore```
