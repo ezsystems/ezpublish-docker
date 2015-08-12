@@ -60,7 +60,7 @@ If you do not already have a eZ Publish installation, the ezpinstall container p
 If you copy a existing installation to volumes/ezpublish, the ezpinstall will only set file permissions correctly, so that they are writable for the webserver
 
  - In files/docker-compose.config set the EZ_* settings according to your needs
- - Run ```docker-compose_ezpinstall.sh```
+ - Run ```./docker-compose_ezpinstall.sh```
  
 
 
@@ -119,7 +119,7 @@ Please note that running ```vagrant rsync```will also delete any volumes in VM a
 - Run `./docker-compose.sh up -d`
 
 If you later just want to recreate specific images or containers, you then first remove those using `docker rm [container]` and `docker rmi [image]`, and then run
-`docker-compose.sh up -d --no-recreate`
+`./docker-compose.sh up -d --no-recreate`
 
 
 ### docker-compose.sh
@@ -138,9 +138,9 @@ When the containers are created, you should be able to browse to eZ Publish setu
 It is possible to setup a fresh installation using the install script instead of using the setup wizard.
  - Run ```vagrant up``` ( or ```./docker-compose.sh``` and ```docker-compose.sh up -d --no-recreate``` ) as usual.
  - If using Vagrant, run : ```vagrant ssh```
- - Run command : ```docker run --rm --link ezpublishdocker_db1_1:db --volumes-from ezpublishdocker_ezpublishvol_1 --volumes-from ezpublishdocker_composercachevol_1 ezpublishdocker_phpcli /bin/bash -c "php ezpublish/console ezplatform:install demo; php ezpublish/console cache:clear --env=prod"```
- 
-FYI : ```docker run``` commands above assumes you have ```EZ_ENVIRONMENT=prod``` in files/docker-compose.config. If you use a different setting, adjust the ```--env=....``` parameter accordingly.
+ - Run command : ```docker-compose -f docker-compose.yml run --rm phpfpm1 /bin/bash -c "php ezpublish/console ezplatform:install demo; php ezpublish/console cache:clear --env=prod"```
+
+FYI : The command above assumes you have ```EZ_ENVIRONMENT=prod``` in files/docker-compose.config. If you use a different setting, adjust the ```--env=....``` parameter accordingly.
 You may also substitute "demo" with "demo_clean" if you want to install ezdemo without demo data, or "clean" if only want the very basics.
  
 
