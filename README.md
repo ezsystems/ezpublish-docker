@@ -172,7 +172,7 @@ From there you can check running containers:
 - ```docker ps```
 
 And inspect the eZ Publish folder which was rsynced into the vm and is used as volume for eZ Publish container:
-- ```ls -al /vagrant/ezpublish/```
+- ```ls -al /vagrant/volumes/ezpublish/```
 
 
 ##### Running php-cli and mysql commands

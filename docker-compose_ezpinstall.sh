@@ -60,5 +60,10 @@ fi
 
 ${COMPOSE_EXECUTION_PATH}docker-compose -f $YMLFILE up --no-recreate
 
-echo "Running Composer : composer --no-interaction create-project ${EZ_COMPOSERPARAM?}"
-${COMPOSE_EXECUTION_PATH}docker-compose -f $YMLFILE run --rm ezphp composer --no-interaction create-project --no-progress ${EZ_COMPOSERPARAM?};
+# Unless user has provided install to use in volume folder, install from composer
+if [ ! -f volumes/ezpublish/composer.json ]; then
+    echo "No prior install detected in ezpublish folder, so running Composer with: composer --no-interaction create-project ${EZ_COMPOSERPARAM?}"
+    ${COMPOSE_EXECUTION_PATH}docker-compose -f $YMLFILE run --rm ezphp composer --no-interaction create-project --no-progress ${EZ_COMPOSERPARAM?};
+else
+    echo "Prior install detected in ezpublish folder, skipp running Composer"
+fi
