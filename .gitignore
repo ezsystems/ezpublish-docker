@@ -9,3 +9,5 @@ volumes/ezpublish
 volumes/composercache
 dockerfiles/ezphp/kickstart_template.ini
 dockerfiles/internal/varnish_prepare/ezpublish.yml_varnishpurge.diff
+dockerfiles/distribution/ezpublish.tar.gz
+dockerfiles/databasedump/ezp.sql
