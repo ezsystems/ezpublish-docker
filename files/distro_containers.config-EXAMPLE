@@ -1,0 +1,13 @@
+
+
+source files/docker-compose.config
+
+
+DOCKER_REPOSITORY=myrepository.local:5000
+DOCKER_USER=ezsystems
+DOCKER_BUILDVER=0.1
+
+export DOCKER_REPOSITORY
+export DOCKER_BUILDVER
+export DOCKER_USER
+#export EZ_INSTALLTYPE

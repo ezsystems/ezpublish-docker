@@ -1,0 +1,67 @@
+# Example of using the distribution containers
+
+
+site1dbvol:
+  image: debian:jessie
+#  volumes:
+#   - volumes/mysql:/var/lib/mysql
+
+site1databasedump:
+  image: ezpublishdocker_databasedump
+
+site1ezpublishvol:
+  image: ezpublishdocker_distribution
+
+site1db1:
+  image: mariadb:latest
+  volumes_from:
+   - site1dbvol
+  environment:
+   - MYSQL_ROOT_PASSWORD=mysecretrootpassword
+   - MYSQL_USER=ezp
+   - MYSQL_PASSWORD
+   - MYSQL_DATABASE=ezp
+
+site1phpfpm1:
+  # docker compose does not allow to specify container name, this is what it generates, might be fixed in 1.3
+  image: ezpublishdocker_ezphp
+  links:
+   - site1db1:db
+  volumes_from:
+   - site1ezpublishvol
+  environment:
+   - EZ_KICKSTART
+   - EZ_KICKSTART_FROM_TEMPLATE
+   - EZ_ENVIRONMENT
+   - MYSQL_PASSWORD
+
+site1web1:
+  image: ezpublishdocker_web1
+  links:
+   - site1phpfpm1:php_fpm
+  volumes_from:
+   - site1ezpublishvol
+  ports:
+   - "8081:80"
+  environment:
+   - EZ_ENVIRONMENT
+   - VARNISH_ENABLED
+   - DOCKER0NET
+#  command: /bin/bash -c "while [ 1 ]; do echo -n .; sleep 10; done"
+
+site1initialize:
+  image: ezpublishdocker_ezphp
+  links:
+   - site1db1:db
+  volumes_from:
+   - site1ezpublishvol
+   - site1databasedump
+  environment:
+   - EZ_KICKSTART
+   - EZ_KICKSTART_FROM_TEMPLATE
+   - EZ_ENVIRONMENT
+   - MYSQL_USER=ezp
+   - MYSQL_PASSWORD
+   - MYSQL_DATABASE=ezp
+  command: /prepare_distribution_volume.sh
+

@@ -4,6 +4,7 @@ files/authorized_keys2
 files/auth.json
 files/user-data
 files/docker-compose.config
+files/distro_containers.config
 volumes/mysql
 volumes/ezpublish
 volumes/composercache

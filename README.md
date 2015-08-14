@@ -230,3 +230,18 @@ Remove the images:
 
 Remove the eZ Platform files:
     ```sudo rm -rf volumes/ezpublish/* volumes/mysql/*; sudo rm volumes/ezpublish/.travis.yml volumes/ezpublish/.gitignore```
+
+
+#### Building the distro container
+
+Make a config file
+    ```cp files/distro_containers.config-EXAMPLE files/distro_containers.config```
+    
+Create the containers
+    ```./create_distro_containers.sh```
+
+Start the containers
+    ```source files/docker-compose.config; docker-compose -f docker-compose_services.yml up -d --no-recreate```
+
+Remove all the containers
+    ```docker-compose -f docker-compose_services.yml stop; docker-compose -f docker-compose_services.yml rm -v```
