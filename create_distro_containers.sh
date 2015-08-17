@@ -96,8 +96,8 @@ function prepare
     ${COMPOSE_EXECUTION_PATH}docker-compose -f docker-compose_distribution.yml kill
     ${COMPOSE_EXECUTION_PATH}docker-compose -f docker-compose_distribution.yml rm --force -v
 
-##    ${COMPOSE_EXECUTION_PATH}docker-compose -f docker-compose_ezpmysqldata.yml kill
-##    ${COMPOSE_EXECUTION_PATH}docker-compose -f docker-compose_ezpmysqldata.yml rm --force -v
+    ${COMPOSE_EXECUTION_PATH}docker-compose -f docker-compose_databasedump.yml kill
+    ${COMPOSE_EXECUTION_PATH}docker-compose -f docker-compose_databasedump.yml rm --force -v
 
     ${COMPOSE_EXECUTION_PATH}docker-compose -f docker-compose_ezpinstall.yml kill
     ${COMPOSE_EXECUTION_PATH}docker-compose -f docker-compose_ezpinstall.yml rm --force -v
@@ -105,13 +105,13 @@ function prepare
 
     docker rmi ${COMPOSE_PROJECT_NAME}_distribution:latest || /bin/true
     docker rmi ${DOCKER_REPOSITORY}/${DOCKER_USER}/${BUILD_TARGET}_distribution:${DOCKER_BUILDVER} || /bin/true
+    docker rmi ${COMPOSE_PROJECT_NAME}_databasedump:latest || /bin/true
+    docker rmi ${DOCKER_REPOSITORY}/${DOCKER_USER}/${BUILD_TARGET}_databasedump:${DOCKER_BUILDVER} || /bin/true
 
-    docker rmi ${COMPOSE_PROJECT_NAME}_databasedump || /bin/true
     docker rmi ${COMPOSE_PROJECT_NAME}_ezphp || /bin/true
     docker rmi ${COMPOSE_PROJECT_NAME}_web1 || /bin/true
-
-##    docker rmi ${COMPOSE_PROJECT_NAME}_ezpmysqldata:latest || /bin/true
-##    docker rmi ${DOCKER_REPOSITORY}/${DOCKER_USER}/${BUILD_TARGET}_mysqldata:${DOCKER_BUILDVER} || /bin/true
+    docker rmi ${COMPOSE_PROJECT_NAME}_db1 || /bin/true
+    docker rmi ${COMPOSE_PROJECT_NAME}_phpfpm1 || /bin/true
 
 
     if [ $REBUILD_EZP == "true" ]; then
