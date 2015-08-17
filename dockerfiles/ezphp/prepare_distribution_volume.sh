@@ -2,6 +2,16 @@
 
 cd /var/www
 
+
+function prevent_multiple_execuition
+{
+    if [ -f /already_run.txt ]; then
+        echo "Script has already been executed. Bailling out"
+        exit
+    fi
+    touch /already_run.txt
+}
+
 function set_splash_screen
 {
     mv /var/www/web/index.php /var/www/web/index.php.org
@@ -40,6 +50,7 @@ function remove_splash_screen
     mv /var/www/web/index.php.org /var/www/web/index.php
 }
 
+prevent_multiple_execuition
 set_splash_screen
 set_permissions
 import_database
