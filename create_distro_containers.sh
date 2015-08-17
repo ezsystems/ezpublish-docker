@@ -164,7 +164,7 @@ function warm_cache
 
 function create_distribution_tarball
 {
-    sudo tar -czf dockerfiles/distribution/ezpublish.tar.gz --directory volumes/ezpublish .
+    sudo tar -czf dockerfiles/distribution/ezpublish.tar.gz --directory volumes/ezpublish --exclude './ezpublish/cache/*' --exclude './ezpublish/logs/*' .
     sudo chown `whoami`: dockerfiles/distribution/ezpublish.tar.gz
 }
 
