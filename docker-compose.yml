@@ -14,9 +14,13 @@ ezpublishvol:
    - volumes/ezpublish:/var/www
 
 db1:
-  image: mariadb:latest
+#  image: mariadb:latest
+# We'll use local Dockerfile to create mariadb untill official image is updated and contains https://github.com/docker-library/mariadb/commit/0196e310a3bd7511ee6090150925a3301c4daaad
+  build: dockerfiles/internal/mariadb
   volumes_from:
    - dbvol
+  volumes:
+   - resources/database_character_set.sh:/docker-entrypoint-initdb.d/database_character_set.sh
   environment:
    - MYSQL_ROOT_PASSWORD=mysecretrootpassword
    - MYSQL_USER=admin
