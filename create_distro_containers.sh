@@ -117,7 +117,7 @@ function prepare
     if [ $REBUILD_EZP == "true" ]; then
         sudo rm -rf volumes/ezpublish/* volumes/mysql/*; sudo rm volumes/ezpublish/.travis.yml volumes/ezpublish/.gitignore || /bin/true
     fi
-    rm -f dockerfiles/ezpublish/distribution/ezpublish.tar.gz
+    rm -f dockerfiles/distribution/ezpublish.tar.gz
 
     if [ $ONLYCLEANUP == "true" ]; then
         echo exiting
