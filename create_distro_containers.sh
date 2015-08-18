@@ -175,7 +175,7 @@ function create_distribution_container
 
 function tag_distribution_container
 {
-    docker tag -f ezpublishdocker_distribution:latest ${DOCKER_REPOSITORY}/${DOCKER_USER}/${BUILD_TARGET}_distribution:${DOCKER_BUILDVER}
+    docker tag -f ${COMPOSE_PROJECT_NAME}_distribution:latest ${DOCKER_REPOSITORY}/${DOCKER_USER}/${BUILD_TARGET}_distribution:${DOCKER_BUILDVER}
 }
 
 function push_distribution_container
@@ -199,7 +199,7 @@ function create_mysql_container
 
 function tag_mysql_container
 {
-    docker tag -f ezpublishdocker_databasedump:latest ${DOCKER_REPOSITORY}/${DOCKER_USER}/${BUILD_TARGET}_databasedump:${DOCKER_BUILDVER}
+    docker tag -f ${COMPOSE_PROJECT_NAME}_databasedump:latest ${DOCKER_REPOSITORY}/${DOCKER_USER}/${BUILD_TARGET}_databasedump:${DOCKER_BUILDVER}
 }
 
 function push_mysql_container
@@ -235,6 +235,9 @@ create_distribution_tarball
 echo create_distribution_container
 create_distribution_container
 
+echo tag_distribution_container
+tag_distribution_container
+
 echo push_distribution_container
 push_distribution_container
 
@@ -243,6 +246,9 @@ create_mysql_tarball
 
 echo create_mysql_container
 create_mysql_container
+
+echo tag_mysql_container
+tag_mysql_container
 
 echo push_mysql_container
 push_mysql_container
