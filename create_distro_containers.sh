@@ -115,7 +115,9 @@ function prepare
 
 
     if [ $REBUILD_EZP == "true" ]; then
-        sudo rm -rf volumes/ezpublish/* volumes/mysql/*; sudo rm volumes/ezpublish/.travis.yml volumes/ezpublish/.gitignore || /bin/true
+        sudo rm -rf volumes/ezpublish volumes/mysql || /bin/true
+        mkdir volumes/ezpublish volumes/mysql
+        touch volumes/mysql/.keep
     fi
     rm -f dockerfiles/distribution/ezpublish.tar.gz
 
