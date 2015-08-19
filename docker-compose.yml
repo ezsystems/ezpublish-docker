@@ -6,19 +6,19 @@
 dbvol:
   image: debian:jessie
   volumes:
-   - volumes/mysql:/var/lib/mysql
+   - ./volumes/mysql:/var/lib/mysql
 
 ezpublishvol:
   image: debian:jessie
   volumes:
-   - volumes/ezpublish:/var/www
+   - ./volumes/ezpublish:/var/www
 
 db1:
   image: mariadb:latest
   volumes_from:
    - dbvol
   volumes:
-   - resources/database_character_set.sh:/docker-entrypoint-initdb.d/database_character_set.sh
+   - ./resources/database_character_set.sh:/docker-entrypoint-initdb.d/database_character_set.sh
   environment:
    - MYSQL_ROOT_PASSWORD=mysecretrootpassword
    - MYSQL_USER=ezp
