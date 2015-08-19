@@ -1,5 +1,6 @@
 
 
+source files/docker-compose.config-EXAMPLE
 source files/docker-compose.config
 
 
