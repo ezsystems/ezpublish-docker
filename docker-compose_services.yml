@@ -21,6 +21,7 @@ site1db1:
    - MYSQL_USER=ezp
    - MYSQL_PASSWORD
    - MYSQL_DATABASE=ezp
+  restart: always
 
 site1phpfpm1:
   # docker compose does not allow to specify container name, this is what it generates, might be fixed in 1.3
@@ -34,6 +35,7 @@ site1phpfpm1:
    - EZ_KICKSTART_FROM_TEMPLATE
    - EZ_ENVIRONMENT
    - MYSQL_PASSWORD
+  restart: always
 
 site1web1:
   image: ezpublishdocker_web1
@@ -48,6 +50,7 @@ site1web1:
    - VARNISH_ENABLED
    - DOCKER0NET
 #  command: /bin/bash -c "while [ 1 ]; do echo -n .; sleep 10; done"
+  restart: always
 
 site1initialize:
   image: ezpublishdocker_ezphp
