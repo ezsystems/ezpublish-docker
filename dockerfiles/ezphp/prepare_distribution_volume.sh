@@ -53,8 +53,14 @@ function import_database
     TRY=1
     while [ $DBUP == "false" ]; do
         echo Contacting mysql, attempt :$TRY
-        set_splash_screen "Importing database"
-        mysql -u$MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE -h db< /dbdump/ezp.sql && DBUP="true"
+        set_splash_screen "Waiting for db connection"
+        echo "ALTER DATABASE $MYSQL_DATABASE CHARACTER SET utf8 COLLATE utf8_general_ci" | mysql -u$MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE -h db && DBUP="true"
+        if [ $DBUP == "true" ]; then
+            DBUP=false
+            set_splash_screen "Importing database"
+            mysql -u$MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE -h db< /dbdump/ezp.sql && DBUP="true"
+        fi
+
         if [ $DBUP == "false" ]; then
             set_splash_screen "Attempt $TRY failed. Waiting for db connection"
         fi
