@@ -23,7 +23,7 @@ Type=mysqli
 Server=db
 Port=${DB_PORT_3306_TCP_PORT}
 Database=ezp
-User=admin
+User=ezp
 Password=${MYSQL_PASSWORD}
 Socket=
 
@@ -36,6 +36,6 @@ else
 
     sed -i "s@^Server=@Server=db@" ezpublish_legacy/kickstart.ini
     sed -i "s@^Database=@Database=ezp@" ezpublish_legacy/kickstart.ini
-    sed -i "s@^User=@User=admin@" ezpublish_legacy/kickstart.ini
+    sed -i "s@^User=@User=ezp@" ezpublish_legacy/kickstart.ini
     sed -i "s@^Password=\$@Password=${MYSQL_PASSWORD}@" ezpublish_legacy/kickstart.ini
 fi
