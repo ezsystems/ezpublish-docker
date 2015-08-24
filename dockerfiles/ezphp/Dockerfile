@@ -65,7 +65,6 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 # As application is put in as volume we do all needed operation on run
 ADD run.sh /run.sh
 ADD generate_kickstart_file.sh /generate_kickstart_file.sh
-ADD kickstart_template.ini /kickstart_template.ini
 ADD generate_parameters_file.sh /generate_parameters_file.sh
 ADD prepare_distribution_volume.sh /prepare_distribution_volume.sh
 ADD config/opcache.ini /etc/php5/mods-available/opcache.ini

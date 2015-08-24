@@ -38,11 +38,8 @@ if [ ! -f files/auth.json ]; then
     touch files/auth.json
 fi
 
-# Copy kickstart template to build dir
-if [ "$EZ_KICKSTART_FROM_TEMPLATE" != "" ]; then
-    cp files/$EZ_KICKSTART_FROM_TEMPLATE dockerfiles/ezphp/kickstart_template.ini
-else
-    echo "# Kickstart file not found. Please check your kickstart settings ( like EZ_KICKSTART_FROM_TEMPLATE ) in config/docker-compose.config if you want a kickstart file " > dockerfiles/ezphp/kickstart_template.ini
+if [ ! -f files/kickstart_template.ini ]; then
+    touch files/kickstart_template.ini
 fi
 
 # If {COMPOSE_EXECUTION_PATH} is not set and docker-compose is not in path, we'll test if it is located in /opt/bin. Needed for systemd service

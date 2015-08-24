@@ -5,6 +5,7 @@ files/auth.json
 files/user-data
 files/docker-compose.config
 files/distro_containers.config
+files/kickstart_template.ini
 volumes/mysql
 volumes/ezpublish
 volumes/composercache
