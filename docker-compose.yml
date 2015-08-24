@@ -26,6 +26,7 @@ db1:
    - MYSQL_USER=admin
    - MYSQL_PASSWORD
    - MYSQL_DATABASE=ezp
+   - TERM=dumb
 
 phpfpm1:
   # docker compose does not allow to specify container name, this is what it generates, might be fixed in 1.3
