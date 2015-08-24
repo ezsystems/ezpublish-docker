@@ -1,0 +1,163 @@
+FROM debian:jessie
+
+# Container containing php-fpm and php-cli to run and interact with eZ Platform
+#
+# Note: This is a test of using php7, we will aim to use debian packages when that becomes available.
+#
+# It has two modes of operation:
+# - (default run.sh cmd) Reconfigure eZ Platform/Publish based on provided env variables and start php-fpm
+# - (bash|php|composer) Allows to execute composer, php or bash against the install
+
+# Set defaults for variables used by run.sh
+# If you change MAX_EXECUTION TIME, also change fastcgi_read_timeout accordingly in nginx!
+ENV DEBIAN_FRONTEND=noninteractive \
+    TIMEZONE=Europe/Warsaw \
+    MEMORY_LIMIT=256M \
+    MAX_EXECUTION_TIME=90 \
+    PORT=9000 \
+    COMPOSER_HOME=/var/.composer \
+    PHP_DIR=/usr/local/php7
+
+## Get deps, alot since we here compile the source
+RUN apt-get update  -q -y \
+ && apt-get install -q -y --force-yes --no-install-recommends  \
+    aufs-tools \
+    automake \
+    bison \
+    btrfs-tools \
+    build-essential \
+    curl \
+    git \
+    libbz2-dev \
+    libcurl4-openssl-dev \
+    libmcrypt-dev \
+    libxml2-dev \
+    libreadline-dev \
+    re2c \
+    libjpeg62-turbo-dev \
+    libpng12-dev \
+    libxpm-dev \
+    libpcre3-dev \
+    libfreetype6-dev \
+    libgmp-dev \
+    libsasl2-dev \
+    libmhash-dev \
+    unixodbc-dev \
+    freetds-dev \
+    libpspell-dev \
+    libsnmp-dev \
+    libtidy-dev \
+    libxslt1-dev \
+    libmcrypt-dev \
+    libicu-dev \
+    librecode-dev \
+    imagemagick \
+    wget \
+    ca-certificates \
+    vim \
+    acl \
+    tree \
+    && rm -rf /var/lib/apt/lists/*
+
+# Get php7 release from php.net
+RUN mkdir -p /usr/local/src/php \
+ && wget -P /tmp "https://downloads.php.net/~ab/php-7.0.0RC1.tar.gz" \
+ && tar -xzPf /tmp/php-7*.tar.gz -C /usr/local/src/php
+
+# Link gmp header file for compilation
+RUN ln -s /usr/include/x86_64-linux-gnu/gmp.h /usr/include/gmp.h
+
+# Compile PHP7 with extensions we need
+RUN cd /usr/local/src/php/php-7.0.0RC1 \
+ && ./configure \
+    --prefix=$PHP_DIR \
+    --with-config-file-path=$PHP_DIR/etc \
+    --with-config-file-scan-dir=$PHP_DIR/etc/conf.d \
+    --enable-mbstring \
+    --enable-zip \
+    --enable-bcmath \
+    --enable-pcntl \
+    --enable-ftp \
+    --enable-exif \
+    --enable-calendar \
+    --enable-sysvmsg \
+    --enable-sysvsem \
+    --enable-sysvshm \
+    --enable-wddx \
+    --with-curl \
+    --with-mcrypt \
+    --with-iconv \
+    --with-gmp=/usr \
+    --with-pspell \
+    --with-gd \
+    --with-jpeg-dir=/usr \
+    --with-png-dir=/usr \
+    --with-zlib-dir=/usr \
+    --with-xpm-dir=/usr \
+    --with-freetype-dir=/usr \
+    --enable-gd-native-ttf \
+    --enable-gd-jis-conv \
+    --with-openssl \
+    --with-pdo-mysql=mysqlnd \
+    --with-gettext=/usr \
+    --with-zlib=/usr \
+    --with-bz2=/usr \
+    --with-recode=/usr \
+    --with-mysqli=mysqlnd \
+    --with-readline \
+    --with-xsl \
+    --enable-fpm \
+    --enable-intl \
+    --enable-soap \
+    --without-pear \
+    --with-libdir=/lib/x86_64-linux-gnu \
+ && make -j4 \
+ && make install
+
+# Create Composer and php7 conf.d directory
+RUN mkdir -p $COMPOSER_HOME \
+ && mkdir -p /usr/local/php7/etc/conf.d
+
+# Set timezone
+RUN echo $TIMEZONE > /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata
+
+# Set some php.ini config
+RUN echo "date.timezone = $TIMEZONE" >> /usr/local/php7/etc/php.ini \
+ && echo "memory_limit = $MEMORY_LIMIT" >> /usr/local/php7/etc/php.ini \
+ && echo "realpath_cache_size = 128k" >> /usr/local/php7/etc/php.ini \
+ && echo "max_execution_time = $MAX_EXECUTION_TIME" >> /usr/local/php7/etc/php.ini
+
+# Disable daemonizeing php-fpm
+RUN cp /usr/local/php7/etc/php-fpm.conf.default /usr/local/php7/etc/php-fpm.conf \
+ && sed -i "s@^;daemonize = yes*@daemonize = no@" /usr/local/php7/etc/php-fpm.conf
+
+# Set listen socket for php-fpm
+RUN cp /usr/local/php7/etc/php-fpm.d/www.conf.default /usr/local/php7/etc/php-fpm.d/www.conf \
+ && sed -i "s@^listen = 127.0.0.1:9000@listen = $PORT@" /usr/local/php7/etc/php-fpm.d/www.conf \
+ && sed -i "s@^user = nobody@user = www-data@" /usr/local/php7/etc/php-fpm.d/www.conf \
+ && sed -i "s@^group = nobody@group = www-data@" /usr/local/php7/etc/php-fpm.d/www.conf
+
+# Link php command so Composer can use it
+RUN ln /usr/local/php7/bin/php /usr/local/bin/php
+
+# Get Composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin \
+ && mv /usr/local/bin/composer.phar /usr/local/bin/composer
+
+# As application is put in as volume we do all needed operation on run
+ADD run.sh /run.sh
+ADD generate_kickstart_file.sh /generate_kickstart_file.sh
+ADD kickstart_template.ini /kickstart_template.ini
+ADD generate_parameters_file.sh /generate_parameters_file.sh
+ADD config/opcache.ini /usr/local/php7/etc/conf.d/opcache.ini
+
+# Change run.sh for php7
+RUN sed -i "s@^exec /usr/sbin/php5-fpm@exec /usr/local/php7/sbin/php-fpm@" /run.sh
+
+RUN chmod 755 /*.sh
+
+WORKDIR /var/www
+
+CMD /run.sh
+
+EXPOSE 9000

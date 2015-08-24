@@ -113,7 +113,7 @@ Vagrant.configure("2") do |config|
           echo 'Install eZ Platform demo data'
           docker exec -i ezpublishdocker_phpfpm1_1 php ezpublish/console ezplatform:install demo
           echo 'Manually clear all cache since we do not know env here'
-          rm -Rf volumes/ezpublish/ezpublish/cache/*/*
+          sudo rm -Rf volumes/ezpublish/ezpublish/cache/*/*
           echo 'Warm up cache using curl'
           curl --progress-bar --head localhost:8080
       fi
