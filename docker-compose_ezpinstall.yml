@@ -11,7 +11,7 @@ composercachevol:
    - ./volumes/composercache:/var/.composer/cache
 
 ezphp:
-  build: dockerfiles/ezphp
+  image: ezsystems/ezphp
   volumes_from:
    - ezpublishvol
    - composercachevol
