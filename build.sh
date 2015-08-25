@@ -38,6 +38,12 @@ function tag
     docker tag -f ${COMPOSE_PROJECT_NAME}_ezphp:latest ezsystems/ezphp:latest
 }
 
+function remove_project_tags
+{
+    docker rmi ${COMPOSE_PROJECT_NAME}_web
+    docker rmi ${COMPOSE_PROJECT_NAME}_ezphp
+}
+
 set_composeconfig "$@"
 
 # Load default settings
@@ -56,3 +62,4 @@ fi
 
 build
 tag
+remove_project_tags
