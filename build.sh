@@ -29,7 +29,7 @@ function set_composeconfig
 
 function build
 {
-    ./docker-compose.sh $CONFIGFILEPARAM -f docker-compose_build.yml build
+    ./docker-compose.sh $CONFIGFILEPARAM -f docker-compose_build.yml build --no-cache
 }
 
 function tag
