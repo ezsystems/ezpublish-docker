@@ -8,10 +8,10 @@ _Note: The use of Vagrant will probably be faded out in favour of Docker Machine
 ## Project goal
 
 Two things:
-- Provide an (eventually) official image for use with eZ Platform, able to configure itself on startup. On top of that:
+- Provide an (eventually) official php image for use with eZ Platform, able to configure itself on startup. On top of that:
  - By extended container or otherwise: support for eZ Publish 5.3+ *(fixes will be made on upstream 5.3.x/5.4.x to make this possible)*
  - By extended container or otherwise: support debugging/development mode use cases and other PHP versions
-- Provide a wide range of docker-compose setups for the different ways to setup eZ Platform, using thirdparty official latest docker images
+- Provide a wide range of docker-compose setups for the different ways to setup eZ Platform, using thirdparty official docker images *(apache, nginx, mysql, mariadb, solr, varnish, memcached, redis, ..)*
 
 
 The docker-compose setups aims to cover specific setups.
