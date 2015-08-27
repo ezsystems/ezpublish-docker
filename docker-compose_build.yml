@@ -1,0 +1,6 @@
+
+ezphp:
+  build: dockerfiles/ezphp
+
+web:
+  build: dockerfiles/internal/nginx

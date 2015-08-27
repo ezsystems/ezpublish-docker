@@ -11,11 +11,12 @@ composercachevol:
    - ./volumes/composercache:/var/.composer/cache
 
 ezphp:
-  build: dockerfiles/ezphp
+  image: ezsystems/ezphp
   volumes_from:
    - ezpublishvol
    - composercachevol
   volumes:
    - ./files/auth.json:/var/.composer/auth.json
+   - ./files/kickstart_template.ini:/kickstart_template.ini
    # Override command, we don't want to start php-fpm just yet, just want to run composer commands this
   command: php -v

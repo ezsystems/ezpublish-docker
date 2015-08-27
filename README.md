@@ -33,7 +33,7 @@ The containers can be created and started using either vagrant or docker-compose
 By default, the following system will be installed:
  - Vagrant will create a virtual machine using VirtualBox. This VM will run CoreOS
  - Latest eZ Platform will be installed (any distribution available over *composer create-project* should work)
- - eZ Publish will be available on port 8080 on the VM
+ - eZ Platform will be available on http://33.33.33.53:8080 on the VM
 
 ### Optional installation steps
 
@@ -43,6 +43,7 @@ By default, the following system will be installed:
   - The setting for updates.ez.no is applicable if you want to install eZ Publish Enterprise and not the community version
   - The setting for github.com is applicable when doing installations via composer ( which is default ). It will raise certain API bandwidth limitations on github.
     In order to create a github oauth token, please follow instructions on this page : https://help.github.com/articles/creating-an-access-token-for-command-line-use To revoke access to this github oauth token you can visit https://github.com/settings/applications
+  - Adding a github oauth token will in most cases INCREASE the performance of the installation process and is therefore HIGHLY recommended.
 - Copy files/vagrant.yml-EXAMPLE to files/vagrant.yml. Then adjust settings in .yml file as needed
 - If you have an existing ezpublish installation you want to use, do the following :
  - Place the installation in volumes/ezpublish
@@ -52,16 +53,6 @@ By default, the following system will be installed:
    For convenience, you should also place the database dump in volumes/ezpublish so you may easily access it from the php-cli container
 
 Note : If you opt not to copy the configurations files mentioned above ( the *.-EXAMPLE files ), the system will do so for you and use default settings.
-
-### Setup eZ Publish
-
-First of all, you need a eZ Publish installation. If you already have one, then fine. You can use an existing installation by moving the files to volumes/ezpublish.
-If you do not already have a eZ Publish installation, the ezpinstall container provided is able to install eZ Publish from tarball or composer.
-If you copy a existing installation to volumes/ezpublish, the ezpinstall will only set file permissions correctly, so that they are writable for the webserver
-
- - In files/docker-compose.config set the EZ_* settings according to your needs
- - Run ```./docker-compose_ezpinstall.sh```
- 
 
 
 ### AWS specific procedures
@@ -122,6 +113,15 @@ If you later just want to recreate specific images or containers, you then first
 `./docker-compose.sh up -d --no-recreate`
 
 
+### build.sh
+
+build.sh will build the "service" images you need in order to run eZ Platform. By "service" image we mean the nginx and php images. No customized db image is currently needed as the official MariaDB docker image is used. 
+
+### docker-compose_ezpinstall.sh
+
+docker-compose_ezpinstall.sh is a script which will download eZ Platform via composer and install it in volumes/ezpublish. You may specify parameters to composer using EZ_COMPOSERPARAM variable in files/docker-compose.config.
+docker-compose_ezpinstall.sh will automaticly by run when running ```vagrant up``` and ```vagrant provision```.
+
 ### docker-compose.sh
 
 docker-compose.sh is a wrapper for docker-compose which also do some internal provisioning. Any command line arguments (except "-c configfile" ) used when starting the wrapper is passed on to docker-compose.
@@ -129,15 +129,13 @@ docker-compose.sh also accepts one special argument for specifying a alternative
 Example : 
 ```docker-compose.sh -c files/my_custom_docker-compose.config up -d --no-recreate```
 
-### Access your eZ Publish installation
+### Access your eZ Platform installation
 
-When the containers are created, you should be able to browse to eZ Publish setup wizard by going to http://[VM_IP_ADDR]:8080/ if using vagrant and http://localhost:8080/ if running the containers on localhost 
+When the containers are created, you should be able to browse to eZ Platform setup wizard by going to http://[VM_IP_ADDR]:8080/ if using vagrant and http://localhost:8080/ if running the containers on localhost 
 
-### Setting up eZ Publish using install script
+### Setting up eZ Platform using install script
 
-It is possible to setup a fresh installation using the install script instead of using the setup wizard.
- - Run ```vagrant up``` ( or ```./docker-compose.sh``` and ```docker-compose.sh up -d --no-recreate``` ) as usual.
- - If using Vagrant, run : ```vagrant ssh```
+It is possible to setup a fresh installation using the install script instead of using the setup wizard. ( If using vagrant, this is done automaticly )
  - Run command : ```docker-compose -f docker-compose.yml run --rm phpfpm1 /bin/bash -c "php ezpublish/console ezplatform:install demo; php ezpublish/console cache:clear --env=prod"```
 
 FYI : The command above assumes you have ```EZ_ENVIRONMENT=prod``` in files/docker-compose.config. If you use a different setting, adjust the ```--env=....``` parameter accordingly.
@@ -202,18 +200,43 @@ So, you need to use rsync on Windows too. In order to do this, you need rsync an
 Easiest way to accomplish this is to install MinGW ( minimalist GNU for Windows ), http://sourceforge.net/projects/mingw/files/MSYS/Extension/rsync/rsync-3.0.8-1/
 Download wingw-get-setup.exe and install openssh and rsync. You should then add "C:\MinGW\msys\1.0\bin" to your path and you should be all set to run "vagrant up"
 
+If you have issues getting ssh keys to work with MinGW, this is how to fix that:
+
+    C:\> cd C:\MinGW\msys\1.0
+    C:\> mkdir home\vl\.ssh
+
+Substitute 'C:\MinGW\msys\1.0' with your actuall MinGW installation directory.
 
 ### Tutorials
+
+#### Installing the system using vagrant
+
+Make a config file ( recommended, but not strictly speaking )
+    ```cp files/docker-compose.config-EXAMPLE files/docker-compose.config```
+
+Make a vagrant config file
+    ```cp files/vagrant.yml-EXAMPLE to files/vagrant.yml```
+
+Start vagrant
+    ```vagrant up```
+
+Access the eZ Platform installation.
+Access the installation using the url http://33.33.33.53/
+
+
 
 #### Installing on local host without vagrant ( requires docker and docker-compose installed locally )
 
 Make a config file ( recommended, but not strictly speaking )
     ```cp files/docker-compose.config-EXAMPLE files/docker-compose.config```
 
-Setup eZ Publish:
+Create the service images ( web and php images )
+    ```./build.sh```
+
+Install eZ Platform/Studio:
     ```./docker-compose_ezpinstall.sh```
 
-Create the containers needed for running eZ Publish
+Create the containers needed for running eZ Platform/Studio
     ```./docker-compose.sh up -d --no-recreate```
 
 Run the install script
@@ -226,7 +249,7 @@ Remove the containers:
     ```docker-compose -f docker-compose.yml rm -v; docker-compose -f docker-compose_ezpinstall.yml rm -v```
 
 Remove the images:
-    ```docker rmi ezpublishdocker_web1 ezpublishdocker_ezphp```
+    ```docker rmi ezsystems/web ezsystems/ezphp```
 
 Remove the eZ Platform files:
     ```sudo rm -rf volumes/ezpublish/* volumes/mysql/*; sudo rm volumes/ezpublish/.travis.yml volumes/ezpublish/.gitignore```
@@ -237,6 +260,9 @@ Remove the eZ Platform files:
 Make a config file
     ```cp files/distro_containers.config-EXAMPLE files/distro_containers.config```
     
+Create the service images ( web, db and php images )
+    ```./build.sh```
+
 Create the containers
     ```./create_distro_containers.sh```
 
