@@ -1,6 +1,6 @@
-# eZ Platform (/ Publish 5.3+) in Docker
+# eZ Platform, eZ Studio & eZ Publish Platform 5.3+ in Docker
 
-Project is work in progress!
+*Project is work in progress!*
 
 Aims to provide setup for _eZ Platform_(also implies _eZ Studio_) using Docker containers and Docker Compose, either natively on linux if you have docker and docker-compose installed, or via VM using Vagrant and Virtualbox/AWS.
 _Note: The use of Vagrant will probably be faded out in favour of Docker Machine in the future._
@@ -9,16 +9,16 @@ _Note: The use of Vagrant will probably be faded out in favour of Docker Machine
 
 Two things:
 - Provide an (eventually) official image for use with eZ Platform, able to configure itself on startup. On top of that:
--- By extended container or otherwise: support for eZ Publish 5.3+ *(patches needed to streamline this will be accepted)*
--- By extended container or otherwise: support debugging/development mode use cases
+ - By extended container or otherwise: support for eZ Publish 5.3+ *(fixes will be made on upstream 5.3.x/5.4.x to make this possible)*
+ - By extended container or otherwise: support debugging/development mode use cases and other PHP versions
 - Provide a wide range of docker-compose setups for the different ways to setup eZ Platform, using thirdparty official latest docker images
 
 
 The docker-compose setups aims to cover specific setups.
 And the aim is that the yml files can easily be customized to change version to test for QA/Support/Reproduction needs.
--- (default) Single server using mysql: nginx, mariadb
--- Cluster using mysql *(sharing volume, so on one machine)*: nginx, mysql, memcached, varnish
--- Single server postgres: apache (fastcgi), postgres
+- (default) Single server using mysql: nginx, mariadb
+- Cluster using mysql *(sharing volume, so on one machine)*: nginx, mysql, memcached, varnish
+- Single server postgres: apache (fastcgi), postgres
 
 With this everything should be in place for easily evaluating adding postgres cluster support, adding redis support,
 shared files system for scalability testing, and much more..
@@ -31,19 +31,19 @@ The containers can be created and started using either vagrant or docker-compose
 ### Default system
 
 By default, the following system will be installed:
- - Vagrant will create a virtual machine using VirtualBox. This VM will run CoreOS
- - Latest eZ Platform will be installed (any distribution available over *composer create-project* should work)
- - eZ Platform will be available on http://33.33.33.53:8080 on the VM
+- Vagrant will create a virtual machine using VirtualBox. This VM will run CoreOS
+- Latest eZ Platform will be installed (any distribution available over *composer create-project* should work)
+- eZ Platform will be available on http://33.33.33.53:8080 on the VM
 
 ### Optional installation steps
 
 - Copy files/docker-compose.config-EXAMPLE to files/docker-compose.config ( and set the environment variables in files/docker-compose.config according to your needs if you want to change the default setup ).
 - Copy files/auth.yml-EXAMPLE to files/auth.yml.
   This file has two authentication sections:
-  - The setting for updates.ez.no is applicable if you want to install eZ Publish Enterprise and not the community version
-  - The setting for github.com is applicable when doing installations via composer ( which is default ). It will raise certain API bandwidth limitations on github.
-    In order to create a github oauth token, please follow instructions on this page : https://help.github.com/articles/creating-an-access-token-for-command-line-use To revoke access to this github oauth token you can visit https://github.com/settings/applications
-  - Adding a github oauth token will in most cases INCREASE the performance of the installation process and is therefore HIGHLY recommended.
+ - The setting for updates.ez.no is applicable if you want to install eZ Publish Enterprise/eZ Platform LTS/eZ Studio and not the community version
+ - The setting for github.com is applicable when doing installations via composer ( which is default ). It will raise certain API bandwidth limitations on github.
+   In order to create a github oauth token, please follow instructions on this page : https://help.github.com/articles/creating-an-access-token-for-command-line-use To revoke access to this github oauth token you can visit https://github.com/settings/applications
+ - Adding a github oauth token will in most cases INCREASE the performance of the installation process and is therefore HIGHLY recommended.
 - Copy files/vagrant.yml-EXAMPLE to files/vagrant.yml. Then adjust settings in .yml file as needed
 - If you have an existing ezpublish installation you want to use, do the following :
  - Place the installation in volumes/ezpublish
@@ -145,18 +145,18 @@ You may also substitute "demo" with "demo_clean" if you want to install ezdemo w
 ### Varnish
 
 These are the steps needed in order to get varnish running
- - Set ```VARNISH_ENABLED=yes"```in docker-compose.config.
- - Run ```docker-compose.sh up -d``` or ```docker-compose.sh up -d --no-recreate``` as usual
- - Run the eZ Publish Setup Wizard
- - Start the varnishprepare container in order to configure eZ Publish to use a http cache in ezpublish/config/ezpublish.yml : ```docker-compose -f docker-compose[_ubuntu].yml start varnishprepare```
-   This varnishprepare container has some requirements:
-   - Please note that this container must be run *after* setup wizard has been created. If you run it before SW, the ezpublish.yml is yet not generated and the varnishprepare container will abort 
-   - In order to inject the settings correctly in ezpublish.yml, your ezpublish.yml should not differ too much from the standard ezpublish.yml generated by the setup wizard
-   - Due to the fact mentioned in previous point, this container do not support installations which has been configured using the install script.
-   - The varnishprepare container assumes your siteaccess group is called "ezdemo_site_clean_group" or "ezdemo_site_group:" ( which is the defaults when installing "Demo site with(out) demo content" )
- - If the varnishprepare container is not able to configure ezpublish correctly on your setup, please follow the instructions in the "Update YML configuration" chapter on https://doc.ez.no/display/EZP/Using+Varnish
- - If container do not work as expected, you may inspect the log using ```docker logs ezpublishdocker_varnishprepare_1```
- - The ```docker logs ....``` will output the IP of the varnish container which you need in order to configure ezpublish.yml manually
+- Set ```VARNISH_ENABLED=yes"```in docker-compose.config.
+- Run ```docker-compose.sh up -d``` or ```docker-compose.sh up -d --no-recreate``` as usual
+- Run the eZ Publish Setup Wizard
+- Start the varnishprepare container in order to configure eZ Publish to use a http cache in ezpublish/config/ezpublish.yml : ```docker-compose -f docker-compose[_ubuntu].yml start varnishprepare```
+  This varnishprepare container has some requirements:
+  - Please note that this container must be run *after* setup wizard has been created. If you run it before SW, the ezpublish.yml is yet not generated and the varnishprepare container will abort
+  - In order to inject the settings correctly in ezpublish.yml, your ezpublish.yml should not differ too much from the standard ezpublish.yml generated by the setup wizard
+  - Due to the fact mentioned in previous point, this container do not support installations which has been configured using the install script.
+  - The varnishprepare container assumes your siteaccess group is called "ezdemo_site_clean_group" or "ezdemo_site_group:" ( which is the defaults when installing "Demo site with(out) demo content" )
+- If the varnishprepare container is not able to configure ezpublish correctly on your setup, please follow the instructions in the "Update YML configuration" chapter on https://doc.ez.no/display/EZP/Using+Varnish
+- If container do not work as expected, you may inspect the log using ```docker logs ezpublishdocker_varnishprepare_1```
+- The ```docker logs ....``` will output the IP of the varnish container which you need in order to configure ezpublish.yml manually
 
 
 #### SSH
@@ -169,7 +169,7 @@ To enter virtual machine:
 From there you can check running containers:
 - ```docker ps```
 
-And inspect the eZ Publish folder which was rsynced into the vm and is used as volume for eZ Publish container:
+And inspect the eZ Publish folder which was rsynced into the vm and is used as volume for `ezpublishvol` container:
 - ```ls -al /vagrant/volumes/ezpublish/```
 
 
