@@ -1,0 +1,5 @@
+# dummy container for base image
+ubuntu:
+  build: dockerfiles/ubuntu
+vagrantaws:
+  build: dockerfiles/internal/vagrant-aws

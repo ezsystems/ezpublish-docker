@@ -1,0 +1,3 @@
+databasedump:
+  build: dockerfiles/databasedump
+

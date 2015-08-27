@@ -1,0 +1,95 @@
+#FROM ezpublishdocker_ubuntu
+#FROM ubuntu:trusty
+FROM ubuntu:utopic
+
+RUN apt-get update -y
+
+RUN apt-get install -y --force-yes \
+    ruby \
+    git \
+    man \
+    vagrant \
+    make
+#    ruby1.9.1-dev \
+
+
+###RUN ssh-keyscan github.com >> ~/.ssh/known_hosts
+on ubuntu:trusty:
+cd /tmp; git clone https://github.com/mitchellh/vagrant-aws.git
+cd /tmp/vagrant-aws && gem build vagrant-aws.gemspec
+cd /tmp/vagrant-aws && vagrant plugin install vagrant-aws --plugin-version 0.5.1
+
+#rake
+on ubuntu:utopic:
+ln -s /usr/bin/ruby19.....( not sure it is needed )
+ln -s /usr/bin/gem1.9.1 /usr/bin/gem
+ln -s /usr/bin/rake1.9.1 /usr/bin/rake
+ln -s /usr/bin/ri1.9.1 /usr/bin/ri
+ln -s /usr/bin/irb1.9.1 /usr/bin/irb
+
+apt-get install gcc libxml2-dev
+# cd /tmp; git clone https://github.com/mitchellh/vagrant-aws.git
+# cd /tmp/vagrant-aws && gem1.9.1 build vagrant-aws.gemspec
+
+dpkg --purge libruby2.1:amd64 ruby ruby-childprocess ruby-ffi ruby-erubis ruby-i18n ruby-log4r ruby-net-scp ruby-net-ssh ruby2.1 rubygems-integration vagrant
+apt-get install ruby1.9.1 ruby1.9.1-dev vagrant
+(also gcc?)
+
+libruby1.9.1 libruby2.1 ruby ruby-childprocess ruby-erubis ruby-ffi ruby-i18n ruby-log4r ruby-net-scp ruby-net-ssh ruby2.1 rubygems-integration
+
+for i in /usr/bin/erb /usr/bin/testrb /usr/bin/rake /usr/bin/ruby /usr/bin/rdoc /usr/bin/gem /usr/bin/ri /usr/bin/irb; do rm "$i"; ln -s ${i}1.9.1 $i; done
+ ( /usr/bin/rake do not exists )
+
+
+on LTS:
+ruby:
+The following NEW packages will be installed:
+  bsdmainutils bsdtar ca-certificates curl git git-man groff-base krb5-locales
+  libarchive13 libasn1-8-heimdal libcurl3 libcurl3-gnutls libedit2
+  liberror-perl libgssapi-krb5-2 libgssapi3-heimdal libhcrypto4-heimdal
+  libheimbase1-heimdal libheimntlm0-heimdal libhx509-5-heimdal libidn11
+  libk5crypto3 libkeyutils1 libkrb5-26-heimdal libkrb5-3 libkrb5support0
+  libldap-2.4-2 liblzo2-2 libnettle4 libpipeline1 libroken18-heimdal librtmp0
+  libruby1.9.1 libsasl2-2 libsasl2-modules libsasl2-modules-db
+  libwind0-heimdal libx11-6 libx11-data libxau6 libxcb1 libxdmcp6 libxext6
+  libxml2 libxmuu1 libyaml-0-2 make man-db openssh-client openssl patch rsync
+  ruby ruby-childprocess ruby-erubis ruby-ffi ruby-i18n ruby-log4r
+  ruby-net-scp ruby-net-ssh ruby1.9.1 sgml-base vagrant xauth xml-core
+
+ruby1.9.1-dev:
+The following NEW packages will be installed:
+  binutils cpp cpp-4.8 gcc gcc-4.8 libasan0 libatomic1 libc-dev-bin libc6-dev
+  libcloog-isl4 libgcc-4.8-dev libgmp10 libgomp1 libisl10 libitm1 libmpc3
+  libmpfr4 libquadmath0 libtsan0 linux-libc-dev manpages manpages-dev
+  ruby1.9.1-dev
+
+Vagrant 1.4.3
+gem1.9.1 install bundle
+bundle install
+
+
+gem install nokogiri -- --use-system-libraries
+
+If you are using Bundler, tell it to use the option:
+
+    bundle config build.nokogiri --use-system-libraries
+    bundle install
+
+
+
+
+
+#gem install bundle
+#cd /tmp/vagrant-aws && gem build vagrant-aws.gemspec
+
+# do not run as root:
+#RUN cd /tmp/vagrant-aws && bundle install
+#RUN cd /tmp/vagrant-aws && rake install
+
+#RUN gem install fog
+
+# gem build vagrant-aws.gemspec
+# vagrant plugin install vagrant-aws --plugin-version 0.5.1
+
+CMD /bin/true
+

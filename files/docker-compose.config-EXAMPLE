@@ -1,0 +1,63 @@
+#### Project name ####
+
+# Prefix used by docker-compose when creating images and containers
+#export COMPOSE_PROJECT_NAME=ezpublishdocker
+
+#### DB settings ####
+
+# Password for the admin user in mariadb/mysql
+MYSQL_PASSWORD=youmaychangethis
+
+#### Varnish settings ####
+
+VARNISH_ENABLED=no
+
+#### eZ Publish deployment settings ####
+
+# Generates kickstart.ini file with database settings if true
+EZ_KICKSTART=true
+
+# Name of template file to use for generating a kickstart file
+# If value of setting is empty, a default kickstart file will be generated where db settings are stored ( given that EZ_KICKSTART=true )
+# The template must contain "Server=", "Port=", "Database=", "User=" and "Password=" so that the values for these settings can be injected
+# Template file should be located in the files/ directory
+EZ_KICKSTART_FROM_TEMPLATE=
+
+# Setting used by docker-compose_ezpinstall.sh
+# Arguments to give to composer create-project, directory must be named '/var/www'!
+# Examples:
+#
+## Latest eZ Publish Platform 5.4 Trial (requires valid authentication token: https://doc.ez.no/display/EZP/Using+Composer)
+## EZ_COMPOSERPARAM="--prefer-dist --no-dev --repository-url=https://updates.ez.no/ttl ezsystems/ezpublish-community /var/www ~5.4.0"
+#
+## Latest eZ Platform unstable release:
+## EZ_COMPOSERPARAM="--prefer-dist --no-dev ezsystems/ezplatform /var/www ~0.9"
+#
+## eZ Platform current development version:
+## EZ_COMPOSERPARAM="--prefer-source ezsystems/ezplatform /var/www dev-master"
+#
+## eZ Publish Community of a specific tag:
+## EZ_COMPOSERPARAM="--prefer-dist --no-dev ezsystems/ezpublish-community /var/www v2014.11"
+#
+# By default pick latest release of eZ Platform:
+EZ_COMPOSERPARAM="--prefer-dist --no-dev ezsystems/ezplatform /var/www"
+
+# Set the environment for ezpublish. Valid options are "prod", "dev", "behat"
+# WARNING: Only non dev env works (assets) atm as the standard Nginx rewrite rules does not take care to addapt for env!
+EZ_ENVIRONMENT=prod
+
+#### Docker Compose settings ####
+# Path to location of docker-compose. If docker-compose is in your PATH, you may leave it empty
+export COMPOSE_EXECUTION_PATH=""
+
+#### Docker settings ####
+# This is the network address for the docker0 interface. This address is defined by docker and the setting here just needs to reflect that.
+# Docker defaults to the network address given here, so you should normally not need to change it
+DOCKER0NET="172.17.0.0/16"
+
+
+export MYSQL_PASSWORD
+export VARNISH_ENABLED
+export EZ_KICKSTART EZ_KICKSTART_FROM_TEMPLATE EZ_ENVIRONMENT EZ_COMPOSERPARAM
+export COMPOSE_EXECUTION_PATH
+export DOCKER0NET

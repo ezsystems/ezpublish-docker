@@ -1,0 +1,5 @@
+distribution:
+  build: dockerfiles/distribution
+#  volumes:
+#   - volumes/ezpublish:/var/www_source
+

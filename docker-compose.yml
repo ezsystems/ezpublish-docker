@@ -1,0 +1,99 @@
+# Default container setup
+# Simple single server setup
+# Uses Debian Jessie and official images when possible
+
+
+dbvol:
+  image: debian:jessie
+  volumes:
+   - ./volumes/mysql:/var/lib/mysql
+
+ezpublishvol:
+  image: debian:jessie
+  volumes:
+   - ./volumes/ezpublish:/var/www
+
+db1:
+  image: mariadb:latest
+  volumes_from:
+   - dbvol
+  volumes:
+   - ./resources/database_character_set.sh:/docker-entrypoint-initdb.d/database_character_set.sh
+  environment:
+   - MYSQL_ROOT_PASSWORD=mysecretrootpassword
+   - MYSQL_USER=ezp
+   - MYSQL_PASSWORD
+   - MYSQL_DATABASE=ezp
+   - TERM=dumb
+
+phpfpm1:
+  # docker compose does not allow to specify container name, this is what it generates, might be fixed in 1.3
+  build: dockerfiles/ezphp
+  links:
+   - db1:db
+  volumes_from:
+   - ezpublishvol
+  environment:
+   - EZ_KICKSTART
+   - EZ_KICKSTART_FROM_TEMPLATE
+   - EZ_ENVIRONMENT
+   - MYSQL_PASSWORD
+
+web1:
+  build: dockerfiles/internal/nginx
+  links:
+   - phpfpm1:php_fpm
+  volumes_from:
+   - ezpublishvol
+  ports:
+   - "8080:80"
+  environment:
+   - EZ_ENVIRONMENT
+   - VARNISH_ENABLED
+   - DOCKER0NET
+
+#selenium:
+#  image: selenium/standalone-firefox
+#  links:
+#   - web1:web
+#  ports:
+#   - "9999:9999"
+#   - "4444:4444"
+#
+#behatphpcli:
+#  image: ezpublishdocker_ezpphp:latest
+#  links:
+#   - db1:db
+#   - web1:web
+#   - selenium:selenium
+#  volumes_from:
+#   - ezpublishvol
+#  command: echo "php bin/behat -c behat.yml.dist -vv --profile demo --suite content"
+#
+# To run this you'll currenly need to edit behat.yml.dist manually to add correct hosts (we plan to fix this
+# either by doing the patching automated, or change default host names in container and travis to be the same
+# by default out of the box for eZ Platform), get the relevant evn variables and fill in their values:
+#
+# default:
+#    extensions:
+#        Behat\MinkExtension:
+#            base_url: 'http://${WEB_PORT_80_TCP_ADDR}'
+#            goutte: ~
+#            selenium2:
+#                wd_host: http://${SELENIUM_PORT_4444_TCP_ADDR}:4444/wd/hub
+#
+# Further changes for some sceanrios that is pending changes to use base url can be found in:
+# resources/behat.yml.patch
+#
+#
+#varnish:
+#  build: dockerfiles/internal/varnish
+#  links:
+#   - phpfpm:php_fpm
+#   - nginx:nginx
+#  volumes_from:
+#   - ezpublishvol
+#  ports:
+#   - "8081:80"
+#  environment:
+#   - VARNISH_ENABLED
