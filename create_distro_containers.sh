@@ -108,11 +108,6 @@ function prepare
     docker rmi ${COMPOSE_PROJECT_NAME}_databasedump:latest || /bin/true
     docker rmi ${DOCKER_REPOSITORY}/${DOCKER_USER}/${BUILD_TARGET}_databasedump:${DOCKER_BUILDVER} || /bin/true
 
-    docker rmi ${COMPOSE_PROJECT_NAME}_ezphp || /bin/true
-    docker rmi ${COMPOSE_PROJECT_NAME}_web1 || /bin/true
-    docker rmi ${COMPOSE_PROJECT_NAME}_db1 || /bin/true
-    docker rmi ${COMPOSE_PROJECT_NAME}_phpfpm1 || /bin/true
-
 
     if [ $REBUILD_EZP == "true" ]; then
         sudo rm -rf volumes/ezpublish volumes/mysql || /bin/true
