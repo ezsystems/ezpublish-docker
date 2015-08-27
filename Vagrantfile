@@ -105,19 +105,24 @@ Vagrant.configure("2") do |config|
   "
 
   if vagrantConfig['debug']['disable_docker_provision'] == false
-    config.vm.provision :shell, :inline => "
+    config.vm.provision :shell, :inline => '
       cd /vagrant; \
-      ./docker-compose_ezpinstall.sh; \
+      export COMPOSE_PROJECT_NAME=ezpublishdocker
+      source files/docker-compose.config-EXAMPLE
+      source files/docker-compose.config
+
+      cd /vagrant
+      ./build.sh
+      ./docker-compose_ezpinstall.sh
       ./docker-compose.sh up -d --no-recreate
       if [[ ( -d volumes/ezpublish/ezpublish ) && ( ! -d volumes/ezpublish/ezpublish_legacy ) ]];  then \
-          echo 'Install eZ Platform demo data'
-          docker exec -i ezpublishdocker_phpfpm1_1 php ezpublish/console ezplatform:install demo
-          echo 'Manually clear all cache since we do not know env here'
-          sudo rm -Rf volumes/ezpublish/ezpublish/cache/*/*
-          echo 'Warm up cache using curl'
-          curl --progress-bar --head localhost:8080
+          # Let us wait for db containers to get started and ready
+          sleep 12
+          echo "Install eZ Platform demo data"
+          ${COMPOSE_EXECUTION_PATH}docker-compose -f docker-compose.yml run --rm phpfpm1 /bin/bash -c "php ezpublish/console --env=$EZ_ENVIRONMENT ezplatform:install demo; php ezpublish/console cache:clear --env=$EZ_ENVIRONMENT"
+          ${COMPOSE_EXECUTION_PATH}docker-compose -f docker-compose.yml run --rm phpfpm1 /bin/bash -c "php ezpublish/console cache:warmup --env=$EZ_ENVIRONMENT"
       fi
-    "
+    '
   end
 
   # Make sure containers starts automatically on boot
