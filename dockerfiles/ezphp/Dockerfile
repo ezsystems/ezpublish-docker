@@ -15,7 +15,9 @@ ENV DEBIAN_FRONTEND=noninteractive \
     PORT=9000 \
     COMPOSER_HOME=/var/.composer
 
-RUN apt-get update -q -y && apt-get install -q -y --force-yes --no-install-recommends \
+## Get packages
+RUN apt-get update -q -y \
+ && apt-get install -q -y --force-yes --no-install-recommends \
     php5-cli \
     php5-readline \
     php5-fpm \
@@ -60,6 +62,7 @@ RUN sed -i "s@^;daemonize = yes*@daemonize = no@" /etc/php5/fpm/php-fpm.conf
 # Set listen socket for php-fpm
 RUN sed -i "s@^listen = /var/run/php5-fpm.sock@listen = $PORT@" /etc/php5/fpm/pool.d/www.conf
 
+# Get Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin && mv /usr/local/bin/composer.phar /usr/local/bin/composer
 
 # As application is put in as volume we do all needed operation on run
