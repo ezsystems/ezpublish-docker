@@ -34,6 +34,7 @@ RUN apt-get update -q -y \
     curl \
     wget \
     ca-certificates \
+    less \
     vim \
     git \
     acl \
