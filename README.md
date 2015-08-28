@@ -127,7 +127,7 @@ docker-compose_ezpinstall.sh will automaticly by run when running ```vagrant up`
 docker-compose.sh is a wrapper for docker-compose which also do some internal provisioning. Any command line arguments (except "-c configfile" ) used when starting the wrapper is passed on to docker-compose.
 docker-compose.sh also accepts one special argument for specifying a alternative configuration file ( files/docker-compose.config is the default one if "-c ..." is not provided ).
 Example : 
-```docker-compose.sh -c files/my_custom_docker-compose.config up -d --no-recreate```
+```docker-compose.sh --custom-conf files/my_custom_docker-compose.config up -d --no-recreate```
 
 ### Access your eZ Platform installation
 
@@ -274,3 +274,32 @@ Remove all the containers
     docker-compose -f docker-compose_services.yml stop; docker-compose -f docker-compose_services.yml rm -v
     ./create_distro_containers.sh --cleanup
     ```
+
+#### Running behat tests
+
+Make a config file
+    ```cp files/distro_containers.config-EXAMPLE files/distro_containers.config```
+
+Make sure you use dev-master, edit files/distro_containers.config and ensure you set:
+    ```EZ_COMPOSERPARAM="--prefer-source --no-progress --no-interaction ezsystems/ezplatform /var/www dev-master"```
+
+Make docker-compose file for behat tests
+    ```cat docker-compose.yml docker-compose_behat.yml.template > docker-compose_behat.yml```
+
+Create the service images ( web and php images )
+    ```./build.sh```
+
+Install eZ Platform/Studio:
+    ```./docker-compose_ezpinstall.sh```
+
+Create the containers needed for running eZ Platform/Studio
+    ```./docker-compose.sh -f docker-compose_behat.yml up -d --no-recreate```
+
+Run the install script
+    ```docker-compose -f docker-compose_behat.yml run --rm phpfpm1 /bin/bash -c "php ezpublish/console ezplatform:install demo; php ezpublish/console cache:clear --env=prod"```
+
+Patch behat.yml
+    ```./docker-compose.sh -f docker-compose_behat.yml run --rm behatphpcli /patch_behat.yml.sh```
+
+Run behat tests
+    ```./docker-compose.sh -f docker-compose_behat.yml run --rm behatphpcli bin/behat --no-colors --profile demo --suite content```

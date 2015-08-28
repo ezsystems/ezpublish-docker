@@ -1,0 +1,21 @@
+selenium:
+  image: selenium/standalone-firefox
+  links:
+   - web1:web
+  ports:
+   - "9999:9999"
+   - "4444:4444"
+
+behatphpcli:
+  image: ezsystems/ezphp
+  links:
+   - db1:db
+   - web1:web
+   - selenium:selenium
+  volumes_from:
+   - ezpublishvol
+  volumes:
+   - ./resources/behat/behat.yml.patch:/behat.yml.patch
+   - ./resources/behat/patch_behat.yml.sh:/patch_behat.yml.sh
+  command: "/bin/true"
+

@@ -34,10 +34,12 @@ RUN apt-get update -q -y \
     curl \
     wget \
     ca-certificates \
+    less \
     vim \
     git \
     acl \
     tree \
+    patch \
     && rm -rf /var/lib/apt/lists/*
 
 # Create Composer directory (cache and auth files)
