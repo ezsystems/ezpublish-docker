@@ -127,7 +127,7 @@ docker-compose_ezpinstall.sh will automaticly by run when running ```vagrant up`
 docker-compose.sh is a wrapper for docker-compose which also do some internal provisioning. Any command line arguments (except "-c configfile" ) used when starting the wrapper is passed on to docker-compose.
 docker-compose.sh also accepts one special argument for specifying a alternative configuration file ( files/docker-compose.config is the default one if "-c ..." is not provided ).
 Example : 
-```docker-compose.sh -c files/my_custom_docker-compose.config up -d --no-recreate```
+```docker-compose.sh --custom-conf files/my_custom_docker-compose.config up -d --no-recreate```
 
 ### Access your eZ Platform installation
 

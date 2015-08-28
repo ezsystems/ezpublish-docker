@@ -13,7 +13,7 @@ function set_composeconfig
     CMDPARAMETERS=""
 
     for i in "$@"; do
-        if [ $i == "-c" ]; then
+        if [ "$i" == "--custom-conf" ]; then
             value=1
             continue
         fi
