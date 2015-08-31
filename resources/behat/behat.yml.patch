@@ -1,15 +1,19 @@
---- behat.yml.dist      2015-08-28 11:14:08.638386010 +0200
-+++ behat.yml   2015-08-28 11:39:20.759608030 +0200
-@@ -3,7 +3,7 @@
+--- behat.yml.org	2015-08-31 14:27:39.565475606 +0200
++++ behat.yml	2015-08-31 14:28:14.346967310 +0200
+@@ -3,10 +3,10 @@
  default:
      extensions:
          Behat\MinkExtension:
 -            base_url: 'http://localhost'
 +            base_url: 'http://web'
              goutte: ~
-             selenium2: ~
+             selenium2:
+-                wd_host: 'http://localhost:4444/wd/hub'
++                wd_host: 'http://selenium:4444/wd/hub'
              javascript_session: selenium2
-@@ -26,21 +26,21 @@
+             browser_name: firefox
+ 
+@@ -31,21 +31,21 @@
              paths: [ vendor/ezsystems/ezpublish-kernel/eZ/Bundle/EzPublishRestBundle/Features ]
              contexts:
                  - eZ\Bundle\EzPublishRestBundle\Features\Context\RestContext:
@@ -30,11 +34,11 @@
              contexts:
                  - eZ\Bundle\EzPublishRestBundle\Features\Context\RestContext:
 -                    url: http://localhost/api/ezp/v2/
-+                    url: http://weB/api/ezp/v2/
++                    url: http://web/api/ezp/v2/
                      driver: GuzzleDriver
                      type: json
  
-@@ -56,7 +56,7 @@
+@@ -61,7 +61,7 @@
  legacyAdmin:
      extensions:
          Behat\MinkExtension:
@@ -43,9 +47,3 @@
      suites:
          full:
              paths: [ vendor/ezsystems/legacy-bridge/bundle/Features/Admin ]
-@@ -83,4 +83,4 @@
-             paths: [ vendor/ezsystems/legacy-bridge/bundle/Features/SetupWizard ]
-             contexts: [ eZ\Bundle\EzPublishLegacyBundle\Features\Context\SetupWizard\Context ]
-             filters:
--                tags: '@demo && ~@content && ~@uniqueDatabaseSystem'
-+                tags: '@demo && ~@conTENt && ~@uniqueDatabaseSystem'
