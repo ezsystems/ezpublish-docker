@@ -1,0 +1,13 @@
+--- behat.yml.dist.org	2015-08-31 14:18:38.578273533 +0200
++++ behat.yml.dist	2015-08-31 14:20:37.655380620 +0200
+@@ -17,6 +17,10 @@
+                 env: behat
+                 debug: false
+ 
++        jarnaiz\JUnitFormatter\JUnitFormatterExtension:
++            filename: report.xml
++            outputDir: %paths.base%/build/tests
++
+     # default profile: no suites
+     suites: ~
+ 

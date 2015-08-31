@@ -17,5 +17,6 @@ behatphpcli:
   volumes:
    - ./resources/behat/behat.yml.patch:/behat.yml.patch
    - ./resources/behat/patch_behat.yml.sh:/patch_behat.yml.sh
+   - ./resources/behat/behat.yml.dist.add_junit_formatter.patch:/behat.yml.dist.add_junit_formatter.patch
   command: "/bin/true"
 
