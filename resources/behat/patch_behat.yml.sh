@@ -5,3 +5,4 @@ cp behat.yml.dist behat.yml
 patch -p0 < /behat.yml.patch
 
 composer require --dev jarnaiz/behat-junit-formatter
+patch -p0 < /JUnitFormatter.php.patch

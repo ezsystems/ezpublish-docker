@@ -1,0 +1,27 @@
+--- vendor/jarnaiz/behat-junit-formatter/src/Formatter/JUnitFormatter.php.org	2015-09-03 12:01:52.611758603 +0200
++++ vendor/jarnaiz/behat-junit-formatter/src/Formatter/JUnitFormatter.php	2015-09-03 12:56:28.481904545 +0200
+@@ -2,7 +2,7 @@
+ 
+ namespace jarnaiz\JUnitFormatter\Formatter;
+ 
+-use Behat\Testwork\Tester\Result\TestResult;
++use Behat\Behat\Tester\Result\StepResult as TestResult;
+ use Behat\Behat\EventDispatcher\Event\FeatureTested;
+ use Behat\Behat\EventDispatcher\Event\ScenarioTested;
+ use Behat\Behat\EventDispatcher\Event\StepTested;
+@@ -185,6 +185,7 @@
+             TestResult::SKIPPED   => 0,
+             TestResult::PENDING   => 0,
+             TestResult::FAILED    => 0,
++            TestResult::UNDEFINED => 0,
+         );
+ 
+         $this->testsuiteTimer->start();
+@@ -262,6 +263,7 @@
+             TestResult::SKIPPED   => 'skipped',
+             TestResult::PENDING   => 'pending',
+             TestResult::FAILED    => 'failed',
++            TestResult::UNDEFINED => 'undefined',
+         );
+ 
+         $this->testsuiteStats[$code]++;

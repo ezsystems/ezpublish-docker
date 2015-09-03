@@ -18,5 +18,6 @@ behatphpcli:
    - ./resources/behat/behat.yml.patch:/behat.yml.patch
    - ./resources/behat/patch_behat.yml.sh:/patch_behat.yml.sh
    - ./resources/behat/behat.yml.dist.add_junit_formatter.patch:/behat.yml.dist.add_junit_formatter.patch
+   - ./resources/behat/JUnitFormatter.php.patch:/JUnitFormatter.php.patch
   command: "/bin/true"
 
