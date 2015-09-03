@@ -296,7 +296,7 @@ Create the containers needed for running eZ Platform/Studio
     ```./docker-compose.sh -f docker-compose_behat.yml up -d --no-recreate```
 
 Run the install script
-    ```./docker-compose.sh -f docker-compose_behat.yml run --rm phpfpm1 /bin/bash -c "php ezpublish/console ezplatform:install demo; php ezpublish/console cache:clear --env=prod"```
+    ```docker-compose -f docker-compose_behat.yml run --rm phpfpm1 /bin/bash -c "php ezpublish/console ezplatform:install demo; php ezpublish/console cache:clear --env=prod"```
 
 Patch behat.yml
     ```./docker-compose.sh -f docker-compose_behat.yml run --rm behatphpcli /patch_behat.yml.sh```
