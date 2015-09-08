@@ -93,8 +93,8 @@ function prepare
     ${COMPOSE_EXECUTION_PATH}docker-compose -f $MAINCOMPOSE kill
     ${COMPOSE_EXECUTION_PATH}docker-compose -f $MAINCOMPOSE rm --force -v
 
-    ${COMPOSE_EXECUTION_PATH}docker-compose -f docker-compose_distribution.yml kill
-    ${COMPOSE_EXECUTION_PATH}docker-compose -f docker-compose_distribution.yml rm --force -v
+    ${COMPOSE_EXECUTION_PATH}docker-compose -f distribution.yml kill
+    ${COMPOSE_EXECUTION_PATH}docker-compose -f distribution.yml rm --force -v
 
     ${COMPOSE_EXECUTION_PATH}docker-compose -f docker-compose_databasedump.yml kill
     ${COMPOSE_EXECUTION_PATH}docker-compose -f docker-compose_databasedump.yml rm --force -v
@@ -167,7 +167,7 @@ function create_distribution_tarball
 
 function create_distribution_container
 {
-    docker-compose -f docker-compose_distribution.yml up -d
+    docker-compose -f distribution.yml up -d
 }
 
 function tag_distribution_container
