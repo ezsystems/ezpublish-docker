@@ -117,10 +117,10 @@ If you later just want to recreate specific images or containers, you then first
 
 build.sh will build the "service" images you need in order to run eZ Platform. By "service" image we mean the nginx and php images. No customized db image is currently needed as the official MariaDB docker image is used. 
 
-### docker-compose_ezpinstall.sh
+### ezpinstall.sh
 
-docker-compose_ezpinstall.sh is a script which will download eZ Platform via composer and install it in volumes/ezpublish. You may specify parameters to composer using EZ_COMPOSERPARAM variable in files/docker-compose.config.
-docker-compose_ezpinstall.sh will automaticly by run when running ```vagrant up``` and ```vagrant provision```.
+ezpinstall.sh is a script which will download eZ Platform via composer and install it in volumes/ezpublish. You may specify parameters to composer using EZ_COMPOSERPARAM variable in files/docker-compose.config.
+ezpinstall.sh will automaticly by run when running ```vagrant up``` and ```vagrant provision```.
 
 ### docker-compose.sh
 
@@ -234,7 +234,7 @@ Create the service images ( web and php images )
     ```./build.sh```
 
 Install eZ Platform/Studio:
-    ```./docker-compose_ezpinstall.sh```
+    ```./ezpinstall.sh```
 
 Create the containers needed for running eZ Platform/Studio
     ```./docker-compose.sh up -d --no-recreate```
@@ -246,7 +246,7 @@ Stop the containers:
     ```docker-compose -f docker-compose.yml stop```
 
 Remove the containers:
-    ```docker-compose -f docker-compose.yml rm -v; docker-compose -f docker-compose_ezpinstall.yml rm -v```
+    ```docker-compose -f docker-compose.yml rm -v; docker-compose -f ezpinstall.yml rm -v```
 
 Remove the images:
     ```docker rmi ezsystems/web ezsystems/ezphp```
@@ -290,7 +290,7 @@ Create the service images ( web and php images )
     ```./build.sh```
 
 Install eZ Platform/Studio:
-    ```./docker-compose_ezpinstall.sh```
+    ```./ezpinstall.sh```
 
 Create the containers needed for running eZ Platform/Studio
     ```./docker-compose.sh -f behat.yml up -d --no-recreate```

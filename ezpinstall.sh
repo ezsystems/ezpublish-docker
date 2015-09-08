@@ -2,7 +2,7 @@
 
 export COMPOSE_PROJECT_NAME=ezpublishdocker
 CONFIGFILE=files/docker-compose.config
-YMLFILE="docker-compose_ezpinstall.yml"
+YMLFILE="ezpinstall.yml"
 CMDPARAMETERS="$@"
 
 # Check for parameter "-c alternative-config.file.config"
@@ -52,7 +52,7 @@ if [ "$COMPOSE_EXECUTION_PATH" == "" ]; then
 fi
 
 if [ "$EZ_ENVIRONMENT" = "dev" ]; then
-    YMLFILE="docker-compose_ezpinstall_dev.yml"
+    YMLFILE="ezpinstall_dev.yml"
 fi
 
 ${COMPOSE_EXECUTION_PATH}docker-compose -f $YMLFILE up --no-recreate

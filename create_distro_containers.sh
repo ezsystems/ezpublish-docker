@@ -99,8 +99,8 @@ function prepare
     ${COMPOSE_EXECUTION_PATH}docker-compose -f docker-compose_databasedump.yml kill
     ${COMPOSE_EXECUTION_PATH}docker-compose -f docker-compose_databasedump.yml rm --force -v
 
-    ${COMPOSE_EXECUTION_PATH}docker-compose -f docker-compose_ezpinstall.yml kill
-    ${COMPOSE_EXECUTION_PATH}docker-compose -f docker-compose_ezpinstall.yml rm --force -v
+    ${COMPOSE_EXECUTION_PATH}docker-compose -f ezpinstall.yml kill
+    ${COMPOSE_EXECUTION_PATH}docker-compose -f ezpinstall.yml rm --force -v
     docker rmi ${COMPOSE_PROJECT_NAME}_ezpinstall || /bin/true
 
     docker rmi ${COMPOSE_PROJECT_NAME}_distribution:latest || /bin/true
@@ -125,13 +125,13 @@ function prepare
 function install_ezpublish
 {
     if [ $REBUILD_EZP == "true" ]; then
-#        ./docker-compose_ezpinstall.sh -c files/docker-compose-${BUILD_TARGET}.config #FIXME : let config file be a parameter
-        ./docker-compose_ezpinstall.sh
+#        ./ezpinstall.sh -c files/docker-compose-${BUILD_TARGET}.config #FIXME : let config file be a parameter
+        ./ezpinstall.sh
     else
         # Workaround since ezphp container is not defined in docker-compose.yml
-        YMLFILE="docker-compose_ezpinstall.yml"
+        YMLFILE="ezpinstall.yml"
         if [ "$EZ_ENVIRONMENT" = "dev" ]; then
-            YMLFILE="docker-compose_ezpinstall_dev.yml"
+            YMLFILE="ezpinstall_dev.yml"
         fi
         ${COMPOSE_EXECUTION_PATH}docker-compose -f $YMLFILE build
     fi

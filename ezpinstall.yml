@@ -19,5 +19,5 @@ ezphp:
    - ./files/auth.json:/var/.composer/auth.json
    - ./files/kickstart_template.ini:/kickstart_template.ini
    # Override command, we don't want to start php-fpm just yet, just want to run composer command
-   # That is done in docker-compose_ezpinstall.sh since it needs env variables (todo: fix when on Compose 1.4)
+   # That is done in ezpinstall.sh since it needs env variables (todo: fix when on Compose 1.4)
   command: php -v

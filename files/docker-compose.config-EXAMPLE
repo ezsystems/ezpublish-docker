@@ -23,7 +23,7 @@ EZ_KICKSTART=true
 # Template file should be located in the files/ directory
 EZ_KICKSTART_FROM_TEMPLATE=
 
-# Setting used by docker-compose_ezpinstall.sh
+# Setting used by ezpinstall.sh
 # Arguments to give to composer create-project, directory must be named '/var/www'!
 # Examples:
 #

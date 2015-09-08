@@ -113,7 +113,7 @@ Vagrant.configure("2") do |config|
 
       cd /vagrant
       ./build.sh
-      ./docker-compose_ezpinstall.sh
+      ./ezpinstall.sh
       ./docker-compose.sh up -d --no-recreate
       if [[ ( -d volumes/ezpublish/ezpublish ) && ( ! -d volumes/ezpublish/ezpublish_legacy ) ]];  then \
           # Let us wait for db containers to get started and ready
