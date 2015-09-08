@@ -96,8 +96,8 @@ function prepare
     ${COMPOSE_EXECUTION_PATH}docker-compose -f distribution.yml kill
     ${COMPOSE_EXECUTION_PATH}docker-compose -f distribution.yml rm --force -v
 
-    ${COMPOSE_EXECUTION_PATH}docker-compose -f docker-compose_databasedump.yml kill
-    ${COMPOSE_EXECUTION_PATH}docker-compose -f docker-compose_databasedump.yml rm --force -v
+    ${COMPOSE_EXECUTION_PATH}docker-compose -f databasedump.yml kill
+    ${COMPOSE_EXECUTION_PATH}docker-compose -f databasedump.yml rm --force -v
 
     ${COMPOSE_EXECUTION_PATH}docker-compose -f ezpinstall.yml kill
     ${COMPOSE_EXECUTION_PATH}docker-compose -f ezpinstall.yml rm --force -v
@@ -191,7 +191,7 @@ function create_mysql_tarball
 
 function create_mysql_container
 {
-    ${COMPOSE_EXECUTION_PATH}docker-compose -f docker-compose_databasedump.yml up -d
+    ${COMPOSE_EXECUTION_PATH}docker-compose -f databasedump.yml up -d
 }
 
 function tag_mysql_container
