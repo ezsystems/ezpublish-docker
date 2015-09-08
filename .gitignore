@@ -1,4 +1,5 @@
 /.vagrant/
+docker-compose_behat.yml
 files/vagrant.yml
 files/authorized_keys2
 files/auth.json
