@@ -267,11 +267,11 @@ Create the containers
     ```./create_distro_containers.sh```
 
 Start the containers
-    ```source files/docker-compose.config; docker-compose -f docker-compose_services.yml up -d --no-recreate```
+    ```source files/docker-compose.config; docker-compose -f services.yml up -d --no-recreate```
 
 Remove all the containers
     ```
-    docker-compose -f docker-compose_services.yml stop; docker-compose -f docker-compose_services.yml rm -v
+    docker-compose -f services.yml stop; docker-compose -f services.yml rm -v
     ./create_distro_containers.sh --cleanup
     ```
 
