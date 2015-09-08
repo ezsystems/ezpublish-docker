@@ -146,10 +146,10 @@ function run_installscript
 
     if [ $REBUILD_EZP == "true" ]; then
         if [ $BUILD_TARGET == "ezplatform" ]; then
-            ${COMPOSE_EXECUTION_PATH}docker-compose -f $MAINCOMPOSE run --rm phpfpm1 /bin/bash -c "php ezpublish/console ezplatform:install demo; php ezpublish/console cache:clear --env=prod"
+            ${COMPOSE_EXECUTION_PATH}docker-compose -f $MAINCOMPOSE run --rm phpfpm1 /bin/bash -c "php ezpublish/console ezplatform:install demo && php ezpublish/console cache:clear --env=prod"
         fi
         if [ $BUILD_TARGET == "ezstudio" ]; then
-            ${COMPOSE_EXECUTION_PATH}docker-compose -f $MAINCOMPOSE run --rm phpfpm1 /bin/bash -c "php ezpublish/console --env=prod ezplatform:install studio; php ezpublish/console cache:clear --env=prod"
+            ${COMPOSE_EXECUTION_PATH}docker-compose -f $MAINCOMPOSE run --rm phpfpm1 /bin/bash -c "php ezpublish/console --env=prod ezplatform:install studio && php ezpublish/console cache:clear --env=prod"
         fi
     fi
 }
