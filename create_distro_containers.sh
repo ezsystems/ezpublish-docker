@@ -5,6 +5,7 @@ set -e
 # usage : ./create_distro_containers.sh [--skip-rebuilding-ezp] [ --target ezstudio ]
 # --push : Pushes the created images to a repository
 # --skip-rebuilding-ezp : Assumes ezpublish.tar.gz is already created and will not generate one using the fig_ezpinstall.sh script
+# --skip-running-install-script : Skip running the installer ( php ezpublish/console ezplatform:install ... )
 # --target ezstudio : Create ezstudio containers instead of ezplatform
 
 export COMPOSE_PROJECT_NAME=ezpublishdocker
@@ -13,6 +14,7 @@ MAINCOMPOSE="docker-compose.yml"
 DATE=`date +%Y%m%d`
 PUSH="false"
 REBUILD_EZP="true"
+RUN_INSTALL_SCRIPT="true"
 BUILD_TARGET="ezplatform" # Could be "ezplatform" or "ezstudio"
 ONLYCLEANUP="false"
 
@@ -51,6 +53,9 @@ function parse_commandline_arguments
                     ;;
                 -s* | --skip-rebuilding-ezp )
                     REBUILD_EZP="false"
+                    ;;
+                -i* | --skip-running-install-script )
+                    RUN_INSTALL_SCRIPT="false"
                     ;;
                 -t* | --target )
                     BUILD_TARGET="$2"
@@ -139,6 +144,10 @@ function install_ezpublish
 
 function run_installscript
 {
+    if [ $RUN_INSTALL_SCRIPT == "false" ]; then
+        return 0
+    fi
+
     #Start service containers and wait some seconds for mysql to get running
     #FIXME : can be removed now?
     ${COMPOSE_EXECUTION_PATH}docker-compose -f $MAINCOMPOSE up -d # We must call "up" before "run", or else volumes definitions in .yml will not be treated correctly ( will mount all volumes in vfs/ folder ) ( must be a docker-compose bug )
