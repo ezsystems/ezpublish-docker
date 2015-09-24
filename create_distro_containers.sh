@@ -12,6 +12,7 @@ export COMPOSE_PROJECT_NAME=ezpublishdocker
 source files/distro_containers.config
 MAINCOMPOSE="docker-compose.yml"
 DATE=`date +%Y%m%d`
+CONFIGFILE=""
 PUSH="false"
 REBUILD_EZP="true"
 RUN_INSTALL_SCRIPT="true"
@@ -41,10 +42,10 @@ function parse_commandline_arguments
 #                    shift
 #                    ;;
 #                # and --flag value opts like this
-#                -c* | --config )
-#                    CONFIGFILE="$2"
-#                    shift
-#                    ;;
+                -c* | --config )
+                    CONFIGFILE="$2"
+                    shift
+                    ;;
 #                -f* | --force )
 #                    FORCE=true
 #                    ;;
@@ -130,8 +131,11 @@ function prepare
 function install_ezpublish
 {
     if [ $REBUILD_EZP == "true" ]; then
-#        ./docker-compose_ezpinstall.sh -c files/docker-compose-${BUILD_TARGET}.config #FIXME : let config file be a parameter
-        ./docker-compose_ezpinstall.sh
+        if [ "$CONFIGFILE" == "" ]; then
+            ./docker-compose_ezpinstall.sh
+        else
+            ./docker-compose_ezpinstall.sh -c $CONFIGFILE
+        fi
     else
         # Workaround since ezphp container is not defined in docker-compose.yml
         YMLFILE="docker-compose_ezpinstall.yml"
