@@ -21,7 +21,7 @@ sed -i "s@database_user:.*@database_user: ezp@" ezpublish/config/parameters.yml
 sed -i "s@database_password:.*@database_password: $MYSQL_PASSWORD@" ezpublish/config/parameters.yml
 
 
-if [ "SOLR_PORT_8983_TCP_ADDR" != "" ]; then
+if [ "$SOLR_PORT_8983_TCP_ADDR" != "" ]; then
     sed -i "s@search_engine:.*@search_engine: solr@" ezpublish/config/parameters.yml
     sed -i "s@solr_dsn:.*@solr_dsn: http://$SOLR_PORT_8983_TCP_ADDR:8983/solr@" ezpublish/config/parameters.yml
 else
