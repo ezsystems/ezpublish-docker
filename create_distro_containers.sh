@@ -4,6 +4,7 @@ set -e
 
 # usage : ./create_distro_containers.sh [--skip-rebuilding-ezp] [ --target ezstudio ]
 # --push : Pushes the created images to a repository
+# --pushonly : Only pushes the created images to a repository. In order to make this work, you need to first run this script without the --push or --pushonly parameter
 # --skip-rebuilding-ezp : Assumes ezpublish.tar.gz is already created and will not generate one using the fig_ezpinstall.sh script
 # --skip-running-install-script : Skip running the installer ( php ezpublish/console ezplatform:install ... )
 # --target ezstudio : Create ezstudio containers instead of ezplatform
@@ -14,6 +15,7 @@ MAINCOMPOSE="docker-compose.yml"
 DATE=`date +%Y%m%d`
 CONFIGFILE=""
 PUSH="false"
+PUSHONLY="false"
 REBUILD_EZP="true"
 RUN_INSTALL_SCRIPT="true"
 BUILD_TARGET="ezplatform" # Could be "ezplatform" or "ezstudio"
@@ -51,6 +53,10 @@ function parse_commandline_arguments
 #                    ;;
                 -p* | --push )
                     PUSH="true"
+                    ;;
+                -p* | --pushonly )
+                    PUSH="true"
+                    PUSHONLY="true"
                     ;;
                 -s* | --skip-rebuilding-ezp )
                     REBUILD_EZP="false"
@@ -224,8 +230,23 @@ function create_initialize_container
     ${COMPOSE_EXECUTION_PATH}docker-compose -f docker-compose_initialize.yml up -d
 }
 
+function pushonly
+{
+    if [ "$PUSHONLY" == "true" ]; then
+        echo push_distribution_container
+        push_distribution_container
+
+        echo push_mysql_container
+        push_mysql_container
+        exit
+    fi
+}
+
 echo parse_commandline_arguments
 parse_commandline_arguments "$@"
+
+echo pushonly:
+pushonly
 
 echo Prepare:
 prepare
