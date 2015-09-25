@@ -84,8 +84,12 @@ set_splash_screen "Initializing"
 set_permissions
 set_splash_screen "Waiting for db connection"
 import_database
-set_splash_screen "Warming cache"
-warm_cache
+
+if [ "$WARM_CACHE" != "false" ]; then
+    set_splash_screen "Warming cache"
+    warm_cache
+fi
+
 remove_splash_screen
 
 cd - > /dev/null
