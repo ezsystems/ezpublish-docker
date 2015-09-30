@@ -39,7 +39,6 @@ RUN apt-get update -q -y \
     git \
     acl \
     tree \
-    patch \
     && rm -rf /var/lib/apt/lists/*
 
 # Create Composer directory (cache and auth files)

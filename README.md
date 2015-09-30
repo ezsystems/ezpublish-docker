@@ -280,26 +280,23 @@ Remove all the containers
 Make a config file
     ```cp files/distro_containers.config-EXAMPLE files/distro_containers.config```
 
-Make sure you use dev-master, edit files/distro_containers.config and ensure you set:
+Configure `EZ_COMPOSERPARAM` without `--no-dev` option *(as behat is dev package)*, example:
     ```EZ_COMPOSERPARAM="--prefer-source --no-progress --no-interaction ezsystems/ezplatform /var/www dev-master"```
 
-Make docker-compose file for behat tests
+Make docker-compose file for behat *(step is temporary until we start to use docker compose extend features)*:
     ```cat docker-compose.yml docker-compose_behat.yml.template > docker-compose_behat.yml```
 
 Create the service images ( web and php images )
     ```./build.sh```
 
-Install eZ Platform/Studio:
+Install eZ Platform/Studio *(Step uses what you specified in `EZ_COMPOSERPARAM`)*:
     ```./docker-compose_ezpinstall.sh```
 
 Create the containers needed for running eZ Platform/Studio
     ```./docker-compose.sh -f docker-compose_behat.yml up -d --no-recreate```
 
-Run the install script
+Run the eZ Platform/Studio install script, example:
     ```docker-compose -f docker-compose_behat.yml run --rm phpfpm1 /bin/bash -c "php ezpublish/console ezplatform:install demo; php ezpublish/console cache:clear --env=prod"```
 
-Patch behat.yml
-    ```./docker-compose.sh -f docker-compose_behat.yml run --rm behatphpcli /patch_behat.yml.sh```
-
-Run behat tests
+Run behat tests, example:
     ```./docker-compose.sh -f docker-compose_behat.yml run --rm behatphpcli bin/behat --no-colors --profile demo --suite content```
