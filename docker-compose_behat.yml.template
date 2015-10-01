@@ -14,5 +14,5 @@ behatphpcli:
    - selenium:selenium
   volumes_from:
    - ezpublishvol
-  command: "/bin/true"
+  command: "/prepare_behat.sh"
 
