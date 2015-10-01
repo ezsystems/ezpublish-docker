@@ -61,39 +61,6 @@ web1:
    - VARNISH_ENABLED
    - DOCKER0NET
 
-#selenium:
-#  image: selenium/standalone-firefox
-#  links:
-#   - web1:web
-#  ports:
-#   - "9999:9999"
-#   - "4444:4444"
-#
-#behatphpcli:
-#  image: ezpublishdocker_ezpphp:latest
-#  links:
-#   - db1:db
-#   - web1:web
-#   - selenium:selenium
-#  volumes_from:
-#   - ezpublishvol
-#  command: echo "php bin/behat -c behat.yml.dist -vv --profile demo --suite content"
-#
-# To run this you'll currenly need to edit behat.yml.dist manually to add correct hosts (we plan to fix this
-# either by doing the patching automated, or change default host names in container and travis to be the same
-# by default out of the box for eZ Platform), get the relevant evn variables and fill in their values:
-#
-# default:
-#    extensions:
-#        Behat\MinkExtension:
-#            base_url: 'http://${WEB_PORT_80_TCP_ADDR}'
-#            goutte: ~
-#            selenium2:
-#                wd_host: http://${SELENIUM_PORT_4444_TCP_ADDR}:4444/wd/hub
-#
-# Further changes for some sceanrios that is pending changes to use base url can be found in:
-# resources/behat.yml.patch
-#
 #
 #varnish:
 #  build: dockerfiles/internal/varnish

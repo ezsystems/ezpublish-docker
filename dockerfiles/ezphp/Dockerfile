@@ -34,6 +34,7 @@ RUN apt-get update -q -y \
     curl \
     wget \
     ca-certificates \
+    less \
     vim \
     git \
     acl \
@@ -70,6 +71,7 @@ ADD run.sh /run.sh
 ADD generate_kickstart_file.sh /generate_kickstart_file.sh
 ADD generate_parameters_file.sh /generate_parameters_file.sh
 ADD prepare_distribution_volume.sh /prepare_distribution_volume.sh
+ADD prepare_behat.sh /prepare_behat.sh
 ADD config/opcache.ini /etc/php5/mods-available/opcache.ini
 
 RUN chmod 755 /*.sh

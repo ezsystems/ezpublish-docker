@@ -33,6 +33,7 @@ fi
 
 /generate_parameters_file.sh
 
+
 echo "Setting permissions on eZ Publish folder as they might be broken if rsync is used"
 setfacl -R -m u:$APACHE_RUN_USER:rwx -m u:`whoami`:rwx ezpublish/{cache,logs,config,sessions} web
 setfacl -dR -m u:$APACHE_RUN_USER:rwx -m u:`whoami`:rwx ezpublish/{cache,logs,config,sessions} web
