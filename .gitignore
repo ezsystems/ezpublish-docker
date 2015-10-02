@@ -1,5 +1,6 @@
 /.vagrant/
 docker-compose_behat.yml
+docker-compose_solr.yml
 files/vagrant.yml
 files/authorized_keys2
 files/auth.json

@@ -1,0 +1,8 @@
+
+solr1:
+  image: makuk66/docker-solr:4.10.4
+  volumes_from:
+    - ezpublishvol
+  command: /bin/bash -c "cp -R /var/www/vendor/ezsystems/ezplatform-solr-search-engine/lib/eZ/Publish/Core/Search/Solr/Resources/* /opt/solr/example/solr/collection1/conf/
+    && /opt/solr/bin/solr start -f"
+

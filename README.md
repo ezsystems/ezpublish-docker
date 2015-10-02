@@ -300,3 +300,27 @@ Run the eZ Platform/Studio install script, example:
 
 Run behat tests, example:
     ```./docker-compose.sh -f docker-compose_behat.yml run --rm behatphpcli bin/behat --no-colors --profile demo --suite content```
+
+
+#### Running eZ Platform/Studio with solr
+
+Make a config file ( recommended, but not strictly speaking )
+    ```cp files/docker-compose.config-EXAMPLE files/docker-compose.config```
+
+Make docker-compose file for solr:
+    ```cat docker-compose.yml docker-compose_solr.yml.template > docker-compose_solr.yml```
+
+Enable solr link for phpfpm1 service
+    Edit `docker-compose_solr.yml` and uncomment `#   - solr1:solr` in the `phpfpm1:` section.
+
+Create the service images ( web and php images )
+    ```./build.sh```
+
+Install eZ Platform/Studio:
+    ```./docker-compose_ezpinstall.sh```
+
+Create the containers needed for running eZ Platform/Studio
+    ```./docker-compose.sh -f docker-compose_solr.yml up -d --no-recreate```
+
+Run the install script
+    ```docker-compose -f docker-compose_solr.yml run --rm phpfpm1 /bin/bash -c "php ezpublish/console ezplatform:install demo; php ezpublish/console cache:clear --env=prod"```
