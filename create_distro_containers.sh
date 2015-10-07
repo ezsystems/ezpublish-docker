@@ -164,12 +164,7 @@ function run_installscript
     sleep 12
 
     if [ $REBUILD_EZP == "true" ]; then
-        if [ $BUILD_TARGET == "ezplatform" ]; then
-            ${COMPOSE_EXECUTION_PATH}docker-compose -f $MAINCOMPOSE run --rm phpfpm1 /bin/bash -c "php ezpublish/console ezplatform:install demo && php ezpublish/console cache:clear --env=prod"
-        fi
-        if [ $BUILD_TARGET == "ezstudio" ]; then
-            ${COMPOSE_EXECUTION_PATH}docker-compose -f $MAINCOMPOSE run --rm phpfpm1 /bin/bash -c "php ezpublish/console --env=prod ezplatform:install studio && php ezpublish/console cache:clear --env=prod"
-        fi
+        ${COMPOSE_EXECUTION_PATH}docker-compose -f $MAINCOMPOSE run --rm phpfpm1 /bin/bash -c "php ezpublish/console --env=prod ezplatform:install demo && php ezpublish/console cache:clear --env=prod"
     fi
 }
 
