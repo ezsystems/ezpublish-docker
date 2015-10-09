@@ -55,7 +55,7 @@ source $CONFIGFILE
 if [ $CONFIGFILE == "files/docker-compose.config" ]; then
     CONFIGFILEPARAM=""
 else
-    CONFIGFILEPARAM="-c $CONFIGFILE "
+    CONFIGFILEPARAM="--custom-conf $CONFIGFILE "
 fi
 
 
