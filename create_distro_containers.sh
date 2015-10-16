@@ -164,13 +164,13 @@ function run_installscript
     sleep 12
 
     if [ $REBUILD_EZP == "true" ]; then
-        ${COMPOSE_EXECUTION_PATH}docker-compose -f $MAINCOMPOSE run --rm phpfpm1 /bin/bash -c "php ezpublish/console --env=prod ezplatform:install demo && php ezpublish/console cache:clear --env=prod"
+        ${COMPOSE_EXECUTION_PATH}docker-compose -f $MAINCOMPOSE run -u ez --rm phpfpm1 /bin/bash -c "php ezpublish/console --env=prod ezplatform:install demo && php ezpublish/console cache:clear --env=prod"
     fi
 }
 
 function warm_cache
 {
-    ${COMPOSE_EXECUTION_PATH}docker-compose -f $MAINCOMPOSE run --rm phpfpm1 /bin/bash -c "php ezpublish/console cache:warmup --env=prod"
+    ${COMPOSE_EXECUTION_PATH}docker-compose -f $MAINCOMPOSE run -u ez --rm phpfpm1 /bin/bash -c "php ezpublish/console cache:warmup --env=prod"
 }
 
 function create_distribution_tarball
@@ -200,7 +200,7 @@ function push_distribution_container
 
 function create_mysql_tarball
 {
-    ${COMPOSE_EXECUTION_PATH}docker-compose -f $MAINCOMPOSE run phpfpm1 /bin/bash -c "mysqldump -u ezp -p${MYSQL_PASSWORD} -h db --databases ezp > /tmp/ezp.sql"
+    ${COMPOSE_EXECUTION_PATH}docker-compose -f $MAINCOMPOSE run -u ez phpfpm1 /bin/bash -c "mysqldump -u ezp -p${MYSQL_PASSWORD} -h db --databases ezp > /tmp/ezp.sql"
     docker cp ${COMPOSE_PROJECT_NAME}_phpfpm1_run_1:/tmp/ezp.sql dockerfiles/databasedump
     docker rm ${COMPOSE_PROJECT_NAME}_phpfpm1_run_1
 }

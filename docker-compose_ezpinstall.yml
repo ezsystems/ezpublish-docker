@@ -2,16 +2,18 @@ ezpublishvol:
   image: debian:jessie
   volumes:
    - ./volumes/ezpublish:/var/www
-  # Remove .keep file so composer is able to install in the directory afterwards
-  command: rm /var/www/.keep
+  # Remove .keep file so composer is able to install in the directory afterwards. UID=10000 and GUID=10000 is ez user in ezphp image
+  command: bash -c "rm /var/www/.keep; chown 10000:10000 /var/www"
 
 composercachevol:
   image: debian:jessie
   volumes:
    - ./volumes/composercache:/var/.composer/cache
+  command: chown 10000:10000 /var/.composer/cache
 
 ezphp:
   image: ezsystems/ezphp
+  user: ez
   volumes_from:
    - ezpublishvol
    - composercachevol

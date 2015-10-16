@@ -35,25 +35,28 @@ fi
 
 
 echo "Setting permissions on eZ Publish folder as they might be broken if rsync is used"
-setfacl -R -m u:$APACHE_RUN_USER:rwx -m u:`whoami`:rwx ezpublish/{cache,logs,config,sessions} web
-setfacl -dR -m u:$APACHE_RUN_USER:rwx -m u:`whoami`:rwx ezpublish/{cache,logs,config,sessions} web
+if [ ! -d web/var ]; then
+    sudo -u ez mkdir web/var
+fi
+setfacl -R -m u:$APACHE_RUN_USER:rwX -m u:ez:rwX ezpublish/{cache,logs,sessions} web/var
+setfacl -dR -m u:$APACHE_RUN_USER:rwX -m u:ez:rwX ezpublish/{cache,logs,sessions} web/var
 
 if [ -d ezpublish_legacy ]; then
-    setfacl -R -m u:$APACHE_RUN_USER:rwx -m u:`whoami`:rwx ezpublish_legacy/{design,extension,settings,var}
-    setfacl -dR -m u:$APACHE_RUN_USER:rwx -m u:`whoami`:rwx ezpublish_legacy/{design,extension,settings,var}
+    setfacl -R -m u:$APACHE_RUN_USER:rwx -m u:ez:rwx ezpublish_legacy/{design,extension,settings,var} ezpublish/config web
+    setfacl -dR -m u:$APACHE_RUN_USER:rwx -m u:ez:rwx ezpublish_legacy/{design,extension,settings,var} ezpublish/config web
 fi
 
 echo "Clear cache after parameters where updated"
-php ezpublish/console cache:clear --env $EZ_ENVIRONMENT
+sudo -u ez php ezpublish/console cache:clear --env $EZ_ENVIRONMENT
 
 if [ "$EZ_ENVIRONMENT" != "dev" ]; then
     echo "Re-generate symlink assets in case rsync was used so asstets added during setup wizards are reachable"
-    php ezpublish/console assetic:dump --env $EZ_ENVIRONMENT
+    sudo -u ez php ezpublish/console assetic:dump --env $EZ_ENVIRONMENT
 fi
 
-php ezpublish/console assets:install --symlink --relative --env $EZ_ENVIRONMENT
+sudo -u ez php ezpublish/console assets:install --symlink --relative --env $EZ_ENVIRONMENT
 if [ -d ezpublish_legacy ]; then
-    php ezpublish/console ezpublish:legacy:assets_install --symlink --relative --env $EZ_ENVIRONMENT
+    sudo -u ez php ezpublish/console ezpublish:legacy:assets_install --symlink --relative --env $EZ_ENVIRONMENT
 fi
 
 # Start php-fpm

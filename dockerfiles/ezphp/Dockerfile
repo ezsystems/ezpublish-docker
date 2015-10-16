@@ -38,6 +38,7 @@ RUN apt-get update -q -y \
     vim \
     git \
     acl \
+    sudo \
     tree \
     && rm -rf /var/lib/apt/lists/*
 
@@ -75,6 +76,7 @@ ADD prepare_behat.sh /prepare_behat.sh
 ADD config/opcache.ini /etc/php5/mods-available/opcache.ini
 
 RUN chmod 755 /*.sh
+RUN groupadd -g 10000 ez && useradd -g ez -u 10000 ez
 
 WORKDIR /var/www
 

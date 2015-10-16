@@ -136,7 +136,7 @@ When the containers are created, you should be able to browse to eZ Platform set
 ### Setting up eZ Platform using install script
 
 It is possible to setup a fresh installation using the install script instead of using the setup wizard. ( If using vagrant, this is done automaticly )
- - Run command : ```docker-compose -f docker-compose.yml run --rm phpfpm1 /bin/bash -c "php ezpublish/console ezplatform:install demo; php ezpublish/console cache:clear --env=prod"```
+ - Run command : ```docker-compose -f docker-compose.yml run -u ez --rm phpfpm1 /bin/bash -c "php ezpublish/console ezplatform:install demo; php ezpublish/console cache:clear --env=prod"```
 
 FYI : The command above assumes you have ```EZ_ENVIRONMENT=prod``` in files/docker-compose.config. If you use a different setting, adjust the ```--env=....``` parameter accordingly.
 You may also substitute "demo" with "demo_clean" if you want to install ezdemo without demo data, or "clean" if only want the very basics.
@@ -240,7 +240,7 @@ Create the containers needed for running eZ Platform/Studio
     ```./docker-compose.sh up -d --no-recreate```
 
 Run the install script
-    ```docker-compose -f docker-compose.yml run --rm phpfpm1 /bin/bash -c "php ezpublish/console ezplatform:install demo; php ezpublish/console cache:clear --env=prod"```
+    ```docker-compose -f docker-compose.yml run --rm -u ez phpfpm1 /bin/bash -c "php ezpublish/console ezplatform:install demo; php ezpublish/console cache:clear --env=prod"```
 
 Stop the containers:
     ```docker-compose -f docker-compose.yml stop```
@@ -296,7 +296,7 @@ Create the containers needed for running eZ Platform/Studio
     ```./docker-compose.sh -f docker-compose_behat.yml up -d --no-recreate```
 
 Run the eZ Platform/Studio install script, example:
-    ```docker-compose -f docker-compose_behat.yml run --rm phpfpm1 /bin/bash -c "php ezpublish/console ezplatform:install demo; php ezpublish/console cache:clear --env=prod"```
+    ```docker-compose -f docker-compose_behat.yml run -u ez --rm phpfpm1 /bin/bash -c "php ezpublish/console ezplatform:install demo; php ezpublish/console cache:clear --env=prod"```
 
 Run behat tests, example:
     ```./docker-compose.sh -f docker-compose_behat.yml run --rm behatphpcli bin/behat --no-colors --profile demo --suite content```
@@ -323,4 +323,4 @@ Create the containers needed for running eZ Platform/Studio
     ```./docker-compose.sh -f docker-compose_solr.yml up -d --no-recreate```
 
 Run the install script
-    ```docker-compose -f docker-compose_solr.yml run --rm phpfpm1 /bin/bash -c "php ezpublish/console ezplatform:install demo; php ezpublish/console cache:clear --env=prod"```
+    ```docker-compose -f docker-compose_solr.yml run -u ez --rm phpfpm1 /bin/bash -c "php ezpublish/console ezplatform:install demo; php ezpublish/console cache:clear --env=prod"```
