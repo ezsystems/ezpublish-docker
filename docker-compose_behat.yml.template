@@ -8,6 +8,7 @@ selenium:
 
 behatphpcli:
   image: ezsystems/ezphp
+  user: ez
   links:
    - db1:db
    - web1:web

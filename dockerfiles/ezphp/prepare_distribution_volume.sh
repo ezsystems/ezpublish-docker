@@ -8,11 +8,11 @@ cd /var/www
 
 function prevent_multiple_execuition
 {
-    if [ -f /already_run.txt ]; then
+    if [ -f /tmp/prepare_distribution_already_run.txt ]; then
         echo "Script has already been executed. Bailling out"
         exit
     fi
-    touch /already_run.txt
+    sudo -u ez touch /tmp/prepare_distribution_already_run.txt
 }
 
 
@@ -20,14 +20,14 @@ function prevent_multiple_execuition
 function set_splash_screen
 {
     if [ ! -f /var/www/web/index.php.org ]; then
-        mv /var/www/web/index.php /var/www/web/index.php.org
+        sudo -u ez mv /var/www/web/index.php /var/www/web/index.php.org
     fi
-    echo "<html><body>$1</body></html>" > /var/www/web/index.php
+    sudo -u ez echo "<html><body>$1</body></html>" > /var/www/web/index.php
 }
 
 function remove_splash_screen
 {
-    mv /var/www/web/index.php.org /var/www/web/index.php
+    sudo -u ez mv /var/www/web/index.php.org /var/www/web/index.php
 }
 
 function set_permissions
@@ -36,12 +36,15 @@ function set_permissions
         APACHE_RUN_USER=www-data
     fi
 
-    setfacl -R -m u:$APACHE_RUN_USER:rwx -m u:`whoami`:rwx ezpublish/{cache,logs,config,sessions} web
-    setfacl -dR -m u:$APACHE_RUN_USER:rwx -m u:`whoami`:rwx ezpublish/{cache,logs,config,sessions} web
+    if [ ! -d web/var ]; then
+        sudo -u ez mkdir web/var
+    fi
+    setfacl -R -m u:$APACHE_RUN_USER:rwX -m u:ez:rwX ezpublish/{cache,logs,sessions} web/var
+    setfacl -dR -m u:$APACHE_RUN_USER:rwX -m u:ez:rwX ezpublish/{cache,logs,sessions} web/var
 
     if [ -d ezpublish_legacy ]; then
-        setfacl -R -m u:$APACHE_RUN_USER:rwx -m u:`whoami`:rwx ezpublish_legacy/{design,extension,settings,var}
-        setfacl -dR -m u:$APACHE_RUN_USER:rwx -m u:`whoami`:rwx ezpublish_legacy/{design,extension,settings,var}
+        setfacl -R -m u:$APACHE_RUN_USER:rwx -m u:ez:rwx ezpublish_legacy/{design,extension,settings,var} ezpublish/config web
+        setfacl -dR -m u:$APACHE_RUN_USER:rwx -m u:ez:rwx ezpublish_legacy/{design,extension,settings,var} ezpublish/config web
     fi
 }
 
@@ -58,7 +61,7 @@ function import_database
         if [ $DBUP == "true" ]; then
             DBUP=false
             set_splash_screen "Importing database"
-            mysql -u$MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE -h db< /dbdump/ezp.sql && DBUP="true"
+            sudo -u ez mysql -u$MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE -h db< /dbdump/ezp.sql && DBUP="true"
         fi
 
         if [ $DBUP == "false" ]; then
@@ -67,7 +70,7 @@ function import_database
         let TRY=$TRY+1
         if [ $TRY -eq $MAXTRY ]; then
             echo Max limit reached. Not able to connect to mysql
-            rm /already_run.txt
+            sudo -u ez rm /tmp/prepare_distribution_already_run.txt
             exit 1;
         fi
         sleep 5;
@@ -76,7 +79,7 @@ function import_database
 
 function warm_cache
 {
-    php ezpublish/console cache:warmup --env=$EZ_ENVIRONMENT
+    sudo -u ez php ezpublish/console cache:warmup --env=$EZ_ENVIRONMENT
 }
 
 prevent_multiple_execuition
