@@ -21,6 +21,9 @@ RUN_INSTALL_SCRIPT="true"
 BUILD_TARGET="ezplatform" # Could be "ezplatform" or "ezstudio"
 ONLYCLEANUP="false"
 
+# Let's try to connect to db for 2 minutes ( 24 * 5 sec intervalls )
+MAXTRY=24
+
 function parse_commandline_arguments
 {
     # Based on http://stackoverflow.com/questions/192249/how-do-i-parse-command-line-arguments-in-bash, comment by Shane Day answered Jul 1 '14 at 1:20
@@ -152,6 +155,26 @@ function install_ezpublish
     fi
 }
 
+function waitForDatabaseToGetUp
+{
+    local DBUP
+    local TRY
+    DBUP=false
+    TRY=1
+    while [ $DBUP == "false" ]; do
+        echo "Checking if mysql is up yet, attempt :$TRY"
+        docker-compose -f docker-compose.yml run -u ez --rm phpfpm1 /bin/bash -c 'echo "show databases" | mysql -u$DB_ENV_MYSQL_USER -p$DB_ENV_MYSQL_PASSWORD $DB_ENV_MYSQL_DATABASE -h db > /dev/null' && DBUP="true"
+
+        let TRY=$TRY+1
+        if [ $TRY -eq $MAXTRY ]; then
+            echo Max limit reached. Not able to connect to mysql. Running installer will likely fail
+            DBUP="true"
+        else
+            sleep 5;
+        fi
+    done
+}
+
 function run_installscript
 {
     if [ $RUN_INSTALL_SCRIPT == "false" ]; then
@@ -161,7 +184,8 @@ function run_installscript
     #Start service containers and wait some seconds for mysql to get running
     #FIXME : can be removed now?
     ${COMPOSE_EXECUTION_PATH}docker-compose -f $MAINCOMPOSE up -d # We must call "up" before "run", or else volumes definitions in .yml will not be treated correctly ( will mount all volumes in vfs/ folder ) ( must be a docker-compose bug )
-    sleep 12
+    waitForDatabaseToGetUp
+#    sleep 12
 
     if [ $REBUILD_EZP == "true" ]; then
         ${COMPOSE_EXECUTION_PATH}docker-compose -f $MAINCOMPOSE run -u ez --rm phpfpm1 /bin/bash -c "php ezpublish/console --env=prod ezplatform:install demo && php ezpublish/console cache:clear --env=prod"
