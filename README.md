@@ -301,6 +301,17 @@ Run the eZ Platform/Studio install script, example:
 Run behat tests, example:
     ```./docker-compose.sh -f docker-compose_behat.yml run --rm behatphpcli bin/behat --no-colors --profile demo --suite content```
 
+If you need to see what is going on in the browser being used by selenium, this is how:
+- Find the name of the selenium container using ```docker ps -a```. ( It is usually called ```ezpublishdocker_selenium_1``` )
+- Find the IP address of the selenium container using ```docker inspect ezpublishdocker_selenium_1```. Look under NetworkSettings-->IPAddress
+- Enter the container using ```docker exec -t -i ezpublishdocker_selenium_1 /bin/bash``` and issue the following commands:
+ - ```sudo apt-get update```
+ - ```sudo apt-get install x11vnc```
+ - ```x11vnc -display :99```
+- If you run the containers on a remote server but want to see the X session on your local display, port-forward the container's port 5900 to localhost :
+ - ```ssh remoteserver.example.com -L 5900:172.17.27.159:5900``` ( where you substitute "172.17.27.159" with the actuall IP of the selenium container )
+- Start vncviewer on your computer : ```vncviewer localhost:5900```
+
 
 #### Running eZ Platform/Studio with solr
 
