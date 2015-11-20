@@ -5,6 +5,7 @@ set -e
 # usage : ./create_distro_containers.sh [--skip-rebuilding-ezp] [ --target ezstudio ]
 # --push : Pushes the created images to a repository
 # --pushonly : Only pushes the created images to a repository. In order to make this work, you need to first run this script without the --push or --pushonly parameter
+# --install-type [ type ]: Install type used when running installer. Typicall values for type is "clean" and "demo"
 # --skip-rebuilding-ezp : Assumes ezpublish.tar.gz is already created and will not generate one using the fig_ezpinstall.sh script
 # --skip-running-install-script : Skip running the installer ( php ezpublish/console ezplatform:install ... )
 # --target ezstudio : Create ezstudio containers instead of ezplatform
@@ -17,6 +18,7 @@ CONFIGFILE=""
 PUSH="false"
 PUSHONLY="false"
 REBUILD_EZP="true"
+INSTALL_TYPE="demo"
 RUN_INSTALL_SCRIPT="true"
 BUILD_TARGET="ezplatform" # Could be "ezplatform" or "ezstudio"
 ONLYCLEANUP="false"
@@ -66,6 +68,10 @@ function parse_commandline_arguments
                     ;;
                 -i* | --skip-running-install-script )
                     RUN_INSTALL_SCRIPT="false"
+                    ;;
+                -s* | --install-type )
+                    INSTALL_TYPE="$2"
+                    shift
                     ;;
                 -t* | --target )
                     BUILD_TARGET="$2"
@@ -188,7 +194,7 @@ function run_installscript
 #    sleep 12
 
     if [ $REBUILD_EZP == "true" ]; then
-        ${COMPOSE_EXECUTION_PATH}docker-compose -f $MAINCOMPOSE run -u ez --rm phpfpm1 /bin/bash -c "php ezpublish/console --env=prod ezplatform:install demo && php ezpublish/console cache:clear --env=prod"
+        ${COMPOSE_EXECUTION_PATH}docker-compose -f $MAINCOMPOSE run -u ez --rm phpfpm1 /bin/bash -c "php ezpublish/console --env=prod ezplatform:install $INSTALL_TYPE && php ezpublish/console cache:clear --env=prod"
     fi
 }
 
