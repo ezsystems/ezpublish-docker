@@ -1,4 +1,4 @@
-FROM debian:jessie
+FROM busybox
 
 add ezpublish.tar.gz /var/www
 # Make sure /var/www is also owned by ez user

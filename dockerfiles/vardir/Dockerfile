@@ -1,4 +1,4 @@
-FROM debian:jessie
+FROM busybox
 
 add vardir.tar.gz /var/www/web
 # Make sure /var/www/ is also owned by ez user

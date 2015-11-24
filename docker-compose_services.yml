@@ -2,7 +2,7 @@
 
 
 site1dbvol:
-  image: debian:jessie
+  image: busybox
 #  volumes:
 #   - volumes/mysql:/var/lib/mysql
 

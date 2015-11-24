@@ -1,4 +1,4 @@
-FROM debian:jessie
+FROM busybox
 
 copy ezp.sql /dbdump/ezp.sql
 
