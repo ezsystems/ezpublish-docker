@@ -46,6 +46,12 @@ EZ_COMPOSERPARAM="--prefer-dist --no-dev ezsystems/ezplatform /var/www"
 # WARNING: Only non dev env works (assets) atm as the standard Nginx rewrite rules does not take care to addapt for env!
 EZ_ENVIRONMENT=prod
 
+# SwiftMailer to inject into platform's parameters.yml
+EZ_MAILER_TRANSPORT=
+EZ_MAILER_HOST=
+EZ_MAILER_USER=
+EZ_MAILER_PASSWORD=
+
 #### Docker Compose settings ####
 # Path to location of docker-compose. If docker-compose is in your PATH, you may leave it empty
 export COMPOSE_EXECUTION_PATH=""
@@ -58,6 +64,6 @@ DOCKER0NET="172.17.0.0/16"
 
 export MYSQL_PASSWORD
 export VARNISH_ENABLED
-export EZ_KICKSTART EZ_KICKSTART_FROM_TEMPLATE EZ_ENVIRONMENT EZ_COMPOSERPARAM
+export EZ_KICKSTART EZ_KICKSTART_FROM_TEMPLATE EZ_ENVIRONMENT EZ_COMPOSERPARAM EZ_MAILER_TRANSPORT EZ_MAILER_HOST EZ_MAILER_USER EZ_MAILER_PASSWORD
 export COMPOSE_EXECUTION_PATH
 export DOCKER0NET

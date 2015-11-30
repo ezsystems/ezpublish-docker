@@ -20,6 +20,22 @@ sed -i "s@database_name:.*@database_name: ezp@" ezpublish/config/parameters.yml
 sed -i "s@database_user:.*@database_user: ezp@" ezpublish/config/parameters.yml
 sed -i "s@database_password:.*@database_password: $MYSQL_PASSWORD@" ezpublish/config/parameters.yml
 
+if [ "$EZ_MAILER_TRANSPORT" != "" ]; then
+    sed -i "s@mailer_transport:.*@mailer_transport: $EZ_MAILER_TRANSPORT@" ezpublish/config/parameters.yml
+fi
+
+if [ "$EZ_MAILER_HOST" != "" ]; then
+    sed -i "s@mailer_host:.*@mailer_host: $EZ_MAILER_HOST@" ezpublish/config/parameters.yml
+fi
+
+if [ "$EZ_MAILER_USER" != "" ]; then
+    sed -i "s@mailer_user:.*@mailer_user: $EZ_MAILER_USER@" ezpublish/config/parameters.yml
+fi
+
+if [ "$EZ_MAILER_PASSWORD" != "" ]; then
+    sed -i "s@mailer_password:.*@mailer_password: $EZ_MAILER_PASSWORD@" ezpublish/config/parameters.yml
+fi
+
 
 if [ "$SOLR_PORT_8983_TCP_ADDR" != "" ]; then
     sed -i "s@search_engine:.*@search_engine: solr@" ezpublish/config/parameters.yml
