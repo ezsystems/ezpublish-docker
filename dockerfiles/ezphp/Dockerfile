@@ -53,7 +53,7 @@ RUN sed -i "s@^;date.timezone =.*@date.timezone = $TIMEZONE@" /etc/php5/*/php.in
 RUN sed -i "s@^memory_limit =.*@memory_limit = $MEMORY_LIMIT@" /etc/php5/fpm/php.ini
 
 # Increase realpath_cache_size
-RUN sed -i "s@^;realpath_cache_size =.*@realpath_cache_size = 128k@" /etc/php5/fpm/php.ini
+RUN sed -i "s@^;realpath_cache_size =.*@realpath_cache_size = 256k@" /etc/php5/fpm/php.ini
 
 # Set Max execution time
 RUN sed -i "s@^max_execution_time = .*@max_execution_time = $MAX_EXECUTION_TIME@" /etc/php5/fpm/php.ini
