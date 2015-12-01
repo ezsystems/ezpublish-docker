@@ -7,7 +7,7 @@ set -e
 # --pushonly : Only pushes the created images to a repository. In order to make this work, you need to first run this script without the --push or --pushonly parameter
 # --install-type [ type ]: Install type used when running installer. Typicall values for type is "clean" and "demo"
 # --skip-rebuilding-ezp : Assumes ezpublish.tar.gz is already created and will not generate one using the fig_ezpinstall.sh script
-# --skip-running-install-script : Skip running the installer ( php ezpublish/console ezplatform:install ... )
+# --skip-running-install-script : Skip running the installer ( php app/console ezplatform:install ... )
 # --target ezstudio : Create ezstudio containers instead of ezplatform
 
 export COMPOSE_PROJECT_NAME=ezpublishdocker
@@ -109,6 +109,15 @@ function parse_commandline_arguments
     echo "BUILD_TARGET=$BUILD_TARGET"
 }
 
+function getAppFolder
+{
+    APP_FOLDER="app"
+    if [ -d volumes/ezpublish/ezpublish ]; then
+        APP_FOLDER="ezpublish"
+    fi
+    echo "App folder found : $APP_FOLDER"
+}
+
 function prepare
 {
     ${COMPOSE_EXECUTION_PATH}docker-compose -f $MAINCOMPOSE kill
@@ -194,18 +203,18 @@ function run_installscript
 #    sleep 12
 
     if [ $REBUILD_EZP == "true" ]; then
-        ${COMPOSE_EXECUTION_PATH}docker-compose -f $MAINCOMPOSE run -u ez --rm phpfpm1 /bin/bash -c "php ezpublish/console --env=prod ezplatform:install $INSTALL_TYPE && php ezpublish/console cache:clear --env=prod"
+        ${COMPOSE_EXECUTION_PATH}docker-compose -f $MAINCOMPOSE run -u ez --rm phpfpm1 /bin/bash -c "php $APP_FOLDER/console --env=prod ezplatform:install $INSTALL_TYPE && php $APP_FOLDER/console cache:clear --env=prod"
     fi
 }
 
 function warm_cache
 {
-    ${COMPOSE_EXECUTION_PATH}docker-compose -f $MAINCOMPOSE run -u ez --rm phpfpm1 /bin/bash -c "php ezpublish/console cache:warmup --env=prod"
+    ${COMPOSE_EXECUTION_PATH}docker-compose -f $MAINCOMPOSE run -u ez --rm phpfpm1 /bin/bash -c "php $APP_FOLDER/console cache:warmup --env=prod"
 }
 
 function create_distribution_tarball
 {
-    sudo tar -czf dockerfiles/distribution/ezpublish.tar.gz --directory volumes/ezpublish --exclude './ezpublish/cache/*' --exclude './ezpublish/logs/*' .
+    sudo tar -czf dockerfiles/distribution/ezpublish.tar.gz --directory volumes/ezpublish --exclude "./$APP_FOLDER/cache/*" --exclude "./$APP_FOLDER/logs/*" .
     sudo chown `whoami`: dockerfiles/distribution/ezpublish.tar.gz
 }
 
@@ -273,6 +282,9 @@ function pushonly
 
 echo parse_commandline_arguments
 parse_commandline_arguments "$@"
+
+echo getAppFolder:
+getAppFolder
 
 echo pushonly:
 pushonly

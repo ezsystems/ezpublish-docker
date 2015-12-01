@@ -11,8 +11,18 @@ cp -a ${BASEDIR}/doc/nginx/etc/nginx/ez_params.d /etc/nginx/
 sed -i "s@  fastcgi_pass unix:/var/run/php5-fpm.sock;@  # fastcgi_pass unix:/var/run/php5-fpm.sock;@" /etc/nginx/conf.d/ez.conf
 sed -i "s@  #fastcgi_pass 127.0.0.1:9000;@  fastcgi_pass php_fpm:${PHP_FPM_PORT_9000_TCP_PORT};@" /etc/nginx/conf.d/ez.conf
 
-# Setting environment for ezpublish ( dev/prod/behat etc )
-sed -i "s@  #fastcgi_param ENVIRONMENT dev;@  fastcgi_param ENVIRONMENT ${EZ_ENVIRONMENT};@" /etc/nginx/conf.d/ez.conf
+if [ -d /var/www/ezpublish ]; then
+    VAR_ENVIRONMENT="ENVIRONMENT"
+    VAR_HTTP_CACHE="USE_HTTP_CACHE"
+    VAR_TRUSTED_PROXIES="TRUSTED_PROXIES"
+else
+    VAR_ENVIRONMENT="SYMFONY_ENV"
+    VAR_HTTP_CACHE="SYMFONY_HTTP_CACHE"
+    VAR_TRUSTED_PROXIES="SYMFONY_TRUSTED_PROXIES"
+fi
+
+# Setting environment for ezplatform ( dev/prod/behat etc )
+sed -i "s@  #fastcgi_param $VAR_ENVIRONMENT dev;@  fastcgi_param $VAR_ENVIRONMENT ${EZ_ENVIRONMENT};@" /etc/nginx/conf.d/ez.conf
 
 # Disable asset rewrite rules if dev env
 if [ "$EZ_ENVIRONMENT" == "dev" ]; then
@@ -26,8 +36,8 @@ sed -i "s@%BASEDIR%@${BASEDIR}@" /etc/nginx/conf.d/ez.conf
 echo "fastcgi_read_timeout $FASTCGI_READ_TIMEOUT;" > /etc/nginx/conf.d/fastcgi_read_timeout.conf
 
 if [ "$VARNISH_ENABLED" == "yes" ]; then
-    sed -i "s@  #fastcgi_param USE_HTTP_CACHE 1;@  fastcgi_param USE_HTTP_CACHE 0;@" /etc/nginx/conf.d/ez.conf
-    sed -i "s@  #fastcgi_param TRUSTED_PROXIES \"%PROXY%\";@  fastcgi_param TRUSTED_PROXIES \"${DOCKER0NET}\";@" /etc/nginx/conf.d/ez.conf
+    sed -i "s@  #fastcgi_param $VAR_HTTP_CACHE 1;@  fastcgi_param $VAR_HTTP_CACHE 0;@" /etc/nginx/conf.d/ez.conf
+    sed -i "s@  #fastcgi_param $VAR_TRUSTED_PROXIES \"%PROXY%\";@  fastcgi_param $VAR_TRUSTED_PROXIES \"${DOCKER0NET}\";@" /etc/nginx/conf.d/ez.conf
 fi
 
 

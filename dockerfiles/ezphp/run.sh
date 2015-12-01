@@ -23,8 +23,21 @@ function parseCommandlineOptions
     fi
 }
 
-parseCommandlineOptions $1 $2
+function getAppFolder
+{
+    APP_FOLDER="app"
+    if [ -d ezpublish ]; then
+        APP_FOLDER="ezpublish"
+    fi
+}
 
+parseCommandlineOptions $1 $2
+getAppFolder
+
+# If using Dockerfile-dev and we are dealing with ezp 5.4 we'll need to replace xdebug.ini
+if [[ "$APP_FOLDER" == "ezpublish" && -f /etc/php5/mods-available/xdebug.ini-ezp54 ]]; then
+    cp /etc/php5/mods-available/xdebug.ini-ezp54 /etc/php5/mods-available/xdebug.ini
+fi
 
 # Prepare for setup wizard if requested
 if [ "$EZ_KICKSTART" = "true" ]; then
@@ -38,25 +51,37 @@ echo "Setting permissions on eZ Publish folder as they might be broken if rsync 
 if [ ! -d web/var ]; then
     sudo -u ez mkdir web/var
 fi
-setfacl -R -m u:$APACHE_RUN_USER:rwX -m u:ez:rwX ezpublish/{cache,logs,sessions} web/var
-setfacl -dR -m u:$APACHE_RUN_USER:rwX -m u:ez:rwX ezpublish/{cache,logs,sessions} web/var
+
+if [ -d ezpublish ]; then
+    setfacl -R -m u:$APACHE_RUN_USER:rwX -m u:ez:rwX ezpublish/{cache,logs,sessions} web/var
+    setfacl -dR -m u:$APACHE_RUN_USER:rwX -m u:ez:rwX ezpublish/{cache,logs,sessions} web/var
+else
+    setfacl -R -m u:$APACHE_RUN_USER:rwX -m u:ez:rwX app/{cache,logs} web/var
+    setfacl -dR -m u:$APACHE_RUN_USER:rwX -m u:ez:rwX app/{cache,logs} web/var
+fi
 
 if [ -d ezpublish_legacy ]; then
     setfacl -R -m u:$APACHE_RUN_USER:rwx -m u:ez:rwx ezpublish_legacy/{design,extension,settings,var} ezpublish/config web
     setfacl -dR -m u:$APACHE_RUN_USER:rwx -m u:ez:rwx ezpublish_legacy/{design,extension,settings,var} ezpublish/config web
 fi
 
+APP_FOLDER="app"
+if [ -d ezpublish ]; then
+    APP_FOLDER="ezpublish"
+fi
+
 echo "Clear cache after parameters where updated"
-sudo -u ez php ezpublish/console cache:clear --env $EZ_ENVIRONMENT
+sudo -u ez php $APP_FOLDER/console cache:clear --env $EZ_ENVIRONMENT
 
 if [ "$EZ_ENVIRONMENT" != "dev" ]; then
     echo "Re-generate symlink assets in case rsync was used so asstets added during setup wizards are reachable"
-    sudo -u ez php ezpublish/console assetic:dump --env $EZ_ENVIRONMENT
+    sudo -u ez php $APP_FOLDER/console assetic:dump --env $EZ_ENVIRONMENT
 fi
 
-sudo -u ez php ezpublish/console assets:install --symlink --relative --env $EZ_ENVIRONMENT
+sudo -u ez php $APP_FOLDER/console assets:install --symlink --relative --env $EZ_ENVIRONMENT
+
 if [ -d ezpublish_legacy ]; then
-    sudo -u ez php ezpublish/console ezpublish:legacy:assets_install --symlink --relative --env $EZ_ENVIRONMENT
+    sudo -u ez php $APP_FOLDER/console ezpublish:legacy:assets_install --symlink --relative --env $EZ_ENVIRONMENT
 fi
 
 # Start php-fpm

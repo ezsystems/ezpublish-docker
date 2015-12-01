@@ -11,5 +11,5 @@ xdebug.remote_port=9001
 
 xdebug.profiler_enable = 1
 xdebug.profiler_output_name = xdebug.out.%t
-xdebug.profiler_output_dir = /var/www/app/log
+xdebug.profiler_output_dir = /var/www/ezpublish/log
 xdebug.profiler_enable_trigger = 1
