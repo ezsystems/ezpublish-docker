@@ -82,6 +82,7 @@ ADD prepare_distribution_volume.sh /prepare_distribution_volume.sh
 ADD prepare_behat.sh /prepare_behat.sh
 ADD config/opcache.ini /etc/php5/mods-available/opcache.ini
 ADD config/xdebug.ini /etc/php5/mods-available/xdebug.ini
+ADD config/xdebug.ini /etc/php5/mods-available/xdebug.ini-ezp54
 
 RUN chmod 755 /*.sh
 RUN groupadd -g 10000 ez && useradd -g ez -u 10000 ez

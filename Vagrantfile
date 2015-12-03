@@ -115,13 +115,18 @@ Vagrant.configure("2") do |config|
       ./build.sh
       ./docker-compose_ezpinstall.sh
       ./docker-compose.sh up -d --no-recreate
-      if [[ ( -d volumes/ezpublish/ezpublish ) && ( ! -d volumes/ezpublish/ezpublish_legacy ) ]];  then \
+      # We'll not run setup if ezpublish_legacy exists. Then user might want to run setup wizard
+      if [[ ( ! -d volumes/ezpublish/ezpublish_legacy ) ]];  then \
+          APP_FOLDER="app"
+          if [ -d volumes/ezpublish ]; then
+              APP_FOLDER="ezpublish"
+
           # Let us wait for db, and Solr.., containers to get started and ready
           echo "Now waiting 20 seconds for database and Solr to be fully booted before installing eZ Platform data!"
           sleep 20
           echo "Install eZ Platform demo data"
-          ${COMPOSE_EXECUTION_PATH}docker-compose -f docker-compose.yml run -u ez --rm phpfpm1 /bin/bash -c "php ezpublish/console --env=$EZ_ENVIRONMENT ezplatform:install demo; php ezpublish/console cache:clear --env=$EZ_ENVIRONMENT"
-          ${COMPOSE_EXECUTION_PATH}docker-compose -f docker-compose.yml run -u ez --rm phpfpm1 /bin/bash -c "php ezpublish/console cache:warmup --env=$EZ_ENVIRONMENT"
+          ${COMPOSE_EXECUTION_PATH}docker-compose -f docker-compose.yml run -u ez --rm phpfpm1 /bin/bash -c "php $APP_FOLDER/console --env=$EZ_ENVIRONMENT ezplatform:install clean; php $APP_FOLDER/console --env=$EZ_ENVIRONMENT cache:clear"
+          ${COMPOSE_EXECUTION_PATH}docker-compose -f docker-compose.yml run -u ez --rm phpfpm1 /bin/bash -c "php $APP_FOLDER/console --env=$EZ_ENVIRONMENT cache:warmup"
       fi
     '
   end

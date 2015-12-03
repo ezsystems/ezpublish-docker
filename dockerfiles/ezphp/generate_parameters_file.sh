@@ -12,36 +12,45 @@ function generate_secret
 
 SECRET=`generate_secret`
 
-sed -i "s@secret:.*@secret: $SECRET@" ezpublish/config/parameters.yml
-sed -i "s@database_driver:.*@database_driver: pdo_mysql@" ezpublish/config/parameters.yml
-sed -i "s@database_port:.*@database_port: $DB_PORT_3306_TCP_PORT@" ezpublish/config/parameters.yml
-sed -i "s@database_host:.*@database_host: db@" ezpublish/config/parameters.yml
-sed -i "s@database_name:.*@database_name: ezp@" ezpublish/config/parameters.yml
-sed -i "s@database_user:.*@database_user: ezp@" ezpublish/config/parameters.yml
-sed -i "s@database_password:.*@database_password: $MYSQL_PASSWORD@" ezpublish/config/parameters.yml
+APP_FOLDER="app"
+if [ -d ezpublish ]; then
+    APP_FOLDER="ezpublish"
+fi
+
+sed -i "s@secret:.*@secret: $SECRET@" $APP_FOLDER/config/parameters.yml
+sed -i "s@database_driver:.*@database_driver: pdo_mysql@" $APP_FOLDER/config/parameters.yml
+sed -i "s@database_port:.*@database_port: $DB_PORT_3306_TCP_PORT@" $APP_FOLDER/config/parameters.yml
+sed -i "s@database_host:.*@database_host: db@" $APP_FOLDER/config/parameters.yml
+sed -i "s@database_name:.*@database_name: ezp@" $APP_FOLDER/config/parameters.yml
+sed -i "s@database_user:.*@database_user: ezp@" $APP_FOLDER/config/parameters.yml
+sed -i "s@database_password:.*@database_password: $MYSQL_PASSWORD@" $APP_FOLDER/config/parameters.yml
+
+
+
+
 
 if [ "$EZ_MAILER_TRANSPORT" != "" ]; then
-    sed -i "s@mailer_transport:.*@mailer_transport: $EZ_MAILER_TRANSPORT@" ezpublish/config/parameters.yml
+    sed -i "s@mailer_transport:.*@mailer_transport: $EZ_MAILER_TRANSPORT@" $APP_FOLDER/config/parameters.yml
 fi
 
 if [ "$EZ_MAILER_HOST" != "" ]; then
-    sed -i "s@mailer_host:.*@mailer_host: $EZ_MAILER_HOST@" ezpublish/config/parameters.yml
+    sed -i "s@mailer_host:.*@mailer_host: $EZ_MAILER_HOST@" $APP_FOLDER/config/parameters.yml
 fi
 
 if [ "$EZ_MAILER_USER" != "" ]; then
-    sed -i "s@mailer_user:.*@mailer_user: $EZ_MAILER_USER@" ezpublish/config/parameters.yml
+    sed -i "s@mailer_user:.*@mailer_user: $EZ_MAILER_USER@" $APP_FOLDER/config/parameters.yml
 fi
 
 if [ "$EZ_MAILER_PASSWORD" != "" ]; then
-    sed -i "s@mailer_password:.*@mailer_password: $EZ_MAILER_PASSWORD@" ezpublish/config/parameters.yml
+    sed -i "s@mailer_password:.*@mailer_password: $EZ_MAILER_PASSWORD@" $APP_FOLDER/config/parameters.yml
 fi
 
 
 if [ "$SOLR_PORT_8983_TCP_ADDR" != "" ]; then
-    sed -i "s@search_engine:.*@search_engine: solr@" ezpublish/config/parameters.yml
-    sed -i "s@solr_dsn:.*@solr_dsn: http://$SOLR_PORT_8983_TCP_ADDR:8983/solr@" ezpublish/config/parameters.yml
+    sed -i "s@search_engine:.*@search_engine: solr@" $APP_FOLDER/config/parameters.yml
+    sed -i "s@solr_dsn:.*@solr_dsn: http://$SOLR_PORT_8983_TCP_ADDR:8983/solr@" $APP_FOLDER/config/parameters.yml
 else
-    sed -i "s@search_engine:.*@search_engine: legacy@" ezpublish/config/parameters.yml
+    sed -i "s@search_engine:.*@search_engine: legacy@" $APP_FOLDER/config/parameters.yml
 fi
 
-cat ezpublish/config/parameters.yml
+cat $APP_FOLDER/config/parameters.yml

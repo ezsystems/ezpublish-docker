@@ -42,7 +42,7 @@ EZ_KICKSTART_FROM_TEMPLATE=
 # By default pick latest release of eZ Platform:
 EZ_COMPOSERPARAM="--prefer-dist --no-dev ezsystems/ezplatform /var/www"
 
-# Set the environment for ezpublish. Valid options are "prod", "dev", "behat"
+# Set the environment for ezplatform. Valid options are "prod", "dev", "behat"
 # WARNING: Only non dev env works (assets) atm as the standard Nginx rewrite rules does not take care to addapt for env!
 EZ_ENVIRONMENT=prod
 
