@@ -115,8 +115,8 @@ Vagrant.configure("2") do |config|
       ./build.sh
       ./docker-compose_ezpinstall.sh
       ./docker-compose.sh up -d --no-recreate
-      # We'll not run setup if ezpublish_legacy exists. Then user might want to run setup wizard
-      if [[ ( ! -d volumes/ezpublish/ezpublish_legacy ) ]];  then \
+      # We will not run setup if ezpublish_legacy exists. Then user might want to run setup wizard
+      if [ ! -d volumes/ezpublish/ezpublish_legacy ];  then \
           APP_FOLDER="app"
           if [ -d volumes/ezpublish ]; then
               APP_FOLDER="ezpublish"
