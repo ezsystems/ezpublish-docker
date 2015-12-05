@@ -1,7 +1,7 @@
 
 ezphp:
   build: dockerfiles/ezphp
-  #dockerfile: Dockerfile-php7
+  dockerfile: Dockerfile-php7
 
 web:
   build: dockerfiles/internal/nginx
