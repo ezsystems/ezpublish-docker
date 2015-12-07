@@ -78,9 +78,6 @@ ADD prepare_behat.sh /prepare_behat.sh
 #/usr/local/etc/php/conf.d/docker-php-ext-opcache.ini
 #ADD config/opcache.ini /usr/local/php7/etc/conf.d/opcache.ini
 
-# Change run.sh for php-fpm command
-RUN sed -i "s@^exec /usr/sbin/php5-fpm@exec /usr/local/sbin/php-fpm@" /run.sh
-
 RUN chmod 755 /*.sh
 RUN groupadd -g 10000 ez && useradd -g ez -u 10000 ez
 

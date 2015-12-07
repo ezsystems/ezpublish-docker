@@ -85,4 +85,8 @@ if [ -d ezpublish_legacy ]; then
 fi
 
 # Start php-fpm
-exec /usr/sbin/php5-fpm
+if [ -x /usr/local/sbin/php-fpm ]; then
+    exec /usr/local/sbin/php-fpm
+else
+    exec /usr/sbin/php5-fpm
+fi
