@@ -13,6 +13,7 @@ set -e
 export COMPOSE_PROJECT_NAME=ezpublishdocker
 source files/distro_containers.config
 MAINCOMPOSE="docker-compose.yml"
+EZPINSTALLCOMPOSE=""
 DATE=`date +%Y%m%d`
 CONFIGFILE=""
 PUSH="false"
@@ -53,9 +54,10 @@ function parse_commandline_arguments
                     CONFIGFILE="$2"
                     shift
                     ;;
-#                -f* | --force )
-#                    FORCE=true
-#                    ;;
+                -e* | --ezp54 )
+                    EZPINSTALLCOMPOSE="-f docker-compose_ezpinstall_php5.yml"
+                    MAINCOMPOSE="$MAINCOMPOSE -f docker-compose_php5.yml"
+                    ;;
                 -p* | --push )
                     PUSH="true"
                     ;;
@@ -129,8 +131,8 @@ function prepare
     ${COMPOSE_EXECUTION_PATH}docker-compose -f docker-compose_databasedump.yml kill
     ${COMPOSE_EXECUTION_PATH}docker-compose -f docker-compose_databasedump.yml rm --force -v
 
-    ${COMPOSE_EXECUTION_PATH}docker-compose -f docker-compose_ezpinstall.yml kill
-    ${COMPOSE_EXECUTION_PATH}docker-compose -f docker-compose_ezpinstall.yml rm --force -v
+    ${COMPOSE_EXECUTION_PATH}docker-compose -f docker-compose_ezpinstall.yml $EZPINSTALLCOMPOSE kill
+    ${COMPOSE_EXECUTION_PATH}docker-compose -f docker-compose_ezpinstall.yml $EZPINSTALLCOMPOSE rm --force -v
     docker rmi ${COMPOSE_PROJECT_NAME}_ezpinstall || /bin/true
 
     docker rmi ${COMPOSE_PROJECT_NAME}_distribution:latest || /bin/true
@@ -156,9 +158,9 @@ function install_ezpublish
 {
     if [ $REBUILD_EZP == "true" ]; then
         if [ "$CONFIGFILE" == "" ]; then
-            ./docker-compose_ezpinstall.sh
+            ./docker-compose_ezpinstall.sh $EZPINSTALLCOMPOSE
         else
-            ./docker-compose_ezpinstall.sh -c $CONFIGFILE
+            ./docker-compose_ezpinstall.sh $EZPINSTALLCOMPOSE -c $CONFIGFILE
         fi
     else
         # Workaround since ezphp container is not defined in docker-compose.yml
@@ -283,9 +285,6 @@ function pushonly
 echo parse_commandline_arguments
 parse_commandline_arguments "$@"
 
-echo getAppFolder:
-getAppFolder
-
 echo pushonly:
 pushonly
 
@@ -294,6 +293,9 @@ prepare
 
 echo install_ezpublish:
 install_ezpublish
+
+echo getAppFolder:
+getAppFolder
 
 echo run_installscript:
 run_installscript
