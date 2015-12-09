@@ -1,4 +1,7 @@
 
+ezphp5:
+  build: dockerfiles/ezphp
+
 ezphp:
   build: dockerfiles/ezphp
   dockerfile: Dockerfile-php7

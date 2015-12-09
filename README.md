@@ -227,7 +227,7 @@ Access the installation using the url http://33.33.33.53/
 
 #### Installing on local host without vagrant ( requires docker and docker-compose installed locally )
 
-Make a config file ( recommended, but not strictly speaking )
+Make a config file ( recommended, but not strictly speaking needed )
     ```cp files/docker-compose.config-EXAMPLE files/docker-compose.config```
 
 Create the service images ( web and php images )
@@ -249,7 +249,38 @@ Remove the containers:
     ```docker-compose -f docker-compose.yml rm -v; docker-compose -f docker-compose_ezpinstall.yml rm -v```
 
 Remove the images:
-    ```docker rmi ezsystems/web ezsystems/ezphp```
+    ```docker rmi ezsystems/web ezsystems/ezphp ezsystems/ezphp:5.6```
+
+Remove the eZ Platform files:
+    ```sudo rm -rf volumes/ezpublish/* volumes/mysql/*; sudo rm volumes/ezpublish/.travis.yml volumes/ezpublish/.gitignore```
+
+
+#### Installing ezp 5.4 on local host without vagrant ( requires docker and docker-compose installed locally )
+
+Make a config file ( recommended, but not strictly speaking needed )
+    ```cp files/docker-compose.config-EXAMPLE files/docker-compose.config```
+
+Make sure you have the following setting in ```files/docker-compose.config```:
+
+    EZ_COMPOSERPARAM="--prefer-dist --repository-url=https://updates.ez.no/ttl ezsystems/ezpublish-community /var/www ~5.4.0"
+
+Create the service images ( web and php images )
+    ```./build.sh```
+
+Install eZ Platform/Studio:
+    ```./docker-compose_ezpinstall.sh -f docker-compose_ezpinstall_php5.yml```
+
+Create the containers needed for running eZ Platform/Studio using php5 container instead of php7
+    ```./docker-compose.sh -f docker-compose.yml -f docker-compose_php5.yml up -d --no-recreate```
+
+Stop the containers:
+    ```docker-compose -f docker-compose.yml -f docker-compose_php5.yml stop```
+
+Remove the containers:
+    ```docker-compose -f docker-compose.yml -f docker-compose_php5.yml rm -v; docker-compose -f docker-compose_ezpinstall.yml -f docker-compose_php5.yml rm -v```
+
+Remove the images:
+    ```docker rmi ezsystems/web ezsystems/ezphp ezsystems/ezphp:5.6```
 
 Remove the eZ Platform files:
     ```sudo rm -rf volumes/ezpublish/* volumes/mysql/*; sudo rm volumes/ezpublish/.travis.yml volumes/ezpublish/.gitignore```
