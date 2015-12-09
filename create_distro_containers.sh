@@ -285,9 +285,6 @@ function pushonly
 echo parse_commandline_arguments
 parse_commandline_arguments "$@"
 
-echo getAppFolder:
-getAppFolder
-
 echo pushonly:
 pushonly
 
@@ -296,6 +293,9 @@ prepare
 
 echo install_ezpublish:
 install_ezpublish
+
+echo getAppFolder:
+getAppFolder
 
 echo run_installscript:
 run_installscript
