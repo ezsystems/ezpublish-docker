@@ -5,6 +5,10 @@ selenium:
   ports:
    - "9999:9999"
    - "4444:4444"
+  environment:
+   - SCREEN_WIDTH=1920
+   - SCREEN_HEIGHT=1080
+   - SCREEN_DEPTH=24
 
 behatphpcli:
   image: ezsystems/ezphp
