@@ -2,15 +2,20 @@
 
 
 site1dbvol:
-  image: debian:jessie
+  image: busybox
 #  volumes:
 #   - volumes/mysql:/var/lib/mysql
 
 site1databasedump:
   image: ezpublishdocker_databasedump
 
+site1vardir:
+  image: ezpublishdocker_vardir
+
 site1ezpublishvol:
   image: ezpublishdocker_distribution
+  volumes_from:
+   - site1vardir
 
 site1db1:
   image: mariadb:latest

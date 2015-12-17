@@ -128,6 +128,9 @@ function prepare
     ${COMPOSE_EXECUTION_PATH}docker-compose -f docker-compose_distribution.yml kill
     ${COMPOSE_EXECUTION_PATH}docker-compose -f docker-compose_distribution.yml rm --force -v
 
+    ${COMPOSE_EXECUTION_PATH}docker-compose -f docker-compose_vardir.yml kill
+    ${COMPOSE_EXECUTION_PATH}docker-compose -f docker-compose_vardir.yml rm --force -v
+
     ${COMPOSE_EXECUTION_PATH}docker-compose -f docker-compose_databasedump.yml kill
     ${COMPOSE_EXECUTION_PATH}docker-compose -f docker-compose_databasedump.yml rm --force -v
 
@@ -137,6 +140,8 @@ function prepare
 
     docker rmi ${COMPOSE_PROJECT_NAME}_distribution:latest || /bin/true
     docker rmi ${DOCKER_REPOSITORY}/${DOCKER_USER}/${BUILD_TARGET}_distribution:${DOCKER_BUILDVER} || /bin/true
+    docker rmi ${COMPOSE_PROJECT_NAME}_vardir:latest || /bin/true
+    docker rmi ${DOCKER_REPOSITORY}/${DOCKER_USER}/${BUILD_TARGET}_vardir:${DOCKER_BUILDVER} || /bin/true
     docker rmi ${COMPOSE_PROJECT_NAME}_databasedump:latest || /bin/true
     docker rmi ${DOCKER_REPOSITORY}/${DOCKER_USER}/${BUILD_TARGET}_databasedump:${DOCKER_BUILDVER} || /bin/true
 
@@ -216,7 +221,7 @@ function warm_cache
 
 function create_distribution_tarball
 {
-    sudo tar -czf dockerfiles/distribution/ezpublish.tar.gz --directory volumes/ezpublish --exclude "./$APP_FOLDER/cache/*" --exclude "./$APP_FOLDER/logs/*" .
+    sudo tar -czf dockerfiles/distribution/ezpublish.tar.gz --directory volumes/ezpublish --exclude "./$APP_FOLDER/cache/*" --exclude "./$APP_FOLDER/logs/*" --exclude './web/var/*' .
     sudo chown `whoami`: dockerfiles/distribution/ezpublish.tar.gz
 }
 
@@ -236,6 +241,31 @@ function push_distribution_container
     if [ $PUSH == "true" ]; then
         echo "Pushing image : ${DOCKER_REPOSITORY}/${DOCKER_USER}/${BUILD_TARGET}_distribution:${DOCKER_BUILDVER}"
         docker push ${DOCKER_REPOSITORY}/${DOCKER_USER}/${BUILD_TARGET}_distribution:${DOCKER_BUILDVER}
+    fi
+}
+
+function create_vardir_tarball
+{
+    sudo tar -czf dockerfiles/vardir/vardir.tar.gz --directory volumes/ezpublish/web var
+    sudo chown `whoami`: dockerfiles/vardir/vardir.tar.gz
+}
+
+function create_vardir_container
+{
+    docker-compose -f docker-compose_vardir.yml up -d
+}
+
+function tag_vardir_container
+{
+    echo "Tagging image : ${DOCKER_REPOSITORY}/${DOCKER_USER}/${BUILD_TARGET}_vardir:${DOCKER_BUILDVER}"
+    docker tag -f ${COMPOSE_PROJECT_NAME}_vardir:latest ${DOCKER_REPOSITORY}/${DOCKER_USER}/${BUILD_TARGET}_vardir:${DOCKER_BUILDVER}
+}
+
+function push_vardir_container
+{
+    if [ $PUSH == "true" ]; then
+        echo "Pushing image : ${DOCKER_REPOSITORY}/${DOCKER_USER}/${BUILD_TARGET}_vardir:${DOCKER_BUILDVER}"
+        docker push ${DOCKER_REPOSITORY}/${DOCKER_USER}/${BUILD_TARGET}_vardir:${DOCKER_BUILDVER}
     fi
 }
 
@@ -276,6 +306,9 @@ function pushonly
         echo push_distribution_container
         push_distribution_container
 
+        echo push_vardir_container
+        push_vardir_container
+
         echo push_mysql_container
         push_mysql_container
         exit
@@ -314,6 +347,18 @@ tag_distribution_container
 
 echo push_distribution_container
 push_distribution_container
+
+echo create_vardir_tarball
+create_vardir_tarball
+
+echo create_vardir_container
+create_vardir_container
+
+echo tag_vardir_container
+tag_vardir_container
+
+echo push_vardir_container
+push_vardir_container
 
 echo create_mysql_tarball
 create_mysql_tarball
