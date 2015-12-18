@@ -21,6 +21,14 @@ function parseCommandlineOptions
     if [ "$APACHE_RUN_USER" == "" ]; then
         APACHE_RUN_USER=www-data
     fi
+
+    # You might set SKIP_INITIALIZING_VAR=true if you would like to setup web/var from outside this container
+    if [ "$SKIP_INITIALIZING_VAR" == "true" ]; then
+        VARDIR=""
+    else
+        SKIP_INITIALIZING_VAR == "false"
+        VARDIR=" web/var"
+    fi
 }
 
 function getAppFolder
@@ -48,16 +56,16 @@ fi
 
 
 echo "Setting permissions on eZ Publish folder as they might be broken if rsync is used"
-if [ ! -d web/var ]; then
+if [ ! -d web/var ] && [ "$SKIP_INITIALIZING_VAR" == "false" ]; then
     sudo -u ez mkdir web/var
 fi
 
 if [ -d ezpublish ]; then
-    setfacl -R -m u:$APACHE_RUN_USER:rwX -m u:ez:rwX ezpublish/{cache,logs,sessions} web/var
-    setfacl -dR -m u:$APACHE_RUN_USER:rwX -m u:ez:rwX ezpublish/{cache,logs,sessions} web/var
+    setfacl -R -m u:$APACHE_RUN_USER:rwX -m u:ez:rwX ezpublish/{cache,logs,sessions}${VARDIR}
+    setfacl -dR -m u:$APACHE_RUN_USER:rwX -m u:ez:rwX ezpublish/{cache,logs,sessions}${VARDIR}
 else
-    setfacl -R -m u:$APACHE_RUN_USER:rwX -m u:ez:rwX app/{cache,logs} web/var
-    setfacl -dR -m u:$APACHE_RUN_USER:rwX -m u:ez:rwX app/{cache,logs} web/var
+    setfacl -R -m u:$APACHE_RUN_USER:rwX -m u:ez:rwX app/{cache,logs}${VARDIR}
+    setfacl -dR -m u:$APACHE_RUN_USER:rwX -m u:ez:rwX app/{cache,logs}${VARDIR}
 fi
 
 if [ -d ezpublish_legacy ]; then
