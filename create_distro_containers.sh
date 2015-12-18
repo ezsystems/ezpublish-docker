@@ -271,7 +271,7 @@ function push_vardir_container
 
 function create_mysql_tarball
 {
-    ${COMPOSE_EXECUTION_PATH}docker-compose -f $MAINCOMPOSE run -u ez phpfpm1 /bin/bash -c "mysqldump -u ezp -p${MYSQL_PASSWORD} -h db --databases ezp > /tmp/ezp.sql"
+    ${COMPOSE_EXECUTION_PATH}docker-compose -f $MAINCOMPOSE run -u ez phpfpm1 /bin/bash -c "mysqldump -u ezp -p${MYSQL_PASSWORD} -h db ezp > /tmp/ezp.sql"
     docker cp ${COMPOSE_PROJECT_NAME}_phpfpm1_run_1:/tmp/ezp.sql dockerfiles/databasedump
     docker rm ${COMPOSE_PROJECT_NAME}_phpfpm1_run_1
 }
