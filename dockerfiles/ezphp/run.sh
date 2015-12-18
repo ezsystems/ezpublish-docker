@@ -26,7 +26,7 @@ function parseCommandlineOptions
     if [ "$SKIP_INITIALIZING_VAR" == "true" ]; then
         VARDIR=""
     else
-        SKIP_INITIALIZING_VAR == "false"
+        SKIP_INITIALIZING_VAR="false"
         VARDIR=" web/var"
     fi
 }
