@@ -51,7 +51,7 @@ if [ "$COMPOSE_EXECUTION_PATH" == "" ]; then
     fi
 fi
 
-if [ "$EZ_ENVIRONMENT" = "dev" ]; then
+if [ "$SYMFONY_ENV" = "dev" ]; then
     YMLFILE="docker-compose_ezpinstall_dev.yml"
 fi
 

@@ -125,8 +125,8 @@ Vagrant.configure("2") do |config|
           echo "Now waiting 20 seconds for database and Solr to be fully booted before installing eZ Platform data!"
           sleep 20
           echo "Install eZ Platform demo data"
-          ${COMPOSE_EXECUTION_PATH}docker-compose -f docker-compose.yml run -u ez --rm phpfpm1 /bin/bash -c "php $APP_FOLDER/console --env=$EZ_ENVIRONMENT ezplatform:install clean; php $APP_FOLDER/console --env=$EZ_ENVIRONMENT cache:clear"
-          ${COMPOSE_EXECUTION_PATH}docker-compose -f docker-compose.yml run -u ez --rm phpfpm1 /bin/bash -c "php $APP_FOLDER/console --env=$EZ_ENVIRONMENT cache:warmup"
+          ${COMPOSE_EXECUTION_PATH}docker-compose -f docker-compose.yml run -u ez --rm phpfpm1 /bin/bash -c "php $APP_FOLDER/console --env=$SYMFONY_ENV ezplatform:install clean; php $APP_FOLDER/console --env=$SYMFONY_ENV cache:clear"
+          ${COMPOSE_EXECUTION_PATH}docker-compose -f docker-compose.yml run -u ez --rm phpfpm1 /bin/bash -c "php $APP_FOLDER/console --env=$SYMFONY_ENV cache:warmup"
       fi
     '
   end

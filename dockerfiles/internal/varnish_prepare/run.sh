@@ -18,7 +18,7 @@ if [ aa$VARNISH_ENABLED == "aayes" ]; then
         # Inject varnish' IP in ezpublish config
         perl -pi -e "s|^(.*)purge_servers:(.*)|\1purge_servers: [http://$VARNISH_IP:80]|" app/config/ezplatform.yml
 
-        php app/console cache:clear --env=$EZ_ENVIRONMENT
+        php app/console cache:clear --env=$SYMFONY_ENV
     else
         echo File do not exists : app/config/ezplatform.yml. Skipping injecting varnish IP
     fi

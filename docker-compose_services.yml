@@ -38,27 +38,33 @@ site1phpfpm1:
   environment:
    - EZ_KICKSTART
    - EZ_KICKSTART_FROM_TEMPLATE
-   - EZ_ENVIRONMENT
    - EZ_MAILER_TRANSPORT
    - EZ_MAILER_HOST
    - EZ_MAILER_USER
    - EZ_MAILER_PASSWORD
+   - SYMFONY_ENV
    - MYSQL_PASSWORD
   restart: always
 
 site1web1:
-  image: ezsystems/web
+  image: nginx
   links:
    - site1phpfpm1:php_fpm
   volumes_from:
    - site1ezpublishvol
+  volumes:
+   - ./volumes/ezpublish/doc/nginx/ez-host.template:/etc/nginx/conf.d/ez-host.template
+   - ./volumes/ezpublish/doc/nginx/ez_params.d:/etc/nginx/ez_params.d
   ports:
    - "8081:80"
   environment:
-   - EZ_ENVIRONMENT
-   - VARNISH_ENABLED
+   - SYMFONY_ENV
+   - BASEDIR=/var/www
+   - MAX_BODY_SIZE=20
+   - FASTCGI_PASS=php_fpm:9000
+   - TIMEOUT=190
    - DOCKER0NET
-#  command: /bin/bash -c "while [ 1 ]; do echo -n .; sleep 10; done"
+  command: /bin/bash -c "cd /var/www && bin/vhost.sh --template-file=doc/nginx/vhost.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
   restart: always
 
 site1initialize:
@@ -71,7 +77,7 @@ site1initialize:
   environment:
    - EZ_KICKSTART
    - EZ_KICKSTART_FROM_TEMPLATE
-   - EZ_ENVIRONMENT
+   - SYMFONY_ENV
    - MYSQL_USER=ezp
    - MYSQL_PASSWORD
    - MYSQL_DATABASE=ezp

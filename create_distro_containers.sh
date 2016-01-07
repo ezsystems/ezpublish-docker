@@ -170,7 +170,7 @@ function install_ezpublish
     else
         # Workaround since ezphp container is not defined in docker-compose.yml
         YMLFILE="docker-compose_ezpinstall.yml"
-        if [ "$EZ_ENVIRONMENT" = "dev" ]; then
+        if [ "$SYMFONY_ENV" = "dev" ]; then
             YMLFILE="docker-compose_ezpinstall_dev.yml"
         fi
         ${COMPOSE_EXECUTION_PATH}docker-compose -f $YMLFILE build
