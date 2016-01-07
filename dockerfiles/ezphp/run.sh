@@ -79,17 +79,17 @@ if [ -d ezpublish ]; then
 fi
 
 echo "Clear cache after parameters where updated"
-sudo -u ez php $APP_FOLDER/console cache:clear --env $EZ_ENVIRONMENT
+sudo -u ez php $APP_FOLDER/console cache:clear --env $SYMFONY_ENV
 
-if [ "$EZ_ENVIRONMENT" != "dev" ]; then
+if [ "$SYMFONY_ENV" != "dev" ]; then
     echo "Re-generate symlink assets in case rsync was used so asstets added during setup wizards are reachable"
-    sudo -u ez php $APP_FOLDER/console assetic:dump --env $EZ_ENVIRONMENT
+    sudo -u ez php $APP_FOLDER/console assetic:dump --env $SYMFONY_ENV
 fi
 
-sudo -u ez php $APP_FOLDER/console assets:install --symlink --relative --env $EZ_ENVIRONMENT
+sudo -u ez php $APP_FOLDER/console assets:install --symlink --relative --env $SYMFONY_ENV
 
 if [ -d ezpublish_legacy ]; then
-    sudo -u ez php $APP_FOLDER/console ezpublish:legacy:assets_install --symlink --relative --env $EZ_ENVIRONMENT
+    sudo -u ez php $APP_FOLDER/console ezpublish:legacy:assets_install --symlink --relative --env $SYMFONY_ENV
 fi
 
 # Start php-fpm

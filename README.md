@@ -138,7 +138,7 @@ When the containers are created, you should be able to browse to eZ Platform set
 It is possible to setup a fresh installation using the install script instead of using the setup wizard. ( If using vagrant, this is done automaticly )
  - Run command : ```docker-compose -f docker-compose.yml run -u ez --rm phpfpm1 /bin/bash -c "php app/console ezplatform:install demo; php app/console cache:clear --env=prod"```
 
-FYI : The command above assumes you have ```EZ_ENVIRONMENT=prod``` in files/docker-compose.config. If you use a different setting, adjust the ```--env=....``` parameter accordingly.
+FYI : The command above assumes you have ```SYMFONY_ENV=prod``` in files/docker-compose.config. If you use a different setting, adjust the ```--env=....``` parameter accordingly.
 You may also substitute "demo" with "demo_clean" if you want to install ezdemo without demo data, or "clean" if only want the very basics.
  
 
