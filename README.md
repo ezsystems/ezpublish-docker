@@ -271,13 +271,13 @@ Install eZ Platform/Studio:
     ```./docker-compose_ezpinstall.sh -f docker-compose_ezpinstall_php5.yml```
 
 Create the containers needed for running eZ Platform/Studio using php5 container instead of php7
-    ```./docker-compose.sh -f docker-compose.yml -f docker-compose_php5.yml up -d --no-recreate```
+    ```./docker-compose.sh -f docker-compose_ezp54.yml -f docker-compose_php5.yml up -d --no-recreate```
 
 Stop the containers:
-    ```docker-compose -f docker-compose.yml -f docker-compose_php5.yml stop```
+    ```docker-compose -f docker-compose_ezp54.yml -f docker-compose_php5.yml stop```
 
 Remove the containers:
-    ```docker-compose -f docker-compose.yml -f docker-compose_php5.yml rm -v; docker-compose -f docker-compose_ezpinstall.yml -f docker-compose_php5.yml rm -v```
+    ```docker-compose -f docker-compose_ezp54.yml -f docker-compose_php5.yml rm -v; docker-compose -f docker-compose_ezpinstall.yml -f docker-compose_php5.yml rm -v```
 
 Remove the images:
     ```docker rmi ezsystems/web ezsystems/ezphp ezsystems/ezphp:5.6```
