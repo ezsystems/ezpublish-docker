@@ -44,7 +44,7 @@ EZ_COMPOSERPARAM="--prefer-dist --no-dev ezsystems/ezplatform /var/www"
 
 # Set the environment for ezplatform. Valid options are "prod", "dev", "behat"
 # WARNING: Only non dev env works (assets) atm as the standard Nginx rewrite rules does not take care to addapt for env!
-EZ_ENVIRONMENT=prod
+SYMFONY_ENV=prod
 
 # SwiftMailer to inject into platform's parameters.yml
 EZ_MAILER_TRANSPORT=
@@ -61,9 +61,10 @@ export COMPOSE_EXECUTION_PATH=""
 # Docker defaults to the network address given here, so you should normally not need to change it
 DOCKER0NET="172.17.0.0/16"
 
+EZ_ENVIRONMENT="$SYMFONY_ENV"
 
 export MYSQL_PASSWORD
 export VARNISH_ENABLED
-export EZ_KICKSTART EZ_KICKSTART_FROM_TEMPLATE EZ_ENVIRONMENT EZ_COMPOSERPARAM EZ_MAILER_TRANSPORT EZ_MAILER_HOST EZ_MAILER_USER EZ_MAILER_PASSWORD
+export EZ_KICKSTART EZ_KICKSTART_FROM_TEMPLATE EZ_COMPOSERPARAM EZ_MAILER_TRANSPORT EZ_MAILER_HOST EZ_MAILER_USER EZ_MAILER_PASSWORD SYMFONY_ENV EZ_ENVIRONMENT
 export COMPOSE_EXECUTION_PATH
 export DOCKER0NET
