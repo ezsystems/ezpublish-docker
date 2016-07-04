@@ -79,7 +79,7 @@ if [ -d ezpublish ]; then
 fi
 
 echo "Clear cache after parameters where updated"
-sudo -u ez php $APP_FOLDER/console cache:clear --env $SYMFONY_ENV
+sudo -E -u ez php $APP_FOLDER/console cache:clear --env $SYMFONY_ENV
 
 if [ "$SYMFONY_ENV" != "dev" ]; then
     echo "Re-generate symlink assets in case rsync was used so asstets added during setup wizards are reachable"
