@@ -61,6 +61,7 @@ ${COMPOSE_EXECUTION_PATH}docker-compose -f $YMLFILE $CMDPARAMETERS up --no-recre
 if [ ! -f volumes/ezpublish/composer.json ]; then
     echo "No prior install detected in ezpublish folder, so running Composer with: composer --no-interaction create-project ${EZ_COMPOSERPARAM?}"
     ${COMPOSE_EXECUTION_PATH}docker-compose -f $YMLFILE $CMDPARAMETERS run --rm ezphp composer --no-interaction create-project --no-progress ${EZ_COMPOSERPARAM?};
+    ${COMPOSE_EXECUTION_PATH}docker-compose -f $YMLFILE $CMDPARAMETERS run --rm ezphp composer dump-autoload --optimize;
     ${COMPOSE_EXECUTION_PATH}docker-compose -f $YMLFILE $CMDPARAMETERS run --rm ezphp bash -c "if [ -f /var/www/bin/vhost.sh ]; then chmod a+x /var/www/bin/vhost.sh; fi"
     ${COMPOSE_EXECUTION_PATH}docker-compose -f $YMLFILE $CMDPARAMETERS rm -v -f composercachevol ezphp
 else
