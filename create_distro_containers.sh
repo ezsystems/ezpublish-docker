@@ -233,7 +233,7 @@ function create_distribution_container
 function tag_distribution_container
 {
     echo "Tagging image : ${DOCKER_REPOSITORY}/${DOCKER_USER}/${BUILD_TARGET}_distribution:${DOCKER_BUILDVER}"
-    docker tag -f ${COMPOSE_PROJECT_NAME}_distribution:latest ${DOCKER_REPOSITORY}/${DOCKER_USER}/${BUILD_TARGET}_distribution:${DOCKER_BUILDVER}
+    docker tag ${COMPOSE_PROJECT_NAME}_distribution:latest ${DOCKER_REPOSITORY}/${DOCKER_USER}/${BUILD_TARGET}_distribution:${DOCKER_BUILDVER}
 }
 
 function push_distribution_container
@@ -258,7 +258,7 @@ function create_vardir_container
 function tag_vardir_container
 {
     echo "Tagging image : ${DOCKER_REPOSITORY}/${DOCKER_USER}/${BUILD_TARGET}_vardir:${DOCKER_BUILDVER}"
-    docker tag -f ${COMPOSE_PROJECT_NAME}_vardir:latest ${DOCKER_REPOSITORY}/${DOCKER_USER}/${BUILD_TARGET}_vardir:${DOCKER_BUILDVER}
+    docker tag ${COMPOSE_PROJECT_NAME}_vardir:latest ${DOCKER_REPOSITORY}/${DOCKER_USER}/${BUILD_TARGET}_vardir:${DOCKER_BUILDVER}
 }
 
 function push_vardir_container
@@ -284,7 +284,7 @@ function create_mysql_container
 function tag_mysql_container
 {
     echo "Tagging image : ${DOCKER_REPOSITORY}/${DOCKER_USER}/${BUILD_TARGET}_databasedump:${DOCKER_BUILDVER}"
-    docker tag -f ${COMPOSE_PROJECT_NAME}_databasedump:latest ${DOCKER_REPOSITORY}/${DOCKER_USER}/${BUILD_TARGET}_databasedump:${DOCKER_BUILDVER}
+    docker tag ${COMPOSE_PROJECT_NAME}_databasedump:latest ${DOCKER_REPOSITORY}/${DOCKER_USER}/${BUILD_TARGET}_databasedump:${DOCKER_BUILDVER}
 }
 
 function push_mysql_container

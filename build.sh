@@ -34,9 +34,9 @@ function build
 
 function tag
 {
-    docker tag -f ${COMPOSE_PROJECT_NAME}_web:latest ezsystems/web:latest
-    docker tag -f ${COMPOSE_PROJECT_NAME}_ezphp5:latest ezsystems/ezphp:5.6
-    docker tag -f ${COMPOSE_PROJECT_NAME}_ezphp:latest ezsystems/ezphp:latest
+    docker tag ${COMPOSE_PROJECT_NAME}_web:latest ezsystems/web:latest
+    docker tag ${COMPOSE_PROJECT_NAME}_ezphp5:latest ezsystems/ezphp:5.6
+    docker tag ${COMPOSE_PROJECT_NAME}_ezphp:latest ezsystems/ezphp:latest
 }
 
 function remove_project_tags
