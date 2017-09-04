@@ -1,5 +1,5 @@
 selenium:
-  image: selenium/standalone-firefox
+  image: selenium/standalone-chrome-debug:3.4.0
   links:
    - web1:web
   ports:
@@ -9,6 +9,8 @@ selenium:
    - SCREEN_WIDTH=1920
    - SCREEN_HEIGHT=1080
    - SCREEN_DEPTH=24
+  # Because of: https://github.com/elgalu/docker-selenium/issues/20
+  shm_size: 256m
 
 behatphpcli:
   image: ezsystems/ezphp
